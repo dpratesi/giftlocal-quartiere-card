@@ -1,0 +1,110 @@
+export const mockShops = [
+  {
+    id: "1",
+    name: "Caffè del Borgo",
+    category: "Bar & Caffè",
+    image: "/placeholder.svg",
+    rating: 4.8,
+    reviewCount: 127,
+    distance: "200m",
+    giftCardPrices: [10, 25, 50],
+    description: "Il caffè più amato del quartiere, con miscele artigianali e dolci fatti in casa ogni mattina.",
+    neighborhood: "Borgo Vecchio"
+  },
+  {
+    id: "2", 
+    name: "La Libreria di Giulia",
+    category: "Librerie",
+    image: "/placeholder.svg",
+    rating: 4.9,
+    reviewCount: 89,
+    distance: "350m",
+    giftCardPrices: [15, 30, 60],
+    description: "Una libreria indipendente con una selezione curata di libri e eventi culturali settimanali.",
+    neighborhood: "Centro Storico"
+  },
+  {
+    id: "3",
+    name: "Osteria da Marco",
+    category: "Ristoranti", 
+    image: "/placeholder.svg",
+    rating: 4.7,
+    reviewCount: 203,
+    distance: "450m",
+    giftCardPrices: [25, 50, 100],
+    description: "Cucina tradizionale con ingredienti a km zero e una cantina di vini locali eccezionale.",
+    neighborhood: "Porta Romana"
+  },
+  {
+    id: "4",
+    name: "Bottega Verde",
+    category: "Alimentari",
+    image: "/placeholder.svg", 
+    rating: 4.6,
+    reviewCount: 156,
+    distance: "150m",
+    giftCardPrices: [20, 40, 80],
+    description: "Prodotti biologici e a km zero, con una selezione di specialità regionali uniche.",
+    neighborhood: "Borgo Vecchio"
+  },
+  {
+    id: "5",
+    name: "Atelier Sofia",
+    category: "Abbigliamento",
+    image: "/placeholder.svg",
+    rating: 4.9,
+    reviewCount: 67,
+    distance: "600m", 
+    giftCardPrices: [30, 75, 150],
+    description: "Abbigliamento artigianale e sostenibile, con pezzi unici creati dalla stilista Sofia.",
+    neighborhood: "Quartiere Moda"
+  },
+  {
+    id: "6",
+    name: "Wellness Natura",
+    category: "Bellezza",
+    image: "/placeholder.svg",
+    rating: 4.8,
+    reviewCount: 94,
+    distance: "400m",
+    giftCardPrices: [40, 80, 120],
+    description: "Centro benessere con trattamenti naturali e prodotti biologici per la cura della persona.",
+    neighborhood: "Centro Storico"
+  },
+  {
+    id: "7",
+    name: "Il Fornaio di Paolo",
+    category: "Alimentari",
+    image: "/placeholder.svg",
+    rating: 4.7,
+    reviewCount: 234,
+    distance: "300m",
+    giftCardPrices: [15, 30, 45],
+    description: "Pane e focacce cotte nel forno a legna secondo ricette tramandate da generazioni.",
+    neighborhood: "Borgo Vecchio"
+  },
+  {
+    id: "8",
+    name: "Enoteca Centrale",
+    category: "Alimentari", 
+    image: "/placeholder.svg",
+    rating: 4.8,
+    reviewCount: 112,
+    distance: "500m",
+    giftCardPrices: [25, 50, 100, 200],
+    description: "Selezione accurata di vini italiani e internazionali, con degustazioni guidate.",
+    neighborhood: "Centro Storico"
+  },
+  {
+    id: "9",
+    name: "Trattoria Nonna Rosa",
+    category: "Ristoranti",
+    image: "/placeholder.svg",
+    rating: 4.9,
+    reviewCount: 178,
+    distance: "700m",
+    giftCardPrices: [30, 60, 90],
+    description: "Cucina casalinga come quella della nonna, con pasta fatta a mano e sughi tradizionali.",
+    neighborhood: "Porta Romana"
+  }
+];
