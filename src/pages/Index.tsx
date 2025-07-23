@@ -114,7 +114,7 @@ const Index = () => {
             Negozi in Evidenza
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Scopri i migliori negozi del tuo quartiere e sostieni la tua comunità locale 
+            Scoprix i migliori negozi del tuo quartiere e sostieni la tua comunità locale 
             con le nostre gift card digitali
           </p>
         </div>
