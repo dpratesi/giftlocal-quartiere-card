@@ -172,7 +172,7 @@ const Profile = () => {
                         <p className="text-muted-foreground mb-4">
                           Non hai ancora acquistato nessuna gift card
                         </p>
-                        <Link to="/">
+                        <Link to="/shops">
                           <Button>Esplora negozi</Button>
                         </Link>
                       </div>
