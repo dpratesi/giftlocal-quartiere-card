@@ -3,19 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-
-interface Shop {
-  id: string;
-  name: string;
-  category: string;
-  image: string;
-  rating: number;
-  reviewCount: number;
-  distance: string;
-  giftCardPrices: number[];
-  description: string;
-  neighborhood: string;
-}
+import type { Shop } from "@/lib/api";
 
 interface ShopMapProps {
   shops: Shop[];
