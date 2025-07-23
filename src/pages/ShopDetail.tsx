@@ -1,14 +1,39 @@
 import { useParams, Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { fetchShops, type Shop } from "@/lib/api";
 import { ArrowLeft, MapPin, Star, Clock, Phone, Euro, Heart, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { mockShops } from "@/data/mockShops";
 import Header from "@/components/Header";
 
 const ShopDetail = () => {
   const { id } = useParams();
-  const shop = mockShops.find(s => s.id === id);
+  const { data: shops = [], isLoading, error } = useQuery<Shop[]>({
+    queryKey: ['shops'],
+    queryFn: fetchShops
+  });
+  const shop = shops.find((s) => s.id === id);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="container mx-auto px-4 py-12 text-center">Caricamento...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="container mx-auto px-4 py-12 text-center">
+          Impossibile caricare i negozi
+        </div>
+      </div>
+    );
+  }
 
   if (!shop) {
     return (

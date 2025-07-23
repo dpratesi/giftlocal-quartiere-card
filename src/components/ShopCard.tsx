@@ -3,19 +3,9 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import type { Shop } from "@/lib/api";
 
-interface ShopCardProps {
-  id: string;
-  name: string;
-  category: string;
-  image: string;
-  rating: number;
-  reviewCount: number;
-  distance: string;
-  giftCardPrices: number[];
-  description: string;
-  neighborhood: string;
-}
+interface ShopCardProps extends Shop {}
 
 const ShopCard = ({ 
   id,
