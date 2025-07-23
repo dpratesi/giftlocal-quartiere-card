@@ -10,23 +10,33 @@ const categories = [
   { name: "Abbigliamento", icon: Shirt, active: false },
 ];
 
-const CategoryFilter = () => {
+interface CategoryFilterProps {
+  selectedCategories: string[];
+  onCategoryToggle: (category: string) => void;
+}
+
+const CategoryFilter = ({ selectedCategories, onCategoryToggle }: CategoryFilterProps) => {
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="flex flex-wrap gap-3 justify-center">
         {categories.map((category) => {
           const IconComponent = category.icon;
+          const isSelected = category.name === "Tutti" 
+            ? selectedCategories.length === 0 
+            : selectedCategories.includes(category.name);
+          
           return (
             <Badge
               key={category.name}
-              variant={category.active ? "default" : "secondary"}
+              variant={isSelected ? "default" : "secondary"}
               className={`
                 px-4 py-2 cursor-pointer transition-all duration-200 hover:scale-105
-                ${category.active 
+                ${isSelected 
                   ? "bg-primary text-primary-foreground shadow-warm" 
                   : "bg-muted text-muted-foreground hover:bg-primary/10"
                 }
               `}
+              onClick={() => onCategoryToggle(category.name)}
             >
               <IconComponent className="w-4 h-4 mr-2" />
               {category.name}
