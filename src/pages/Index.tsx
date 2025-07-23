@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useShops } from "@/hooks/useShops";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
@@ -10,14 +11,18 @@ import ShopMap from "@/components/ShopMap";
 import { Link } from "react-router-dom";
 
 const Index = () => {
+  const [searchParams] = useSearchParams();
+  const initialCity = searchParams.get('city');
+  const initialCategory = searchParams.get('category');
+
   const [view, setView] = useState<'grid' | 'map'>('grid');
-  const [filters, setFilters] = useState<FilterState>({
-    categories: [],
-    cities: [],
+  const [filters, setFilters] = useState<FilterState>(() => ({
+    categories: initialCategory ? [initialCategory] : [],
+    cities: initialCity ? [initialCity] : [],
     priceRange: [10, 200],
     minRating: 0,
     maxDistance: 1000
-  });
+  }));
 
   const { shops, isLoading, error } = useShops();
 
@@ -28,8 +33,12 @@ const Index = () => {
         return false;
       }
       
-      // City filter
-      if (filters.cities.length > 0 && !filters.cities.includes(shop.neighborhood)) {
+      // City or neighborhood filter
+      if (
+        filters.cities.length > 0 &&
+        !filters.cities.includes(shop.neighborhood) &&
+        !filters.cities.includes(shop.city)
+      ) {
         return false;
       }
       

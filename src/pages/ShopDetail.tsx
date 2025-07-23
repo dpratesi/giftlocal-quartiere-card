@@ -37,7 +37,7 @@ const ShopDetail = () => {
         <Header />
         <div className="container mx-auto px-4 py-12 text-center">
           <h1 className="text-2xl font-bold mb-4">Negozio non trovato</h1>
-          <Link to="/">
+          <Link to="/shops">
             <Button>Torna alla Home</Button>
           </Link>
         </div>
@@ -51,7 +51,7 @@ const ShopDetail = () => {
       
       {/* Back Button */}
       <div className="container mx-auto px-4 py-4">
-        <Link to="/">
+        <Link to="/shops">
           <Button variant="ghost" className="mb-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Torna al catalogo
