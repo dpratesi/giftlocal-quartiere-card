@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useMemo } from "react";
-import type { Shop } from "@/lib/api";
+import type { Shop } from "@/lib/types";
 
 interface ShopMapProps {
   shops: Shop[];
