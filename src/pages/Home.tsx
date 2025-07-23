@@ -23,9 +23,9 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background">
       <HeroSection />
-      <div className="container mx-auto px-4 py-12 text-center space-y-6">
+      <div className="container mx-auto px-4 py-6 text-center space-y-4">
         {!city ? (
           <>
             <h2 className="text-2xl font-display font-bold mb-4">
