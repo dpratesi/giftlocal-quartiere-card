@@ -1,6 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { fetchShops, type Shop } from "@/lib/api";
+import { useShops } from "@/hooks/useShops";
 import { ArrowLeft, MapPin, Star, Clock, Phone, Euro, Heart, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,10 +8,7 @@ import Header from "@/components/Header";
 
 const ShopDetail = () => {
   const { id } = useParams();
-  const { data: shops = [], isLoading, error } = useQuery<Shop[]>({
-    queryKey: ['shops'],
-    queryFn: fetchShops
-  });
+  const { shops, isLoading, error } = useShops();
   const shop = shops.find((s) => s.id === id);
 
   if (isLoading) {

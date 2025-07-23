@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { fetchShops, type Shop } from "@/lib/api";
+import { useShops } from "@/hooks/useShops";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import CategoryFilter from "@/components/CategoryFilter";
@@ -20,10 +19,7 @@ const Index = () => {
     maxDistance: 1000
   });
 
-  const { data: shops = [], isLoading, error } = useQuery<Shop[]>({
-    queryKey: ['shops'],
-    queryFn: fetchShops
-  });
+  const { shops, isLoading, error } = useShops();
 
   const filteredShops = useMemo(() => {
     return shops.filter(shop => {
