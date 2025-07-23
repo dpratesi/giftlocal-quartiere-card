@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useMemo } from "react";
 import type { Shop } from "@/lib/api";
 
 interface ShopMapProps {
@@ -11,11 +12,15 @@ interface ShopMapProps {
 
 const ShopMap = ({ shops }: ShopMapProps) => {
   // Mock positions for shops on the map
-  const shopPositions = shops.map((shop, index) => ({
-    ...shop,
-    x: 20 + (index % 4) * 15 + Math.random() * 10,
-    y: 20 + Math.floor(index / 4) * 20 + Math.random() * 10
-  }));
+  const shopPositions = useMemo(
+    () =>
+      shops.map((shop, index) => ({
+        ...shop,
+        x: 20 + (index % 4) * 15 + Math.random() * 10,
+        y: 20 + Math.floor(index / 4) * 20 + Math.random() * 10,
+      })),
+    [shops]
+  );
 
   return (
     <div className="w-full h-[600px] relative bg-gradient-to-br from-local-green-light to-muted rounded-lg border overflow-hidden">
