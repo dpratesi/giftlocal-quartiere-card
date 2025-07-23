@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useShops } from "@/hooks/useShops";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import CategoryFilter from "@/components/CategoryFilter";
@@ -6,7 +7,6 @@ import ShopFilters, { FilterState } from "@/components/ShopFilters";
 import ViewToggle from "@/components/ViewToggle";
 import ShopCard from "@/components/ShopCard";
 import ShopMap from "@/components/ShopMap";
-import { mockShops } from "@/data/mockShops";
 import { Link } from "react-router-dom";
 
 const Index = () => {
@@ -19,8 +19,10 @@ const Index = () => {
     maxDistance: 1000
   });
 
+  const { shops, isLoading, error } = useShops();
+
   const filteredShops = useMemo(() => {
-    return mockShops.filter(shop => {
+    return shops.filter(shop => {
       // Category filter
       if (filters.categories.length > 0 && !filters.categories.includes(shop.category)) {
         return false;
@@ -51,7 +53,7 @@ const Index = () => {
       
       return true;
     });
-  }, [filters]);
+  }, [filters, shops]);
 
   const handleCategoryToggle = (category: string) => {
     if (category === "Tutti") {
@@ -75,6 +77,26 @@ const Index = () => {
       maxDistance: 1000
     });
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="container mx-auto px-4 py-12 text-center">Caricamento...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="container mx-auto px-4 py-12 text-center">
+          Impossibile caricare i negozi
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
