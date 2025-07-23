@@ -3,6 +3,7 @@ import HeroSection from "@/components/HeroSection";
 import CategoryFilter from "@/components/CategoryFilter";
 import ShopCard from "@/components/ShopCard";
 import { mockShops } from "@/data/mockShops";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   return (
@@ -33,7 +34,10 @@ const Index = () => {
 
         {/* Load More Button */}
         <div className="text-center mt-12">
-          <button className="bg-primary hover:bg-primary-hover text-primary-foreground px-8 py-3 rounded-lg font-semibold transition-colors">
+          <button 
+            className="bg-primary hover:bg-primary-hover text-primary-foreground px-8 py-3 rounded-lg font-semibold transition-colors"
+            onClick={() => alert('Funzionalità in arrivo!')}
+          >
             Carica altri negozi
           </button>
         </div>
@@ -49,9 +53,11 @@ const Index = () => {
             Unisciti a GiftLocal e inizia a vendere le tue gift card online. 
             È semplice, veloce e gratuito.
           </p>
-          <button className="bg-primary hover:bg-primary-hover text-primary-foreground px-8 py-3 rounded-lg font-semibold transition-colors">
-            Registra il tuo negozio
-          </button>
+          <Link to="/register-shop">
+            <button className="bg-primary hover:bg-primary-hover text-primary-foreground px-8 py-3 rounded-lg font-semibold transition-colors">
+              Registra il tuo negozio
+            </button>
+          </Link>
         </div>
       </section>
     </div>

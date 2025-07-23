@@ -2,6 +2,7 @@ import { MapPin, Star, Euro, Heart } from "lucide-react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 
 interface ShopCardProps {
   id: string;
@@ -17,6 +18,7 @@ interface ShopCardProps {
 }
 
 const ShopCard = ({ 
+  id,
   name, 
   category, 
   image, 
@@ -31,7 +33,8 @@ const ShopCard = ({
   const maxPrice = Math.max(...giftCardPrices);
 
   return (
-    <Card className="group hover:shadow-hover transition-all duration-300 hover:-translate-y-1 bg-gradient-card border-border/50 overflow-hidden">
+    <Link to={`/shop/${id}`}>
+      <Card className="group hover:shadow-hover transition-all duration-300 hover:-translate-y-1 bg-gradient-card border-border/50 overflow-hidden cursor-pointer">
       <div className="relative">
         <img 
           src={`/placeholder.svg?height=200&width=300&text=${encodeURIComponent(name)}`}
@@ -97,6 +100,7 @@ const ShopCard = ({
         </Button>
       </CardFooter>
     </Card>
+    </Link>
   );
 };
 

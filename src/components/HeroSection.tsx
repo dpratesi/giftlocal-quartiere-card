@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Gift, MapPin, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
@@ -52,6 +53,9 @@ const HeroSection = () => {
             <Button 
               size="lg" 
               className="bg-white text-local-green hover:bg-white/90 font-semibold px-8 py-3"
+              onClick={() => {
+                document.querySelector('.container')?.scrollIntoView({ behavior: 'smooth' });
+              }}
             >
               <Gift className="w-5 h-5 mr-2" />
               Esplora Gift Card
@@ -60,6 +64,7 @@ const HeroSection = () => {
               variant="outline" 
               size="lg" 
               className="border-white text-white hover:bg-white hover:text-local-green font-semibold px-8 py-3"
+              onClick={() => alert('Funzionalità geolocalizzazione in arrivo!')}
             >
               <MapPin className="w-5 h-5 mr-2" />
               Il mio quartiere
