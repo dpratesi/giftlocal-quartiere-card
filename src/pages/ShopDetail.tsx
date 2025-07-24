@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useShops } from "@/hooks/useShops";
 import { ArrowLeft, MapPin, Star, Clock, Phone, Euro, Heart, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,8 +8,19 @@ import Header from "@/components/Header";
 
 const ShopDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { shops, isLoading, error } = useShops();
   const shop = shops.find((s) => s.id === id);
+
+  const handleBuyGiftCard = (amount: number) => {
+    navigate("/checkout", {
+      state: {
+        shopId: shop?.id,
+        shopName: shop?.name,
+        amount
+      }
+    });
+  };
 
   if (isLoading) {
     return (
@@ -144,13 +155,19 @@ const ShopDetail = () => {
                         <Euro className="w-5 h-5 mr-2 text-local-green" />
                         <span className="font-medium">{price}€</span>
                       </div>
-                      <Button size="sm">Acquista</Button>
+                      <Button size="sm" onClick={() => handleBuyGiftCard(price)}>
+                        Acquista
+                      </Button>
                     </div>
                   ))}
                 </div>
                 
                 <div className="mt-6 pt-6 border-t border-border">
-                  <Button className="w-full bg-primary hover:bg-primary-hover" size="lg">
+                  <Button 
+                    className="w-full bg-primary hover:bg-primary-hover" 
+                    size="lg"
+                    onClick={() => handleBuyGiftCard(shop.giftCardPrices[0])}
+                  >
                     Acquista Gift Card
                   </Button>
                   <p className="text-xs text-muted-foreground text-center mt-3">
