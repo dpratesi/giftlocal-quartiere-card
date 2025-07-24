@@ -48,6 +48,11 @@ const Header = () => {
                 Accedi
               </Button>
             </Link>
+            <Link to="/merchant/login">
+              <Button variant="outline" size="sm">
+                Merchant
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
