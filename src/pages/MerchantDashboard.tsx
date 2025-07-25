@@ -11,12 +11,17 @@ import {
   Plus,
   Eye,
   Settings,
-  LogOut
+  LogOut,
+  QrCode
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import GiftCardModal from "@/components/GiftCardModal";
+import OrderDetailsModal from "@/components/OrderDetailsModal";
+import QRRedemptionModal from "@/components/QRRedemptionModal";
+import MerchantSettingsModal from "@/components/MerchantSettingsModal";
 
 const MerchantDashboard = () => {
   const navigate = useNavigate();
@@ -92,10 +97,11 @@ const MerchantDashboard = () => {
               <p className="text-muted-foreground">Dashboard Merchant</p>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm">
-                <Settings className="w-4 h-4 mr-2" />
-                Impostazioni
-              </Button>
+              <QRRedemptionModal />
+              <MerchantSettingsModal 
+                merchantData={merchantData} 
+                onSettingsUpdate={(settings) => console.log('Settings updated:', settings)}
+              />
               <Button variant="ghost" size="sm" onClick={handleLogout}>
                 <LogOut className="w-4 h-4 mr-2" />
                 Esci
@@ -215,9 +221,7 @@ const MerchantDashboard = () => {
                         <p className="font-medium">€{order.amount}</p>
                         <p className="text-sm text-muted-foreground">{order.date}</p>
                       </div>
-                      <Button variant="ghost" size="sm">
-                        <Eye className="w-4 h-4" />
-                      </Button>
+                      <OrderDetailsModal order={order} />
                     </div>
                   ))}
                 </div>
@@ -229,10 +233,7 @@ const MerchantDashboard = () => {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Gestione Gift Card</CardTitle>
-                <Button>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Nuova Gift Card
-                </Button>
+                <GiftCardModal onGiftCardCreated={(giftCard) => console.log('New gift card:', giftCard)} />
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
