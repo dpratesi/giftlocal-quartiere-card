@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Index from "./pages/Index";
 import ShopDetail from "./pages/ShopDetail";
 import Login from "./pages/Login";
+import LoginSelect from "./pages/LoginSelect";
 import RegisterShop from "./pages/RegisterShop";
 import Profile from "./pages/Profile";
 import Checkout from "./pages/Checkout";
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/" element={<Home />} />
           <Route path="/shops" element={<Index />} />
           <Route path="/shop/:id" element={<ShopDetail />} />
+          <Route path="/login-select" element={<LoginSelect />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register-shop" element={<RegisterShop />} />
           <Route path="/profile" element={<Profile />} />

@@ -43,14 +43,9 @@ const Header = () => {
                 <User className="w-5 h-5" />
               </Button>
             </Link>
-            <Link to="/login">
+            <Link to="/login-select">
               <Button variant="default" size="sm" className="bg-primary hover:bg-primary-hover">
                 Accedi
-              </Button>
-            </Link>
-            <Link to="/merchant/login">
-              <Button variant="outline" size="sm">
-                Merchant
               </Button>
             </Link>
           </div>
