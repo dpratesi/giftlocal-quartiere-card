@@ -1,5 +1,6 @@
 import { useState } from "react";
 import HeroSection from "@/components/HeroSection";
+import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
@@ -24,6 +25,7 @@ const Home = () => {
 
   return (
     <div className="bg-background">
+      <Header />
       <HeroSection />
       <div className="container mx-auto px-4 py-6 text-center space-y-4">
         {!city ? (
