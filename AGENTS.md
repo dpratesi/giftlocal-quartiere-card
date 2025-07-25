@@ -12,7 +12,8 @@ This repository contains a React + TypeScript project built with Vite.
 - Install dependencies with `npm install` when required.
 - Check linting with `npm run lint`.
 - Build the project with `npm run build` (or `npm run build:dev` for development).
-- Ensure `npm run lint` and `npm run build` succeed before committing.
+- Ensure `npm run lint` and `npm run build` succeed before committing when possible.
+- If the environment lacks network access and these commands fail, skip them.
 
 ### Commit style
 - Use a short summary line in the imperative mood (e.g. `Add feature`), optionally followed by a blank line and more details.
