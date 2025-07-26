@@ -8,6 +8,7 @@ import ShopFilters, { FilterState } from "@/components/ShopFilters";
 import ViewToggle from "@/components/ViewToggle";
 import ShopCard from "@/components/ShopCard";
 import ShopMap from "@/components/ShopMap";
+import { ShopListSkeleton } from "@/components/ShopCardSkeleton";
 import { Link } from "react-router-dom";
 
 const Index = () => {
@@ -91,7 +92,34 @@ const Index = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <div className="container mx-auto px-4 py-12 text-center">Caricamento...</div>
+        <HeroSection />
+        <CategoryFilter 
+          selectedCategories={[]}
+          onCategoryToggle={() => {}}
+        />
+        <section className="container mx-auto px-4 py-12">
+          <div className="text-center mb-8">
+            <div className="animate-pulse">
+              <div className="h-8 bg-muted rounded w-64 mx-auto mb-4"></div>
+              <div className="h-4 bg-muted rounded w-96 mx-auto"></div>
+            </div>
+          </div>
+          <div className="flex flex-col lg:flex-row gap-6">
+            <div className="lg:w-1/4">
+              <div className="space-y-4 animate-pulse">
+                <div className="h-6 bg-muted rounded w-24"></div>
+                <div className="h-32 bg-muted rounded"></div>
+              </div>
+            </div>
+            <div className="lg:w-3/4">
+              <div className="flex justify-between items-center mb-6">
+                <div className="h-4 bg-muted rounded w-32 animate-pulse"></div>
+                <div className="h-8 bg-muted rounded w-24 animate-pulse"></div>
+              </div>
+              <ShopListSkeleton count={6} />
+            </div>
+          </div>
+        </section>
       </div>
     );
   }

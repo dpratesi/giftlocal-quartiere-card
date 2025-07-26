@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Store, Mail, Phone, MapPin, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,9 +7,75 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { LoadingButton } from "@/components/LoadingButton";
+import { toast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 
 const RegisterShop = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    shopName: '',
+    category: '',
+    description: '',
+    email: '',
+    phone: '',
+    address: '',
+    neighborhood: '',
+    postalCode: '',
+    vat: '',
+    iban: '',
+    acceptTerms: false,
+    acceptMarketing: false
+  });
+  const navigate = useNavigate();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+    }));
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.acceptTerms) {
+      toast({
+        title: "Termini obbligatori",
+        description: "Devi accettare i termini di servizio per procedere",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      toast({
+        title: "Registrazione completata!",
+        description: "Il tuo negozio è stato registrato. Riceverai una conferma via email entro 24-48 ore.",
+      });
+      
+      navigate('/merchant/login');
+    } catch (error) {
+      toast({
+        title: "Errore di registrazione",
+        description: "Si è verificato un errore. Riprova più tardi.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -44,7 +111,7 @@ const RegisterShop = () => {
             </CardHeader>
             
             <CardContent className="space-y-6">
-              <form className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 
                 {/* Basic Info */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -52,6 +119,9 @@ const RegisterShop = () => {
                     <Label htmlFor="shopName">Nome del negozio *</Label>
                     <Input 
                       id="shopName"
+                      name="shopName"
+                      value={formData.shopName}
+                      onChange={handleInputChange}
                       placeholder="es. Caffè del Borgo"
                       required
                     />
@@ -59,7 +129,7 @@ const RegisterShop = () => {
                   
                   <div className="space-y-2">
                     <Label htmlFor="category">Categoria *</Label>
-                    <Select>
+                    <Select value={formData.category} onValueChange={(value) => handleSelectChange('category', value)}>
                       <SelectTrigger>
                         <SelectValue placeholder="Seleziona categoria" />
                       </SelectTrigger>
@@ -79,6 +149,9 @@ const RegisterShop = () => {
                   <Label htmlFor="description">Descrizione *</Label>
                   <Textarea 
                     id="description"
+                    name="description"
+                    value={formData.description}
+                    onChange={handleInputChange}
                     placeholder="Descrivi il tuo negozio, i tuoi prodotti e cosa rende speciale la tua attività..."
                     rows={4}
                     required
@@ -209,9 +282,15 @@ const RegisterShop = () => {
                   </label>
                 </div>
 
-                <Button type="submit" className="w-full bg-primary hover:bg-primary-hover" size="lg">
+                <LoadingButton 
+                  type="submit" 
+                  className="w-full" 
+                  size="lg"
+                  loading={isLoading}
+                  loadingText="Registrazione in corso..."
+                >
                   Registra il negozio
-                </Button>
+                </LoadingButton>
                 
                 <p className="text-xs text-muted-foreground text-center">
                   La tua richiesta verrà verificata dal nostro team entro 24-48 ore. 
