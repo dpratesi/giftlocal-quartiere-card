@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 
 const MerchantLogin = () => {
@@ -14,7 +16,7 @@ const MerchantLogin = () => {
     password: "password123"
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const { login, isLoading } = useAuth();
   const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,20 +28,29 @@ const MerchantLogin = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     
-    // Mock authentication
-    setTimeout(() => {
-      // Store merchant session
-      localStorage.setItem('merchantAuth', JSON.stringify({
-        id: 'merchant_123',
-        email: credentials.email,
-        shopName: 'La Bottega del Sapore',
-        loginTime: new Date().toISOString()
-      }));
-      
-      navigate('/merchant/dashboard');
-    }, 1500);
+    try {
+      const success = await login(credentials.email, credentials.password, "merchant");
+      if (success) {
+        toast({
+          title: "Login effettuato",
+          description: "Benvenuto nella dashboard merchant!",
+        });
+        navigate("/merchant/dashboard");
+      } else {
+        toast({
+          title: "Errore di login",
+          description: "Email o password non corretti",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Errore",
+        description: "Si è verificato un errore durante il login",
+        variant: "destructive",
+      });
+    }
   };
 
   return (

@@ -1,9 +1,11 @@
-import { Search, MapPin, Heart, User, ShoppingBag } from "lucide-react";
+import { Search, MapPin, Heart, User, ShoppingBag, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Header = () => {
+  const { isAuthenticated, user, logout } = useAuth();
   return (
     <header className="bg-card shadow-card border-b border-border sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
@@ -43,11 +45,23 @@ const Header = () => {
                 <User className="w-5 h-5" />
               </Button>
             </Link>
-            <Link to="/login-select">
-              <Button variant="default" size="sm" className="bg-primary hover:bg-primary-hover">
-                Accedi
-              </Button>
-            </Link>
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-muted-foreground">
+                  Ciao, {user?.name}
+                </span>
+                <Button variant="outline" size="sm" onClick={logout}>
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Esci
+                </Button>
+              </div>
+            ) : (
+              <Link to="/login-select">
+                <Button variant="default" size="sm" className="bg-primary hover:bg-primary-hover">
+                  Accedi
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>
