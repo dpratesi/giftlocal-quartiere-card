@@ -1,6 +1,8 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Store, Mail, Phone, MapPin, Upload } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,52 +12,49 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { LoadingButton } from "@/components/LoadingButton";
 import { toast } from "@/hooks/use-toast";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import Header from "@/components/Header";
 
+// Validation schema
+const shopSchema = z.object({
+  shopName: z.string().min(2, "Il nome deve contenere almeno 2 caratteri").max(50, "Massimo 50 caratteri"),
+  category: z.string().min(1, "Seleziona una categoria"),
+  description: z.string().min(20, "La descrizione deve contenere almeno 20 caratteri").max(500, "Massimo 500 caratteri"),
+  email: z.string().email("Inserisci un email valida"),
+  phone: z.string().regex(/^(\+39\s?)?[0-9\s]{10,}$/, "Inserisci un numero di telefono valido"),
+  address: z.string().min(10, "Inserisci un indirizzo completo"),
+  neighborhood: z.string().min(2, "Inserisci il quartiere"),
+  postalCode: z.string().regex(/^[0-9]{5}$/, "Il CAP deve contenere 5 cifre"),
+  vat: z.string().regex(/^IT[0-9]{11}$/, "La P.IVA deve essere nel formato IT + 11 cifre"),
+  iban: z.string().regex(/^IT[0-9]{2}[A-Z][0-9]{3}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{3}$/, "Inserisci un IBAN italiano valido"),
+  acceptTerms: z.boolean().refine(val => val === true, "Devi accettare i termini di servizio"),
+  acceptMarketing: z.boolean().optional(),
+});
+
+type ShopFormData = z.infer<typeof shopSchema>;
+
 const RegisterShop = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    shopName: '',
-    category: '',
-    description: '',
-    email: '',
-    phone: '',
-    address: '',
-    neighborhood: '',
-    postalCode: '',
-    vat: '',
-    iban: '',
-    acceptTerms: false,
-    acceptMarketing: false
-  });
   const navigate = useNavigate();
+  
+  const form = useForm<ShopFormData>({
+    resolver: zodResolver(shopSchema),
+    defaultValues: {
+      shopName: '',
+      category: '',
+      description: '',
+      email: '',
+      phone: '',
+      address: '',
+      neighborhood: '',
+      postalCode: '',
+      vat: '',
+      iban: '',
+      acceptTerms: false,
+      acceptMarketing: false,
+    },
+  });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
-    }));
-  };
-
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!formData.acceptTerms) {
-      toast({
-        title: "Termini obbligatori",
-        description: "Devi accettare i termini di servizio per procedere",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsLoading(true);
-    
+  const onSubmit = async (data: ShopFormData) => {
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
@@ -72,8 +71,6 @@ const RegisterShop = () => {
         description: "Si è verificato un errore. Riprova più tardi.",
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
   return (
@@ -111,192 +108,280 @@ const RegisterShop = () => {
             </CardHeader>
             
             <CardContent className="space-y-6">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                
-                {/* Basic Info */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="shopName">Nome del negozio *</Label>
-                    <Input 
-                      id="shopName"
-                      name="shopName"
-                      value={formData.shopName}
-                      onChange={handleInputChange}
-                      placeholder="es. Caffè del Borgo"
-                      required
-                    />
-                  </div>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   
-                  <div className="space-y-2">
-                    <Label htmlFor="category">Categoria *</Label>
-                    <Select value={formData.category} onValueChange={(value) => handleSelectChange('category', value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleziona categoria" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="bar-caffe">Bar & Caffè</SelectItem>
-                        <SelectItem value="ristoranti">Ristoranti</SelectItem>
-                        <SelectItem value="librerie">Librerie</SelectItem>
-                        <SelectItem value="bellezza">Bellezza</SelectItem>
-                        <SelectItem value="abbigliamento">Abbigliamento</SelectItem>
-                        <SelectItem value="alimentari">Alimentari</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="description">Descrizione *</Label>
-                  <Textarea 
-                    id="description"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleInputChange}
-                    placeholder="Descrivi il tuo negozio, i tuoi prodotti e cosa rende speciale la tua attività..."
-                    rows={4}
-                    required
-                  />
-                </div>
-
-                {/* Contact Info */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email *</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                      <Input 
-                        id="email"
-                        type="email" 
-                        placeholder="negozio@esempio.com"
-                        className="pl-10"
-                        required
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Telefono *</Label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                      <Input 
-                        id="phone"
-                        type="tel" 
-                        placeholder="+39 123 456 7890"
-                        className="pl-10"
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Address */}
-                <div className="space-y-2">
-                  <Label htmlFor="address">Indirizzo completo *</Label>
-                  <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                    <Input 
-                      id="address"
-                      placeholder="Via Roma 123, 00100 Roma RM"
-                      className="pl-10"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="neighborhood">Quartiere *</Label>
-                    <Input 
-                      id="neighborhood"
-                      placeholder="es. Centro Storico"
-                      required
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="postalCode">CAP *</Label>
-                    <Input 
-                      id="postalCode"
-                      placeholder="00100"
-                      maxLength={5}
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* Logo Upload */}
-                <div className="space-y-2">
-                  <Label htmlFor="logo">Logo del negozio</Label>
-                  <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary transition-colors cursor-pointer">
-                    <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
-                    <p className="text-sm text-muted-foreground mb-1">
-                      Clicca per caricare il logo o trascina qui
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      PNG, JPG fino a 2MB
-                    </p>
-                    <input type="file" className="hidden" accept="image/*" />
-                  </div>
-                </div>
-
-                {/* Business Info */}
-                <div className="border-t border-border pt-6">
-                  <h3 className="text-lg font-semibold mb-4">Informazioni legali</h3>
-                  
+                  {/* Basic Info */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="vat">Partita IVA *</Label>
-                      <Input 
-                        id="vat"
-                        placeholder="IT12345678901"
-                        required
-                      />
-                    </div>
+                    <FormField
+                      control={form.control}
+                      name="shopName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nome del negozio *</FormLabel>
+                          <FormControl>
+                            <Input placeholder="es. Caffè del Borgo" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     
-                    <div className="space-y-2">
-                      <Label htmlFor="iban">IBAN per i pagamenti *</Label>
-                      <Input 
-                        id="iban"
-                        placeholder="IT60 X054 2811 1010 0000 0123 456"
-                        required
+                    <FormField
+                      control={form.control}
+                      name="category"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Categoria *</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Seleziona categoria" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="bar-caffe">Bar & Caffè</SelectItem>
+                              <SelectItem value="ristoranti">Ristoranti</SelectItem>
+                              <SelectItem value="librerie">Librerie</SelectItem>
+                              <SelectItem value="bellezza">Bellezza</SelectItem>
+                              <SelectItem value="abbigliamento">Abbigliamento</SelectItem>
+                              <SelectItem value="alimentari">Alimentari</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Descrizione *</FormLabel>
+                        <FormControl>
+                          <Textarea 
+                            placeholder="Descrivi il tuo negozio, i tuoi prodotti e cosa rende speciale la tua attività..."
+                            rows={4}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Contact Info */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email *</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                              <Input 
+                                type="email" 
+                                placeholder="negozio@esempio.com"
+                                className="pl-10"
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Telefono *</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                              <Input 
+                                type="tel" 
+                                placeholder="+39 123 456 7890"
+                                className="pl-10"
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Address */}
+                  <FormField
+                    control={form.control}
+                    name="address"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Indirizzo completo *</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                            <Input 
+                              placeholder="Via Roma 123, 00100 Roma RM"
+                              className="pl-10"
+                              {...field}
+                            />
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="neighborhood"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Quartiere *</FormLabel>
+                          <FormControl>
+                            <Input placeholder="es. Centro Storico" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="postalCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>CAP *</FormLabel>
+                          <FormControl>
+                            <Input placeholder="00100" maxLength={5} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Logo Upload */}
+                  <div className="space-y-2">
+                    <Label htmlFor="logo">Logo del negozio</Label>
+                    <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary transition-colors cursor-pointer">
+                      <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Clicca per caricare il logo o trascina qui
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        PNG, JPG fino a 2MB
+                      </p>
+                      <input type="file" className="hidden" accept="image/*" />
+                    </div>
+                  </div>
+
+                  {/* Business Info */}
+                  <div className="border-t border-border pt-6">
+                    <h3 className="text-lg font-semibold mb-4">Informazioni legali</h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="vat"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Partita IVA *</FormLabel>
+                            <FormControl>
+                              <Input placeholder="IT12345678901" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="iban"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>IBAN per i pagamenti *</FormLabel>
+                            <FormControl>
+                              <Input placeholder="IT60 X054 2811 1010 0000 0123 456" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
                     </div>
                   </div>
-                </div>
 
-                {/* Terms */}
-                <div className="space-y-4">
-                  <label className="flex items-start space-x-3 cursor-pointer">
-                    <input type="checkbox" className="rounded border-gray-300 mt-1" required />
-                    <span className="text-sm text-muted-foreground">
-                      Accetto i <a href="#" className="text-primary hover:underline">Termini di Servizio</a> e 
-                      la <a href="#" className="text-primary hover:underline">Privacy Policy</a> di GiftLocal *
-                    </span>
-                  </label>
-                  
-                  <label className="flex items-start space-x-3 cursor-pointer">
-                    <input type="checkbox" className="rounded border-gray-300 mt-1" />
-                    <span className="text-sm text-muted-foreground">
-                      Voglio ricevere aggiornamenti e consigli via email per far crescere il mio business
-                    </span>
-                  </label>
-                </div>
+                  {/* Terms */}
+                  <div className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="acceptTerms"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <span className="text-sm text-muted-foreground">
+                              Accetto i <a href="#" className="text-primary hover:underline">Termini di Servizio</a> e 
+                              la <a href="#" className="text-primary hover:underline">Privacy Policy</a> di GiftLocal *
+                            </span>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="acceptMarketing"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <span className="text-sm text-muted-foreground">
+                              Voglio ricevere aggiornamenti e consigli via email per far crescere il mio business
+                            </span>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
-                <LoadingButton 
-                  type="submit" 
-                  className="w-full" 
-                  size="lg"
-                  loading={isLoading}
-                  loadingText="Registrazione in corso..."
-                >
-                  Registra il negozio
-                </LoadingButton>
+                  <LoadingButton 
+                    type="submit" 
+                    className="w-full" 
+                    size="lg"
+                    loading={form.formState.isSubmitting}
+                    loadingText="Registrazione in corso..."
+                  >
+                    Registra il negozio
+                  </LoadingButton>
                 
-                <p className="text-xs text-muted-foreground text-center">
-                  La tua richiesta verrà verificata dal nostro team entro 24-48 ore. 
-                  Ti contatteremo via email per confermare l'attivazione.
-                </p>
-              </form>
+                  <p className="text-xs text-muted-foreground text-center">
+                    La tua richiesta verrà verificata dal nostro team entro 24-48 ore. 
+                    Ti contatteremo via email per confermare l'attivazione.
+                  </p>
+                </form>
+              </Form>
             </CardContent>
           </Card>
         </div>
