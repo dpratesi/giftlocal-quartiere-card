@@ -24,52 +24,52 @@ const ShopCard = ({
 
   return (
     <Link to={`/shop/${id}`}>
-      <Card className="group hover:shadow-hover transition-all duration-300 hover:-translate-y-1 bg-gradient-card border-border/50 overflow-hidden cursor-pointer">
+      <Card className="group hover:shadow-hover transition-all duration-300 hover:-translate-y-1 bg-gradient-card border-border/50 overflow-hidden cursor-pointer h-full">
       <div className="relative">
         <img 
           src={`/placeholder.svg?height=200&width=300&text=${encodeURIComponent(name)}`}
           alt={name}
-          className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+          className="w-full h-40 sm:h-48 object-cover transition-transform duration-300 group-hover:scale-105"
         />
-        <div className="absolute top-3 right-3">
+        <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
           <Button
             variant="ghost"
             size="sm"
-            className="bg-white/80 hover:bg-white text-foreground p-2 rounded-full shadow-sm"
+            className="bg-white/80 hover:bg-white text-foreground p-1.5 sm:p-2 rounded-full shadow-sm"
           >
-            <Heart className="w-4 h-4" />
+            <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
           </Button>
         </div>
-        <div className="absolute top-3 left-3">
-          <Badge variant="secondary" className="bg-local-green text-white">
+        <div className="absolute top-2 sm:top-3 left-2 sm:left-3">
+          <Badge variant="secondary" className="bg-local-green text-white text-xs sm:text-sm">
             {category}
           </Badge>
         </div>
       </div>
 
-      <CardContent className="p-4">
-        <div className="space-y-3">
+      <CardContent className="p-3 sm:p-4 flex-1">
+        <div className="space-y-2 sm:space-y-3">
           <div>
-            <h3 className="font-semibold text-lg text-foreground line-clamp-1">{name}</h3>
-            <p className="text-sm text-muted-foreground flex items-center mt-1">
-              <MapPin className="w-3 h-3 mr-1" />
-              {neighborhood} • {distance}
+            <h3 className="font-semibold text-base sm:text-lg text-foreground line-clamp-1">{name}</h3>
+            <p className="text-xs sm:text-sm text-muted-foreground flex items-center mt-1">
+              <MapPin className="w-3 h-3 mr-1 flex-shrink-0" />
+              <span className="truncate">{neighborhood} • {distance}</span>
             </p>
           </div>
 
           <div className="flex items-center space-x-2">
             <div className="flex items-center">
-              <Star className="w-4 h-4 text-yellow-500 fill-current" />
-              <span className="ml-1 text-sm font-medium">{rating}</span>
+              <Star className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-500 fill-current" />
+              <span className="ml-1 text-xs sm:text-sm font-medium">{rating}</span>
             </div>
-            <span className="text-xs text-muted-foreground">({reviewCount} recensioni)</span>
+            <span className="text-xs text-muted-foreground">({reviewCount})</span>
           </div>
 
-          <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
+          <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{description}</p>
 
           <div className="flex items-center justify-between">
-            <div className="flex items-center text-sm text-foreground">
-              <Euro className="w-4 h-4 mr-1 text-local-green" />
+            <div className="flex items-center text-xs sm:text-sm text-foreground">
+              <Euro className="w-3 h-3 sm:w-4 sm:h-4 mr-1 text-local-green flex-shrink-0" />
               <span className="font-medium">
                 {minPrice === maxPrice ? `${minPrice}` : `${minPrice}-${maxPrice}`}
               </span>
@@ -81,9 +81,9 @@ const ShopCard = ({
         </div>
       </CardContent>
 
-      <CardFooter className="p-4 pt-0">
+      <CardFooter className="p-3 sm:p-4 pt-0">
         <Button 
-          className="w-full bg-primary hover:bg-primary-hover text-primary-foreground transition-colors"
+          className="w-full bg-primary hover:bg-primary-hover text-primary-foreground transition-colors text-sm sm:text-base"
           size="sm"
         >
           Scopri Gift Card

@@ -35,19 +35,19 @@ const Home = () => {
     <div className="bg-background">
       <Header />
       <HeroSection />
-      <div className="container mx-auto px-4 py-6 text-center space-y-4">
+      <div className="container mx-auto px-4 py-6 text-center space-y-6">
         {!city ? (
           <>
-            <h2 className="text-2xl font-display font-bold mb-4">
+            <h2 className="text-xl md:text-2xl font-display font-bold mb-4">
               Scegli la tua città
             </h2>
-            <div className="flex flex-wrap justify-center gap-4">
+            <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-4">
               {["Torino", "Milano", "Roma"].map((c) => (
                 <Button
                   key={c}
                   variant="outline"
                   onClick={() => setCity(c)}
-                  className="px-6 py-3 text-lg"
+                  className="w-full sm:w-auto px-8 py-3 text-base md:text-lg font-medium hover:scale-105 transition-transform"
                 >
                   {c}
                 </Button>
@@ -56,13 +56,13 @@ const Home = () => {
           </>
         ) : (
           <>
-            <h2 className="text-2xl font-display font-bold mb-4">
+            <h2 className="text-xl md:text-2xl font-display font-bold mb-4">
               Scegli una categoria
             </h2>
-            <div className="flex flex-wrap justify-center gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 max-w-4xl mx-auto">
               <LoadingButton
                 variant="outline"
-                className="px-6 py-3 text-lg"
+                className="w-full px-6 py-4 text-base md:text-lg font-medium hover:scale-105 transition-transform"
                 onClick={() => goToShops(null)}
                 loading={isLoading}
                 disabled={isLoading}
@@ -73,7 +73,7 @@ const Home = () => {
                 <LoadingButton
                   key={cat}
                   variant="outline"
-                  className="px-6 py-3 text-lg"
+                  className="w-full px-6 py-4 text-base md:text-lg font-medium hover:scale-105 transition-transform"
                   onClick={() => goToShops(cat)}
                   loading={isLoading}
                   disabled={isLoading}
@@ -82,6 +82,13 @@ const Home = () => {
                 </LoadingButton>
               ))}
             </div>
+            <Button 
+              variant="ghost" 
+              onClick={() => setCity(null)}
+              className="mt-6 text-muted-foreground hover:text-foreground"
+            >
+              ← Cambia città
+            </Button>
           </>
         )}
       </div>

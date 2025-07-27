@@ -157,8 +157,8 @@ const Index = () => {
         </div>
 
         {/* Filters and View Toggle */}
-        <div className="flex flex-col lg:flex-row gap-6 mb-8">
-          <div className="lg:w-1/4">
+        <div className="flex flex-col xl:flex-row gap-6 mb-8">
+          <div className="xl:w-1/4">
             <ShopFilters 
               filters={filters}
               onFiltersChange={setFilters}
@@ -166,8 +166,8 @@ const Index = () => {
             />
           </div>
           
-          <div className="lg:w-3/4">
-            <div className="flex justify-between items-center mb-6">
+          <div className="xl:w-3/4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
               <p className="text-muted-foreground">
                 {filteredShops.length} negozi trovati
               </p>
@@ -176,7 +176,7 @@ const Index = () => {
 
             {/* Shop Display */}
             {view === 'grid' ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 animate-fade-in">
                 {filteredShops.map((shop) => (
                   <div key={shop.id} className="animate-scale-in">
                     <ShopCard {...shop} />
