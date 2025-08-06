@@ -14,6 +14,8 @@ import { LoadingButton } from "@/components/LoadingButton";
 import { toast } from "@/hooks/use-toast";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import Header from "@/components/Header";
+import { createShop } from "@/lib/merchantApi";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Validation schema
 const shopSchema = z.object({
@@ -24,6 +26,7 @@ const shopSchema = z.object({
   phone: z.string().regex(/^(\+39\s?)?[0-9\s]{10,}$/, "Inserisci un numero di telefono valido"),
   address: z.string().min(10, "Inserisci un indirizzo completo"),
   neighborhood: z.string().min(2, "Inserisci il quartiere"),
+  city: z.string().min(2, "Inserisci la città").default("Roma"),
   postalCode: z.string().regex(/^[0-9]{5}$/, "Il CAP deve contenere 5 cifre"),
   vat: z.string().optional(),
   iban: z.string().optional(),
@@ -35,6 +38,7 @@ type ShopFormData = z.infer<typeof shopSchema>;
 
 const RegisterShop = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   
   const form = useForm<ShopFormData>({
     resolver: zodResolver(shopSchema),
@@ -46,6 +50,7 @@ const RegisterShop = () => {
       phone: '',
       address: '',
       neighborhood: '',
+      city: '',
       postalCode: '',
       vat: '',
       iban: '',
@@ -56,16 +61,39 @@ const RegisterShop = () => {
 
   const onSubmit = async (data: ShopFormData) => {
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      toast({
-        title: "Registrazione completata!",
-        description: "Il tuo negozio è stato registrato. Riceverai una conferma via email entro 24-48 ore.",
+      if (!user) {
+        toast({
+          title: "Errore",
+          description: "Devi essere autenticato per registrare un negozio.",
+          variant: "destructive",
+        });
+        navigate('/merchant/login');
+        return;
+      }
+
+      await createShop({
+        name: data.shopName,
+        category: data.category,
+        description: data.description,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
+        neighborhood: data.neighborhood,
+        city: data.city,
+        postalCode: data.postalCode,
+        vat: data.vat,
+        iban: data.iban,
+        ownerId: user.id,
       });
       
-      navigate('/merchant/login');
+      toast({
+        title: "Negozio registrato!",
+        description: "Il tuo negozio è stato registrato con successo e è ora attivo.",
+      });
+      
+      navigate('/merchant/shops');
     } catch (error) {
+      console.error('Registration error:', error);
       toast({
         title: "Errore di registrazione",
         description: "Si è verificato un errore. Riprova più tardi.",
@@ -241,7 +269,7 @@ const RegisterShop = () => {
                     )}
                   />
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <FormField
                       control={form.control}
                       name="neighborhood"
@@ -250,6 +278,20 @@ const RegisterShop = () => {
                           <FormLabel>Quartiere *</FormLabel>
                           <FormControl>
                             <Input placeholder="es. Centro Storico" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="city"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Città *</FormLabel>
+                          <FormControl>
+                            <Input placeholder="es. Roma" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -377,8 +419,7 @@ const RegisterShop = () => {
                   </LoadingButton>
                 
                   <p className="text-xs text-muted-foreground text-center">
-                    La tua richiesta verrà verificata dal nostro team entro 24-48 ore. 
-                    Ti contatteremo via email per confermare l'attivazione.
+                    Il tuo negozio sarà immediatamente attivo e disponibile per le vendite.
                   </p>
                 </form>
               </Form>

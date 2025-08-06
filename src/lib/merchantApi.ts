@@ -208,3 +208,42 @@ export async function updateShopGiftCardPrices(shopId: string, prices: number[])
 
   return data;
 }
+
+// Create a new shop
+export async function createShop(shopData: {
+  name: string;
+  category: string;
+  description: string;
+  email: string;
+  phone: string;
+  address: string;
+  neighborhood: string;
+  postalCode: string;
+  city: string;
+  vat?: string;
+  iban?: string;
+  ownerId: string;
+}) {
+  const { data, error } = await supabase
+    .from('shops')
+    .insert({
+      name: shopData.name,
+      category: shopData.category,
+      description: shopData.description,
+      neighborhood: shopData.neighborhood,
+      city: shopData.city,
+      owner_id: shopData.ownerId,
+      image: '/placeholder.svg', // Default image for now
+      distance: '0 km', // Default distance
+      rating: 0,
+      review_count: 0,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to create shop: ${error.message}`);
+  }
+
+  return data;
+}
