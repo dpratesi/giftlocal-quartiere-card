@@ -7,11 +7,15 @@ import Header from "@/components/Header";
 
 interface OrderData {
   orderId: string;
+  giftCardCode: string;
   shopName: string;
   amount: number;
   email: string;
   recipientEmail: string;
+  recipientName: string;
   message: string;
+  purchaseDate: string;
+  expiryDate: string;
 }
 
 const OrderConfirmation = () => {
@@ -32,8 +36,8 @@ const OrderConfirmation = () => {
   }
 
   const generateQRCode = () => {
-    // Mock QR code generation
-    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=GIFTCARD:${orderData.orderId}:${orderData.amount}`;
+    // Generate QR code with the actual gift card code
+    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=GIFTCARD:${orderData.giftCardCode}:${orderData.amount}`;
   };
 
   return (
@@ -66,7 +70,7 @@ const OrderConfirmation = () => {
                 </div>
                 <div>
                   <span className="text-muted-foreground">Data:</span>
-                  <p className="font-medium">{new Date().toLocaleDateString('it-IT')}</p>
+                  <p className="font-medium">{new Date(orderData.purchaseDate).toLocaleDateString('it-IT')}</p>
                 </div>
                 <div>
                   <span className="text-muted-foreground">Negozio:</span>
@@ -118,7 +122,7 @@ const OrderConfirmation = () => {
                 
                 <div className="text-center">
                   <p className="text-white/80 text-sm">Codice gift card</p>
-                  <p className="font-mono text-lg tracking-wider">{orderData.orderId}</p>
+                  <p className="font-mono text-lg tracking-wider">{orderData.giftCardCode}</p>
                 </div>
               </div>
             </CardContent>

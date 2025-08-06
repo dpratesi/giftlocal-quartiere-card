@@ -7,36 +7,21 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
+import { useGiftCards } from "@/hooks/useGiftCards";
+import { format } from "date-fns";
+import { it } from "date-fns/locale";
 
 const Profile = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { giftCards, isLoading: isLoadingGiftCards } = useGiftCards();
 
   const handleLogout = async () => {
     await logout();
     navigate("/");
   };
 
-  // Mock data for gift cards and favorites (will be replaced with real data later)
-  const userGiftCards = [
-    {
-      id: "1",
-      shopName: "Caffè Centrale",
-      amount: 25,
-      remaining: 15,
-      purchaseDate: "2024-01-15",
-      expiryDate: "2024-07-15"
-    },
-    {
-      id: "2", 
-      shopName: "Libreria del Corso",
-      amount: 30,
-      remaining: 30,
-      purchaseDate: "2024-01-10",
-      expiryDate: "2024-07-10"
-    }
-  ];
-
+  // Mock data for favorites (will be replaced with real data later)
   const favoriteShops = [
     { id: "1", name: "Caffè Centrale", category: "Caffetteria" },
     { id: "3", name: "Trattoria da Mario", category: "Ristoranti" },
@@ -157,69 +142,84 @@ const Profile = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      {userGiftCards.map((card) => (
-                        <div key={card.id} className="border border-border rounded-lg p-4 hover:border-primary transition-colors">
-                          <div className="flex items-start justify-between mb-3">
-                            <div>
-                              <h3 className="font-semibold">{card.shopName}</h3>
-                              <p className="text-sm text-muted-foreground">
-                                Acquistata il {new Date(card.purchaseDate).toLocaleDateString('it-IT')}
-                              </p>
+                    {isLoadingGiftCards ? (
+                      <div className="text-center py-8">
+                        <p className="text-muted-foreground">Caricamento gift card...</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {giftCards.map((card) => (
+                          <div key={card.id} className="border border-border rounded-lg p-4 hover:border-primary transition-colors">
+                            <div className="flex items-start justify-between mb-3">
+                              <div>
+                                <h3 className="font-semibold">{card.shop?.name || 'Negozio'}</h3>
+                                <p className="text-sm text-muted-foreground">
+                                  Acquistata il {format(new Date(card.purchase_date), 'dd MMMM yyyy', { locale: it })}
+                                </p>
+                                <p className="text-xs text-muted-foreground font-mono">
+                                  Codice: {card.gift_card_code}
+                                </p>
+                              </div>
+                              <Badge variant={card.status === 'active' ? "default" : "secondary"}>
+                                {card.status === 'active' ? "Attiva" : card.status === 'used' ? "Utilizzata" : card.status === 'expired' ? "Scaduta" : "Annullata"}
+                              </Badge>
                             </div>
-                            <Badge variant={card.remaining > 0 ? "default" : "secondary"}>
-                              {card.remaining > 0 ? "Attiva" : "Utilizzata"}
-                            </Badge>
-                          </div>
-                          
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-4">
-                              <div>
-                                <p className="text-sm text-muted-foreground">Valore</p>
-                                <p className="font-semibold">{card.amount}€</p>
+                            
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-4">
+                                <div>
+                                  <p className="text-sm text-muted-foreground">Valore</p>
+                                  <p className="font-semibold">€{card.amount}</p>
+                                </div>
+                                <div>
+                                  <p className="text-sm text-muted-foreground">Rimangono</p>
+                                  <p className="font-semibold text-primary">€{card.remaining_value}</p>
+                                </div>
+                                <div>
+                                  <p className="text-sm text-muted-foreground">Scade il</p>
+                                  <p className="font-semibold">{format(new Date(card.expiry_date), 'dd MMMM yyyy', { locale: it })}</p>
+                                </div>
                               </div>
-                              <div>
-                                <p className="text-sm text-muted-foreground">Rimangono</p>
-                                <p className="font-semibold text-primary">{card.remaining}€</p>
-                              </div>
-                              <div>
-                                <p className="text-sm text-muted-foreground">Scade il</p>
-                                <p className="font-semibold">{new Date(card.expiryDate).toLocaleDateString('it-IT')}</p>
+                              
+                              <div className="flex gap-2">
+                                <Button size="sm" variant="outline">Dettagli</Button>
+                                {card.status === 'active' && card.remaining_value > 0 && (
+                                  <Button size="sm">Usa ora</Button>
+                                )}
                               </div>
                             </div>
                             
-                            <div className="flex gap-2">
-                              <Button size="sm" variant="outline">Dettagli</Button>
-                              {card.remaining > 0 && (
-                                <Button size="sm">Usa ora</Button>
-                              )}
+                            {card.message && (
+                              <div className="mt-3 p-2 bg-muted rounded text-sm">
+                                <p className="text-muted-foreground">Messaggio: {card.message}</p>
+                              </div>
+                            )}
+                            
+                            {/* Progress bar */}
+                            <div className="mt-3">
+                              <div className="w-full bg-muted rounded-full h-2">
+                                <div 
+                                  className="bg-primary h-2 rounded-full transition-all" 
+                                  style={{ width: `${(card.remaining_value / card.amount) * 100}%` }}
+                                ></div>
+                              </div>
                             </div>
                           </div>
-                          
-                          {/* Progress bar */}
-                          <div className="mt-3">
-                            <div className="w-full bg-muted rounded-full h-2">
-                              <div 
-                                className="bg-primary h-2 rounded-full transition-all" 
-                                style={{ width: `${(card.remaining / card.amount) * 100}%` }}
-                              ></div>
-                            </div>
+                        ))}
+                        
+                        {giftCards.length === 0 && (
+                          <div className="text-center py-8">
+                            <CreditCard className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                            <p className="text-muted-foreground mb-4">
+                              Non hai ancora acquistato nessuna gift card
+                            </p>
+                            <Link to="/shops">
+                              <Button>Esplora negozi</Button>
+                            </Link>
                           </div>
-                        </div>
-                      ))}
-                      
-                      {userGiftCards.length === 0 && (
-                        <div className="text-center py-8">
-                          <CreditCard className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                          <p className="text-muted-foreground mb-4">
-                            Non hai ancora acquistato nessuna gift card
-                          </p>
-                          <Link to="/shops">
-                            <Button>Esplora negozi</Button>
-                          </Link>
-                        </div>
-                      )}
-                    </div>
+                        )}
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               )}

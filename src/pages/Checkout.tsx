@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, CreditCard, User, Mail, MapPin } from "lucide-react";
+import { purchaseGiftCard } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -25,6 +27,7 @@ const Checkout = () => {
     lastName: "",
     phone: "",
     recipientEmail: "",
+    recipientName: "",
     message: "",
     cardNumber: "4532 1234 5678 9012",
     expiryDate: "12/26",
@@ -53,24 +56,49 @@ const Checkout = () => {
     }));
   };
 
+  const { toast } = useToast();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
     
-    // Simulate payment processing
-    setTimeout(() => {
-      const orderId = `GC-${Date.now()}`;
-      navigate("/order-confirmation", {
+    try {
+      // Actually purchase the gift card
+      const purchasedGiftCard = await purchaseGiftCard({
+        shopId: checkoutData.shopId,
+        amount: checkoutData.amount,
+        email: formData.email,
+        recipientEmail: formData.recipientEmail || undefined,
+        recipientName: formData.recipientName || undefined,
+        message: formData.message || undefined
+      });
+      
+      setIsProcessing(false);
+      
+      // Navigate to order confirmation with real order data
+      navigate('/order-confirmation', {
         state: {
-          orderId,
+          orderId: purchasedGiftCard.id,
+          giftCardCode: purchasedGiftCard.gift_card_code,
           shopName: checkoutData.shopName,
           amount: checkoutData.amount,
           email: formData.email,
-          recipientEmail: formData.recipientEmail || formData.email,
-          message: formData.message
+          recipientEmail: formData.recipientEmail,
+          recipientName: formData.recipientName,
+          message: formData.message,
+          purchaseDate: purchasedGiftCard.purchase_date,
+          expiryDate: purchasedGiftCard.expiry_date
         }
       });
-    }, 2000);
+    } catch (error) {
+      setIsProcessing(false);
+      toast({
+        title: "Errore",
+        description: "Si è verificato un errore durante l'acquisto. Riprova.",
+        variant: "destructive"
+      });
+      console.error('Purchase error:', error);
+    }
   };
 
   return (
@@ -152,6 +180,16 @@ const Checkout = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="recipientName">Nome destinatario (opzionale)</Label>
+                  <Input
+                    id="recipientName"
+                    name="recipientName"
+                    value={formData.recipientName}
+                    onChange={handleInputChange}
+                    placeholder="Nome di chi riceverà la gift card"
+                  />
+                </div>
                 <div>
                   <Label htmlFor="recipientEmail">Email destinatario (opzionale)</Label>
                   <Input

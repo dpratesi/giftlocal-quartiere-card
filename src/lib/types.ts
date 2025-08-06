@@ -11,3 +11,22 @@ export interface Shop {
   description: string;
   city: string;
 }
+
+export interface PurchasedGiftCard {
+  id: string;
+  user_id: string;
+  shop_id: string;
+  gift_card_code: string;
+  amount: number;
+  remaining_value: number;
+  recipient_email?: string;
+  recipient_name?: string;
+  message?: string;
+  status: 'active' | 'used' | 'expired' | 'cancelled';
+  purchase_date: string;
+  expiry_date: string;
+  shop?: {
+    name: string;
+    image: string;
+  };
+}
