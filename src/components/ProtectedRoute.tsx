@@ -28,7 +28,8 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   if (requireMerchant && !isMerchant) {
-    return <Navigate to="/merchant/login" replace />;
+    // If user is authenticated but not a merchant, redirect to login-select with message
+    return <Navigate to="/login-select" replace />;
   }
 
   if (requireCustomer && !isCustomer) {

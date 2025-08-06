@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
+import { useEffect } from "react";
 
 const MerchantLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,8 +25,33 @@ const MerchantLogin = () => {
     password: "",
     confirmPassword: ""
   });
-  const { login, signup, isLoading } = useAuth();
+  const { login, signup, isLoading, user, logout } = useAuth();
   const navigate = useNavigate();
+
+  // Check if user is already logged in as customer and offer logout
+  useEffect(() => {
+    if (user && user.type === 'customer') {
+      toast({
+        title: "Account cliente già connesso",
+        description: "Devi disconnetterti dall'account cliente per accedere come merchant.",
+        action: (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={async () => {
+              await logout();
+              toast({
+                title: "Disconnesso",
+                description: "Ora puoi accedere come merchant.",
+              });
+            }}
+          >
+            Disconnetti
+          </Button>
+        ),
+      });
+    }
+  }, [user, logout]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +62,8 @@ const MerchantLogin = () => {
         title: "Login effettuato",
         description: "Benvenuto nella dashboard merchant!",
       });
-      navigate("/merchant/dashboard");
+      // Use replace to avoid back button issues
+      navigate("/merchant/dashboard", { replace: true });
     } else {
       toast({
         title: "Errore di login",
