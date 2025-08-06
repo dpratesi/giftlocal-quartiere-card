@@ -393,3 +393,49 @@ export async function redeemGiftCard(giftCardCode: string, merchantId: string, a
     fullyUsed: newStatus === 'used'
   };
 }
+
+// Fetch all gift cards for merchant (purchased by customers)
+export async function fetchMerchantGiftCards(merchantId: string, shopId?: string) {
+  let query = supabase
+    .from('purchased_gift_cards')
+    .select(`
+      *,
+      shops!inner(name, owner_id)
+    `)
+    .eq('shops.owner_id', merchantId)
+    .order('purchase_date', { ascending: false });
+
+  if (shopId) {
+    query = query.eq('shop_id', shopId);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw new Error(`Failed to fetch merchant gift cards: ${error.message}`);
+  }
+
+  // Fetch customer emails separately
+  const userIds = data?.map(card => card.user_id) || [];
+  const { data: usersData } = await supabase
+    .from('profiles')
+    .select('id, email')
+    .in('id', userIds);
+
+  const usersMap = new Map(usersData?.map(user => [user.id, user.email]) || []);
+
+  return data?.map(card => ({
+    id: card.id,
+    code: card.gift_card_code,
+    amount: card.amount,
+    remainingValue: card.remaining_value,
+    status: card.status,
+    customer: usersMap.get(card.user_id) || 'N/A',
+    purchaseDate: new Date(card.purchase_date).toLocaleDateString('it-IT'),
+    expiryDate: new Date(card.expiry_date).toLocaleDateString('it-IT'),
+    shopName: card.shops?.name || 'N/A',
+    recipientName: card.recipient_name,
+    recipientEmail: card.recipient_email,
+    message: card.message
+  })) || [];
+}

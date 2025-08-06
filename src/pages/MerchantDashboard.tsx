@@ -33,7 +33,7 @@ const MerchantDashboard = () => {
   const navigate = useNavigate();
   const { user, logout, isAuthenticated, isMerchant } = useAuth();
   const [selectedShopId, setSelectedShopId] = useState<string | undefined>(undefined);
-  const { stats, orders, shopOptions, isLoading, error } = useMerchantDashboard(selectedShopId);
+  const { stats, orders, shopOptions, giftCards, isLoading, error } = useMerchantDashboard(selectedShopId);
 
   console.log('MerchantDashboard render:', { 
     user: user?.id, 
@@ -272,31 +272,140 @@ const MerchantDashboard = () => {
           </TabsContent>
 
           <TabsContent value="giftcards">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Gestione Gift Card</CardTitle>
-                <GiftCardModal onGiftCardCreated={(giftCard) => console.log('New gift card:', giftCard)} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Gift Card Attive */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    <span className="flex items-center">
+                      <CreditCard className="w-5 h-5 mr-2 text-green-600" />
+                      Gift Card Attive
+                    </span>
+                    <Badge variant="default" className="bg-green-100 text-green-800">
+                      {giftCards.filter(card => card.status === 'active').length}
+                    </Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3 max-h-96 overflow-y-auto">
+                    {giftCards.filter(card => card.status === 'active').length === 0 ? (
+                      <div className="text-center py-8">
+                        <p className="text-muted-foreground">Nessuna gift card attiva</p>
+                      </div>
+                    ) : (
+                      giftCards
+                        .filter(card => card.status === 'active')
+                        .map((card) => (
+                          <div key={card.id} className="p-3 border border-green-200 rounded-lg bg-green-50">
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1">
+                                <p className="font-mono text-sm font-medium">{card.code}</p>
+                                <p className="text-sm text-muted-foreground">{card.customer}</p>
+                                <p className="text-xs text-muted-foreground">{card.shopName}</p>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-medium text-green-600">€{card.remainingValue}</p>
+                                <p className="text-xs text-muted-foreground">di €{card.amount}</p>
+                                <p className="text-xs text-muted-foreground">{card.purchaseDate}</p>
+                              </div>
+                            </div>
+                            {card.recipientName && (
+                              <div className="mt-2 pt-2 border-t border-green-200">
+                                <p className="text-xs text-muted-foreground">
+                                  Per: {card.recipientName} ({card.recipientEmail})
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        ))
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Gift Card Esaurite */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    <span className="flex items-center">
+                      <CreditCard className="w-5 h-5 mr-2 text-gray-600" />
+                      Gift Card Esaurite
+                    </span>
+                    <Badge variant="secondary">
+                      {giftCards.filter(card => card.status === 'used').length}
+                    </Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3 max-h-96 overflow-y-auto">
+                    {giftCards.filter(card => card.status === 'used').length === 0 ? (
+                      <div className="text-center py-8">
+                        <p className="text-muted-foreground">Nessuna gift card esaurita</p>
+                      </div>
+                    ) : (
+                      giftCards
+                        .filter(card => card.status === 'used')
+                        .map((card) => (
+                          <div key={card.id} className="p-3 border border-gray-200 rounded-lg bg-gray-50">
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1">
+                                <p className="font-mono text-sm font-medium text-gray-600">{card.code}</p>
+                                <p className="text-sm text-muted-foreground">{card.customer}</p>
+                                <p className="text-xs text-muted-foreground">{card.shopName}</p>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-medium text-gray-600">€{card.amount}</p>
+                                <p className="text-xs text-muted-foreground line-through">€0 rimanente</p>
+                                <p className="text-xs text-muted-foreground">{card.purchaseDate}</p>
+                              </div>
+                            </div>
+                            {card.recipientName && (
+                              <div className="mt-2 pt-2 border-t border-gray-200">
+                                <p className="text-xs text-muted-foreground">
+                                  Per: {card.recipientName} ({card.recipientEmail})
+                                </p>
+                              </div>
+                            )}
+                            <div className="mt-2">
+                              <Badge variant="secondary" className="text-xs">
+                                Completamente utilizzata
+                              </Badge>
+                            </div>
+                          </div>
+                        ))
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Statistiche Gift Card */}
+            <Card className="mt-6">
+              <CardHeader>
+                <CardTitle>Statistiche Gift Card</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground">Gestione Gift Card</p>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    Le gift card vengono create automaticamente quando imposti i prezzi per i tuoi negozi
-                  </p>
-                  <div className="mt-4">
-                    <p className="text-lg font-semibold">Gift Card vendute: {stats.giftCardsSold}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {selectedShopId ? "Per questo negozio" : "Totale per tutti i negozi"}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-green-600">{giftCards.filter(card => card.status === 'active').length}</p>
+                    <p className="text-sm text-muted-foreground">Gift Card Attive</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Valore residuo: €{giftCards.filter(card => card.status === 'active').reduce((sum, card) => sum + card.remainingValue, 0).toFixed(2)}
                     </p>
                   </div>
-                  <div className="mt-6">
-                    <Button 
-                      variant="outline" 
-                      onClick={() => navigate('/merchant/shops')}
-                    >
-                      <Store className="mr-2 h-4 w-4" />
-                      Gestisci Negozi
-                    </Button>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-gray-600">{giftCards.filter(card => card.status === 'used').length}</p>
+                    <p className="text-sm text-muted-foreground">Gift Card Esaurite</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Valore utilizzato: €{giftCards.filter(card => card.status === 'used').reduce((sum, card) => sum + card.amount, 0).toFixed(2)}
+                    </p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-blue-600">{giftCards.length}</p>
+                    <p className="text-sm text-muted-foreground">Totale Gift Card</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Valore totale: €{giftCards.reduce((sum, card) => sum + card.amount, 0).toFixed(2)}
+                    </p>
                   </div>
                 </div>
               </CardContent>

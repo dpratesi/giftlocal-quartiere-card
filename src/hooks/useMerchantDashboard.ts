@@ -4,6 +4,7 @@ import {
   fetchMerchantStats, 
   fetchMerchantOrders, 
   fetchMerchantShopsOptions,
+  fetchMerchantGiftCards,
   type MerchantStats,
   type MerchantOrder,
   type ShopOption
@@ -42,6 +43,16 @@ export function useMerchantDashboard(selectedShopId?: string) {
     enabled: !!user?.id && user?.type === 'merchant',
   });
 
+  const { data: giftCards = [], isLoading: giftCardsLoading, error: giftCardsError } = useQuery({
+    queryKey: ['merchant-gift-cards', user?.id, selectedShopId],
+    queryFn: () => {
+      console.log('Fetching merchant gift cards for user:', user?.id, 'shop:', selectedShopId);
+      if (!user?.id) throw new Error('User not authenticated');
+      return fetchMerchantGiftCards(user.id, selectedShopId);
+    },
+    enabled: !!user?.id && user?.type === 'merchant',
+  });
+
   console.log('Hook state:', { 
     user: user?.id, 
     userType: user?.type, 
@@ -57,7 +68,8 @@ export function useMerchantDashboard(selectedShopId?: string) {
     stats,
     orders,
     shopOptions,
-    isLoading: statsLoading || ordersLoading || shopsLoading,
-    error: statsError || ordersError || shopsError
+    giftCards,
+    isLoading: statsLoading || ordersLoading || shopsLoading || giftCardsLoading,
+    error: statsError || ordersError || shopsError || giftCardsError
   };
 }
