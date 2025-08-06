@@ -224,47 +224,44 @@ const Checkout = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="cardHolder">Intestatario carta</Label>
+                  <Label htmlFor="cardHolder">Intestatario carta (opzionale - demo)</Label>
                   <Input
                     id="cardHolder"
                     name="cardHolder"
                     value={formData.cardHolder}
                     onChange={handleInputChange}
-                    required
+                    placeholder="Nome per demo"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="cardNumber">Numero carta</Label>
+                  <Label htmlFor="cardNumber">Numero carta (opzionale - demo)</Label>
                   <Input
                     id="cardNumber"
                     name="cardNumber"
                     value={formData.cardNumber}
                     onChange={handleInputChange}
-                    placeholder="1234 5678 9012 3456"
-                    required
+                    placeholder="1234 5678 9012 3456 (demo)"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="expiryDate">Scadenza</Label>
+                    <Label htmlFor="expiryDate">Scadenza (opzionale - demo)</Label>
                     <Input
                       id="expiryDate"
                       name="expiryDate"
                       value={formData.expiryDate}
                       onChange={handleInputChange}
                       placeholder="MM/AA"
-                      required
                     />
                   </div>
                   <div>
-                    <Label htmlFor="cvv">CVV</Label>
+                    <Label htmlFor="cvv">CVV (opzionale - demo)</Label>
                     <Input
                       id="cvv"
                       name="cvv"
                       value={formData.cvv}
                       onChange={handleInputChange}
                       placeholder="123"
-                      required
                     />
                   </div>
                 </div>
@@ -302,16 +299,17 @@ const Checkout = () => {
                     type="submit"
                     className="w-full"
                     size="lg"
-                    disabled={isProcessing}
+                    disabled={isProcessing || !formData.email || !formData.firstName || !formData.lastName}
                   >
                     {isProcessing ? "Elaborazione..." : "Completa acquisto"}
                   </Button>
                 </form>
                 
                 <div className="text-xs text-muted-foreground text-center space-y-1">
-                  <p>🔒 Pagamento sicuro con crittografia SSL</p>
+                  <p>🔒 Pagamento sicuro simulato (demo)</p>
                   <p>📧 Gift card inviata via email</p>
                   <p>⚡ Attivazione immediata</p>
+                  <p className="text-primary font-medium">Inserisci solo i dati personali - i dati carta sono opzionali per la demo</p>
                 </div>
               </CardContent>
             </Card>
