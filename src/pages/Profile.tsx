@@ -21,6 +21,95 @@ const Profile = () => {
     navigate("/");
   };
 
+  // Categorize gift cards
+  const activeGiftCards = giftCards.filter(card => {
+    const isNotExpired = new Date(card.expiry_date) > new Date();
+    const hasRemainingValue = card.remaining_value > 0;
+    return card.status === 'active' && isNotExpired && hasRemainingValue;
+  });
+
+  const inactiveGiftCards = giftCards.filter(card => {
+    const isExpired = new Date(card.expiry_date) <= new Date();
+    const hasNoRemainingValue = card.remaining_value === 0;
+    return card.status !== 'active' || isExpired || hasNoRemainingValue;
+  });
+
+  const getInactiveReason = (card: any) => {
+    if (card.status !== 'active') return card.status;
+    if (card.remaining_value === 0) return 'estinta';
+    if (new Date(card.expiry_date) <= new Date()) return 'scaduta';
+    return 'inattiva';
+  };
+
+  const renderGiftCard = (card: any, isActive: boolean) => (
+    <div key={card.id} className="border border-border rounded-lg p-4 hover:border-primary transition-colors">
+      <div className="flex items-start justify-between mb-3">
+        <div>
+          <h3 className="font-semibold">{card.shop?.name || 'Negozio'}</h3>
+          <p className="text-sm text-muted-foreground">
+            Acquistata il {format(new Date(card.purchase_date), 'dd MMMM yyyy', { locale: it })}
+          </p>
+          <p className="text-xs text-muted-foreground font-mono">
+            Codice: {card.gift_card_code}
+          </p>
+        </div>
+        <Badge variant={isActive ? "default" : "secondary"}>
+          {isActive ? "Attiva" : 
+            getInactiveReason(card) === 'estinta' ? "Estinta" :
+            getInactiveReason(card) === 'scaduta' ? "Scaduta" :
+            getInactiveReason(card) === 'used' ? "Utilizzata" :
+            getInactiveReason(card) === 'expired' ? "Scaduta" :
+            getInactiveReason(card) === 'cancelled' ? "Annullata" : "Inattiva"
+          }
+        </Badge>
+      </div>
+      
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <div>
+            <p className="text-sm text-muted-foreground">Valore</p>
+            <p className="font-semibold">€{card.amount}</p>
+          </div>
+          <div>
+            <p className="text-sm text-muted-foreground">Rimangono</p>
+            <p className={`font-semibold ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
+              €{card.remaining_value}
+            </p>
+          </div>
+          <div>
+            <p className="text-sm text-muted-foreground">Scade il</p>
+            <p className={`font-semibold ${new Date(card.expiry_date) <= new Date() ? 'text-red-600' : ''}`}>
+              {format(new Date(card.expiry_date), 'dd MMMM yyyy', { locale: it })}
+            </p>
+          </div>
+        </div>
+        
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline">Dettagli</Button>
+          {isActive && (
+            <Button size="sm">Usa ora</Button>
+          )}
+        </div>
+      </div>
+      
+      {card.message && (
+        <div className="mt-3 p-2 bg-muted rounded text-sm">
+          <p className="text-muted-foreground">Messaggio: {card.message}</p>
+        </div>
+      )}
+      
+      {/* Progress bar */}
+      <div className="mt-3">
+        <div className="w-full bg-muted rounded-full h-2">
+          <div 
+            className={`h-2 rounded-full transition-all ${isActive ? 'bg-primary' : 'bg-muted-foreground'}`}
+            style={{ width: `${(card.remaining_value / card.amount) * 100}%` }}
+          ></div>
+        </div>
+      </div>
+    </div>
+  );
+
   // Mock data for favorites (will be replaced with real data later)
   const favoriteShops = [
     { id: "1", name: "Caffè Centrale", category: "Caffetteria" },
@@ -146,76 +235,41 @@ const Profile = () => {
                       <div className="text-center py-8">
                         <p className="text-muted-foreground">Caricamento gift card...</p>
                       </div>
+                    ) : giftCards.length === 0 ? (
+                      <div className="text-center py-8">
+                        <CreditCard className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                        <p className="text-muted-foreground mb-4">
+                          Non hai ancora acquistato nessuna gift card
+                        </p>
+                        <Link to="/shops">
+                          <Button>Esplora negozi</Button>
+                        </Link>
+                      </div>
                     ) : (
-                      <div className="space-y-4">
-                        {giftCards.map((card) => (
-                          <div key={card.id} className="border border-border rounded-lg p-4 hover:border-primary transition-colors">
-                            <div className="flex items-start justify-between mb-3">
-                              <div>
-                                <h3 className="font-semibold">{card.shop?.name || 'Negozio'}</h3>
-                                <p className="text-sm text-muted-foreground">
-                                  Acquistata il {format(new Date(card.purchase_date), 'dd MMMM yyyy', { locale: it })}
-                                </p>
-                                <p className="text-xs text-muted-foreground font-mono">
-                                  Codice: {card.gift_card_code}
-                                </p>
-                              </div>
-                              <Badge variant={card.status === 'active' ? "default" : "secondary"}>
-                                {card.status === 'active' ? "Attiva" : card.status === 'used' ? "Utilizzata" : card.status === 'expired' ? "Scaduta" : "Annullata"}
-                              </Badge>
-                            </div>
-                            
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center space-x-4">
-                                <div>
-                                  <p className="text-sm text-muted-foreground">Valore</p>
-                                  <p className="font-semibold">€{card.amount}</p>
-                                </div>
-                                <div>
-                                  <p className="text-sm text-muted-foreground">Rimangono</p>
-                                  <p className="font-semibold text-primary">€{card.remaining_value}</p>
-                                </div>
-                                <div>
-                                  <p className="text-sm text-muted-foreground">Scade il</p>
-                                  <p className="font-semibold">{format(new Date(card.expiry_date), 'dd MMMM yyyy', { locale: it })}</p>
-                                </div>
-                              </div>
-                              
-                              <div className="flex gap-2">
-                                <Button size="sm" variant="outline">Dettagli</Button>
-                                {card.status === 'active' && card.remaining_value > 0 && (
-                                  <Button size="sm">Usa ora</Button>
-                                )}
-                              </div>
-                            </div>
-                            
-                            {card.message && (
-                              <div className="mt-3 p-2 bg-muted rounded text-sm">
-                                <p className="text-muted-foreground">Messaggio: {card.message}</p>
-                              </div>
-                            )}
-                            
-                            {/* Progress bar */}
-                            <div className="mt-3">
-                              <div className="w-full bg-muted rounded-full h-2">
-                                <div 
-                                  className="bg-primary h-2 rounded-full transition-all" 
-                                  style={{ width: `${(card.remaining_value / card.amount) * 100}%` }}
-                                ></div>
-                              </div>
+                      <div className="space-y-6">
+                        {/* Active Gift Cards */}
+                        {activeGiftCards.length > 0 && (
+                          <div>
+                            <h3 className="text-lg font-semibold mb-3 text-green-600 flex items-center">
+                              <CreditCard className="w-5 h-5 mr-2" />
+                              Gift Card Attive ({activeGiftCards.length})
+                            </h3>
+                            <div className="space-y-4">
+                              {activeGiftCards.map((card) => renderGiftCard(card, true))}
                             </div>
                           </div>
-                        ))}
-                        
-                        {giftCards.length === 0 && (
-                          <div className="text-center py-8">
-                            <CreditCard className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                            <p className="text-muted-foreground mb-4">
-                              Non hai ancora acquistato nessuna gift card
-                            </p>
-                            <Link to="/shops">
-                              <Button>Esplora negozi</Button>
-                            </Link>
+                        )}
+
+                        {/* Inactive Gift Cards */}
+                        {inactiveGiftCards.length > 0 && (
+                          <div>
+                            <h3 className="text-lg font-semibold mb-3 text-muted-foreground flex items-center">
+                              <CreditCard className="w-5 h-5 mr-2" />
+                              Gift Card Disattive ({inactiveGiftCards.length})
+                            </h3>
+                            <div className="space-y-4">
+                              {inactiveGiftCards.map((card) => renderGiftCard(card, false))}
+                            </div>
                           </div>
                         )}
                       </div>
