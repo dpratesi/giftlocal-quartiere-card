@@ -264,3 +264,117 @@ export async function createShop(shopData: {
 
   return shop;
 }
+
+// Verify gift card by code
+export async function verifyGiftCard(giftCardCode: string) {
+  const { data, error } = await supabase
+    .from('purchased_gift_cards')
+    .select(`
+      *,
+      shops!inner(name, owner_id)
+    `)
+    .eq('gift_card_code', giftCardCode.toUpperCase())
+    .single();
+
+  if (error) {
+    if (error.code === 'PGRST116') {
+      return { valid: false, error: "Gift card non trovata" };
+    }
+    throw new Error(`Failed to verify gift card: ${error.message}`);
+  }
+
+  if (!data) {
+    return { valid: false, error: "Gift card non trovata" };
+  }
+
+  if (data.status === 'used') {
+    return { 
+      valid: false, 
+      error: "Gift card già utilizzata",
+      giftCard: data
+    };
+  }
+
+  if (data.status === 'expired') {
+    return { 
+      valid: false, 
+      error: "Gift card scaduta",
+      giftCard: data
+    };
+  }
+
+  if (new Date(data.expiry_date) < new Date()) {
+    return { 
+      valid: false, 
+      error: "Gift card scaduta",
+      giftCard: data
+    };
+  }
+
+  // Get customer email separately
+  const { data: customerData } = await supabase
+    .from('profiles')
+    .select('email')
+    .eq('id', data.user_id)
+    .single();
+
+  return {
+    valid: true,
+    giftCard: {
+      code: data.gift_card_code,
+      amount: data.remaining_value,
+      status: data.status,
+      customer: customerData?.email || 'N/A',
+      purchaseDate: new Date(data.purchase_date).toLocaleDateString('it-IT'),
+      shopName: data.shops?.name || 'N/A',
+      expiryDate: new Date(data.expiry_date).toLocaleDateString('it-IT')
+    }
+  };
+}
+
+// Redeem gift card
+export async function redeemGiftCard(giftCardCode: string, merchantId: string) {
+  // First verify the gift card and check if merchant owns the shop
+  const { data: giftCardData, error: fetchError } = await supabase
+    .from('purchased_gift_cards')
+    .select(`
+      *,
+      shops!inner(name, owner_id)
+    `)
+    .eq('gift_card_code', giftCardCode.toUpperCase())
+    .single();
+
+  if (fetchError || !giftCardData) {
+    throw new Error('Gift card non trovata');
+  }
+
+  // Check if merchant owns the shop
+  if (giftCardData.shops?.owner_id !== merchantId) {
+    throw new Error('Non sei autorizzato a utilizzare questa gift card');
+  }
+
+  // Check if already used
+  if (giftCardData.status === 'used') {
+    throw new Error('Gift card già utilizzata');
+  }
+
+  // Update gift card status to used
+  const { error: updateError } = await supabase
+    .from('purchased_gift_cards')
+    .update({ 
+      status: 'used',
+      remaining_value: 0,
+      updated_at: new Date().toISOString()
+    })
+    .eq('gift_card_code', giftCardCode.toUpperCase());
+
+  if (updateError) {
+    throw new Error(`Failed to redeem gift card: ${updateError.message}`);
+  }
+
+  return {
+    success: true,
+    amount: giftCardData.amount,
+    code: giftCardCode
+  };
+}

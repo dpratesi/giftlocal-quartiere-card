@@ -15,6 +15,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { QrCode, CreditCard, CheckCircle, AlertCircle, Scan } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { verifyGiftCard, redeemGiftCard } from "@/lib/merchantApi";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface QRRedemptionModalProps {
   onRedemption?: (giftCardCode: string, amount: number) => void;
@@ -26,42 +28,17 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
   const [giftCardCode, setGiftCardCode] = useState("");
   const [verificationResult, setVerificationResult] = useState<any>(null);
   const { toast } = useToast();
-
-  const mockGiftCards = [
-    { code: "GC12345678", amount: 50, status: "active", customer: "mario.rossi@email.com", purchaseDate: "2024-01-20" },
-    { code: "GC87654321", amount: 25, status: "active", customer: "anna.verdi@email.com", purchaseDate: "2024-01-19" },
-    { code: "GC11111111", amount: 100, status: "redeemed", customer: "luca.bianchi@email.com", purchaseDate: "2024-01-18" },
-  ];
+  const { user } = useAuth();
 
   const handleVerifyCode = async () => {
     if (!giftCardCode.trim()) return;
     
     setLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Find gift card
-      const giftCard = mockGiftCards.find(gc => gc.code === giftCardCode.toUpperCase());
-      
-      if (!giftCard) {
-        setVerificationResult({
-          valid: false,
-          error: "Gift card non trovata"
-        });
-      } else if (giftCard.status === "redeemed") {
-        setVerificationResult({
-          valid: false,
-          error: "Gift card già utilizzata",
-          giftCard
-        });
-      } else {
-        setVerificationResult({
-          valid: true,
-          giftCard
-        });
-      }
+      const result = await verifyGiftCard(giftCardCode);
+      setVerificationResult(result);
     } catch (error) {
+      console.error('Error verifying gift card:', error);
       toast({
         title: "Errore",
         description: "Errore durante la verifica del codice",
@@ -73,12 +50,11 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
   };
 
   const handleRedeem = async () => {
-    if (!verificationResult?.giftCard) return;
+    if (!verificationResult?.giftCard || !user) return;
     
     setLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await redeemGiftCard(verificationResult.giftCard.code, user.id);
       
       onRedemption?.(verificationResult.giftCard.code, verificationResult.giftCard.amount);
       
@@ -91,10 +67,11 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
       setGiftCardCode("");
       setVerificationResult(null);
       setOpen(false);
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Error redeeming gift card:', error);
       toast({
         title: "Errore",
-        description: "Errore durante l'utilizzo della gift card",
+        description: error.message || "Errore durante l'utilizzo della gift card",
         variant: "destructive",
       });
     } finally {
@@ -221,23 +198,14 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
               </Card>
             )}
 
-            {/* Quick Test Codes */}
+            {/* Helper Text */}
             <Card className="bg-muted/50">
               <CardContent className="p-4">
-                <p className="text-sm font-medium mb-2">Codici di test:</p>
-                <div className="space-y-1 text-sm">
-                  <div className="flex justify-between">
-                    <code className="bg-background px-2 py-1 rounded">GC12345678</code>
-                    <span className="text-muted-foreground">€50 - Valida</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <code className="bg-background px-2 py-1 rounded">GC87654321</code>
-                    <span className="text-muted-foreground">€25 - Valida</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <code className="bg-background px-2 py-1 rounded">GC11111111</code>
-                    <span className="text-muted-foreground">€100 - Già utilizzata</span>
-                  </div>
+                <p className="text-sm font-medium mb-2">Come utilizzare:</p>
+                <div className="space-y-1 text-sm text-muted-foreground">
+                  <p>• Inserisci il codice gift card nell'input sopra</p>
+                  <p>• Clicca "Verifica" per controllare la validità</p>
+                  <p>• Se valida, clicca "Utilizza" per completare la transazione</p>
                 </div>
               </CardContent>
             </Card>
