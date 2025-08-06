@@ -68,7 +68,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                   email: profile.email,
                   name: profile.name,
                   type: profile.type as 'customer' | 'merchant',
-                  shopId: profile.shop_id || undefined,
                 });
               }
             } catch (error) {

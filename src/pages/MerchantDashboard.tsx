@@ -24,10 +24,12 @@ import GiftCardModal from "@/components/GiftCardModal";
 import OrderDetailsModal from "@/components/OrderDetailsModal";
 import QRRedemptionModal from "@/components/QRRedemptionModal";
 import MerchantSettingsModal from "@/components/MerchantSettingsModal";
+import { useMerchantShops } from "@/hooks/useMerchantShops";
 
 const MerchantDashboard = () => {
   const navigate = useNavigate();
   const { user, logout, isAuthenticated, isMerchant } = useAuth();
+  const { shops, isLoading: shopsLoading } = useMerchantShops();
 
   useEffect(() => {
     if (!isAuthenticated || !isMerchant) {

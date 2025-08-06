@@ -52,7 +52,6 @@ export type Database = {
           email: string
           id: string
           name: string
-          shop_id: string | null
           type: string
           updated_at: string
         }
@@ -61,7 +60,6 @@ export type Database = {
           email: string
           id: string
           name: string
-          shop_id?: string | null
           type: string
           updated_at?: string
         }
@@ -70,7 +68,6 @@ export type Database = {
           email?: string
           id?: string
           name?: string
-          shop_id?: string | null
           type?: string
           updated_at?: string
         }
