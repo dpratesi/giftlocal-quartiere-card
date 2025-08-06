@@ -25,8 +25,8 @@ const shopSchema = z.object({
   address: z.string().min(10, "Inserisci un indirizzo completo"),
   neighborhood: z.string().min(2, "Inserisci il quartiere"),
   postalCode: z.string().regex(/^[0-9]{5}$/, "Il CAP deve contenere 5 cifre"),
-  vat: z.string().regex(/^IT[0-9]{11}$/, "La P.IVA deve essere nel formato IT + 11 cifre"),
-  iban: z.string().regex(/^IT[0-9]{2}[A-Z][0-9]{3}[0-9]{4}[0-9]{4}[0-9]{4}[0-9]{3}$/, "Inserisci un IBAN italiano valido"),
+  vat: z.string().optional(),
+  iban: z.string().optional(),
   acceptTerms: z.boolean().refine(val => val === true, "Devi accettare i termini di servizio"),
   acceptMarketing: z.boolean().optional(),
 });
@@ -296,7 +296,7 @@ const RegisterShop = () => {
                         name="vat"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Partita IVA *</FormLabel>
+                            <FormLabel>Partita IVA</FormLabel>
                             <FormControl>
                               <Input placeholder="IT12345678901" {...field} />
                             </FormControl>
@@ -310,7 +310,7 @@ const RegisterShop = () => {
                         name="iban"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>IBAN per i pagamenti *</FormLabel>
+                            <FormLabel>IBAN per i pagamenti</FormLabel>
                             <FormControl>
                               <Input placeholder="IT60 X054 2811 1010 0000 0123 456" {...field} />
                             </FormControl>
