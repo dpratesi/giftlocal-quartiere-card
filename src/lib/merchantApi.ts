@@ -224,7 +224,7 @@ export async function createShop(shopData: {
   iban?: string;
   ownerId: string;
 }) {
-  const { data, error } = await supabase
+  const { data: shop, error: shopError } = await supabase
     .from('shops')
     .insert({
       name: shopData.name,
@@ -241,9 +241,26 @@ export async function createShop(shopData: {
     .select()
     .single();
 
-  if (error) {
-    throw new Error(`Failed to create shop: ${error.message}`);
+  if (shopError) {
+    throw new Error(`Failed to create shop: ${shopError.message}`);
   }
 
-  return data;
+  // Create default gift cards for the new shop
+  const defaultPrices = [25, 50, 100]; // Default gift card amounts
+  const giftCards = defaultPrices.map(price => ({
+    shop_id: shop.id,
+    amount: price,
+    is_active: true,
+  }));
+
+  const { error: giftCardsError } = await supabase
+    .from('gift_cards')
+    .insert(giftCards);
+
+  if (giftCardsError) {
+    console.error('Failed to create default gift cards:', giftCardsError.message);
+    // Don't throw here, as the shop was created successfully
+  }
+
+  return shop;
 }
