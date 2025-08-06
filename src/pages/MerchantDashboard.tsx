@@ -13,23 +13,26 @@ import {
   Eye,
   Settings,
   LogOut,
-  QrCode
+  QrCode,
+  Building2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/contexts/AuthContext";
 import GiftCardModal from "@/components/GiftCardModal";
 import OrderDetailsModal from "@/components/OrderDetailsModal";
 import QRRedemptionModal from "@/components/QRRedemptionModal";
 import MerchantSettingsModal from "@/components/MerchantSettingsModal";
-import { useMerchantShops } from "@/hooks/useMerchantShops";
+import { useMerchantDashboard } from "@/hooks/useMerchantDashboard";
 
 const MerchantDashboard = () => {
   const navigate = useNavigate();
   const { user, logout, isAuthenticated, isMerchant } = useAuth();
-  const { shops, isLoading: shopsLoading } = useMerchantShops();
+  const [selectedShopId, setSelectedShopId] = useState<string | undefined>(undefined);
+  const { stats, orders, shopOptions, isLoading } = useMerchantDashboard(selectedShopId);
 
   useEffect(() => {
     if (!isAuthenticated || !isMerchant) {
@@ -43,7 +46,7 @@ const MerchantDashboard = () => {
     navigate('/');
   };
 
-  if (!user) {
+  if (!user || isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
@@ -54,36 +57,22 @@ const MerchantDashboard = () => {
     );
   }
 
-  // Mock data for dashboard (will be replaced with real data later)
-  const stats = {
-    totalSales: 2450.00,
-    giftCardsSold: 23,
-    pendingRedemptions: 5,
-    totalCustomers: 18
+  const getShopDisplayName = () => {
+    if (!selectedShopId) return "Tutti i negozi";
+    const shop = shopOptions.find(s => s.id === selectedShopId);
+    return shop?.name || "Negozio selezionato";
   };
-
-  const recentOrders = [
-    { id: "GC-1234567", customer: "mario.rossi@email.com", amount: 50, date: "2024-01-20", status: "completed" },
-    { id: "GC-1234568", customer: "anna.verdi@email.com", amount: 25, date: "2024-01-19", status: "pending" },
-    { id: "GC-1234569", customer: "luca.bianchi@email.com", amount: 100, date: "2024-01-19", status: "completed" },
-    { id: "GC-1234570", customer: "sara.neri@email.com", amount: 75, date: "2024-01-18", status: "redeemed" }
-  ];
-
-  const giftCards = [
-    { id: "GC-001", amount: 25, active: true, sold: 8, remaining: 2 },
-    { id: "GC-002", amount: 50, active: true, sold: 12, remaining: 8 },
-    { id: "GC-003", amount: 100, active: true, sold: 3, remaining: 7 },
-    { id: "GC-004", amount: 150, active: false, sold: 0, remaining: 5 }
-  ];
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      completed: { label: "Completato", variant: "default" as const },
-      pending: { label: "In attesa", variant: "secondary" as const },
-      redeemed: { label: "Utilizzato", variant: "outline" as const }
+      active: { label: "Attiva", variant: "default" as const },
+      used: { label: "Utilizzata", variant: "secondary" as const },
+      expired: { label: "Scaduta", variant: "destructive" as const },
+      cancelled: { label: "Annullata", variant: "outline" as const }
     };
     
-    const config = statusConfig[status as keyof typeof statusConfig];
+    const config = statusConfig[status as keyof typeof statusConfig] || 
+                   { label: status, variant: "outline" as const };
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
@@ -95,18 +84,36 @@ const MerchantDashboard = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold">{user.name}</h1>
-              <p className="text-muted-foreground">Dashboard Merchant</p>
+              <p className="text-muted-foreground">Dashboard Merchant - {getShopDisplayName()}</p>
             </div>
-            <div className="flex items-center gap-2">
-              <QRRedemptionModal />
-              <MerchantSettingsModal 
-                merchantData={{ shopName: user.name, email: user.email }}
-                onSettingsUpdate={(settings) => console.log('Settings updated:', settings)}
-              />
-              <Button variant="ghost" size="sm" onClick={handleLogout}>
-                <LogOut className="w-4 h-4 mr-2" />
-                Esci
-              </Button>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Building2 className="w-4 h-4 text-muted-foreground" />
+                <Select value={selectedShopId || "all"} onValueChange={(value) => setSelectedShopId(value === "all" ? undefined : value)}>
+                  <SelectTrigger className="w-48">
+                    <SelectValue placeholder="Seleziona negozio" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Tutti i negozi</SelectItem>
+                    {shopOptions.map(shop => (
+                      <SelectItem key={shop.id} value={shop.id}>
+                        {shop.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-center gap-2">
+                <QRRedemptionModal />
+                <MerchantSettingsModal 
+                  merchantData={{ shopName: user.name, email: user.email }}
+                  onSettingsUpdate={(settings) => console.log('Settings updated:', settings)}
+                />
+                <Button variant="ghost" size="sm" onClick={handleLogout}>
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Esci
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -209,22 +216,34 @@ const MerchantDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {recentOrders.map((order) => (
-                    <div key={order.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3">
-                          <p className="font-medium">{order.id}</p>
-                          {getStatusBadge(order.status)}
-                        </div>
-                        <p className="text-sm text-muted-foreground">{order.customer}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium">€{order.amount}</p>
-                        <p className="text-sm text-muted-foreground">{order.date}</p>
-                      </div>
-                      <OrderDetailsModal order={order} />
+                  {orders.length === 0 ? (
+                    <div className="text-center py-8">
+                      <p className="text-muted-foreground">Nessun ordine trovato</p>
+                      {selectedShopId && (
+                        <p className="text-sm text-muted-foreground mt-2">
+                          Prova a cambiare negozio o visualizzare tutti i negozi
+                        </p>
+                      )}
                     </div>
-                  ))}
+                  ) : (
+                    orders.map((order) => (
+                      <div key={order.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3">
+                            <p className="font-medium">{order.gift_card_code}</p>
+                            {getStatusBadge(order.status)}
+                          </div>
+                          <p className="text-sm text-muted-foreground">{order.customer}</p>
+                          <p className="text-xs text-muted-foreground">{order.shopName}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-medium">€{order.amount}</p>
+                          <p className="text-sm text-muted-foreground">{order.date}</p>
+                        </div>
+                        <OrderDetailsModal order={order} />
+                      </div>
+                    ))
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -237,30 +256,17 @@ const MerchantDashboard = () => {
                 <GiftCardModal onGiftCardCreated={(giftCard) => console.log('New gift card:', giftCard)} />
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {giftCards.map((card) => (
-                    <div key={card.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
-                      <div className="flex items-center gap-4">
-                        <div className="w-16 h-16 bg-gradient-to-r from-primary to-primary/80 rounded-lg flex items-center justify-center text-white font-bold">
-                          €{card.amount}
-                        </div>
-                        <div>
-                          <p className="font-medium">Gift Card da €{card.amount}</p>
-                          <p className="text-sm text-muted-foreground">
-                            Vendute: {card.sold} • Disponibili: {card.remaining}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant={card.active ? "default" : "secondary"}>
-                          {card.active ? "Attiva" : "Disattivata"}
-                        </Badge>
-                        <Button variant="ghost" size="sm">
-                          <Settings className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">Gestione Gift Card</p>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Le gift card vengono create automaticamente quando imposti i prezzi per i tuoi negozi
+                  </p>
+                  <div className="mt-4">
+                    <p className="text-lg font-semibold">Gift Card vendute: {stats.giftCardsSold}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {selectedShopId ? "Per questo negozio" : "Totale per tutti i negozi"}
+                    </p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
