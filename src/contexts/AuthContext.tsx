@@ -46,7 +46,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth event:', event, session);
+        console.log('Auth event:', event, session?.user?.email, session?.user?.user_metadata?.type);
         setSession(session);
         
         if (session?.user) {
@@ -63,6 +63,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 console.error('Error fetching profile:', error);
                 setUser(null);
               } else if (profile) {
+                console.log('Setting user profile:', profile);
                 setUser({
                   id: profile.id,
                   email: profile.email,
@@ -76,6 +77,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             }
           }, 0);
         } else {
+          console.log('No session, clearing user');
           setUser(null);
         }
         
@@ -83,8 +85,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     );
 
+    // Listen for storage changes (tab synchronization)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'supabase.auth.token') {
+        console.log('Storage change detected, refreshing session');
+        // Refresh session when auth token changes in localStorage
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          // The auth state change listener will handle the rest
+        });
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session check:', session?.user?.email);
       if (session) {
         setSession(session);
       } else {
@@ -92,7 +108,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   const signup = async (
