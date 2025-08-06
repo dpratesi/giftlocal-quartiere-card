@@ -27,15 +27,23 @@ const Index = () => {
     maxDistance: 1000
   }));
 
-  // Update filters when user's preferred city changes
+  // Update filters when user's preferred city changes or URL has city param
   useEffect(() => {
-    if (isAuthenticated && user?.preferred_city && !initialCity && filters.cities.length === 0) {
+    // If there's a city in URL, use that (has priority)
+    if (initialCity) {
+      setFilters(prev => ({
+        ...prev,
+        cities: [initialCity]
+      }));
+    }
+    // Otherwise, if user is authenticated and has preferred city and no city filter is set
+    else if (isAuthenticated && user?.preferred_city && filters.cities.length === 0) {
       setFilters(prev => ({
         ...prev,
         cities: [user.preferred_city!]
       }));
     }
-  }, [user?.preferred_city, isAuthenticated, initialCity, filters.cities.length]);
+  }, [user?.preferred_city, isAuthenticated, initialCity]);
 
   const { shops, isLoading, error } = useShops();
 
@@ -180,9 +188,14 @@ const Index = () => {
           
           <div className="xl:w-3/4">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-              <p className="text-muted-foreground">
-                {filteredShops.length} negozi trovati
-              </p>
+              <div>
+                <p className="text-muted-foreground">
+                  {filteredShops.length} negozi trovati
+                  {filters.cities.length > 0 && (
+                    <span className="text-primary font-medium"> a {filters.cities.join(', ')}</span>
+                  )}
+                </p>
+              </div>
               <ViewToggle view={view} onViewChange={setView} />
             </div>
 
