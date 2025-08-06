@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -18,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/contexts/AuthContext";
 import GiftCardModal from "@/components/GiftCardModal";
 import OrderDetailsModal from "@/components/OrderDetailsModal";
 import QRRedemptionModal from "@/components/QRRedemptionModal";
@@ -25,24 +27,21 @@ import MerchantSettingsModal from "@/components/MerchantSettingsModal";
 
 const MerchantDashboard = () => {
   const navigate = useNavigate();
-  const [merchantData, setMerchantData] = useState<any>(null);
+  const { user, logout, isAuthenticated, isMerchant } = useAuth();
 
   useEffect(() => {
-    const authData = localStorage.getItem('merchantAuth');
-    if (!authData) {
+    if (!isAuthenticated || !isMerchant) {
       navigate('/merchant/login');
       return;
     }
-    
-    setMerchantData(JSON.parse(authData));
-  }, [navigate]);
+  }, [isAuthenticated, isMerchant, navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('merchantAuth');
+  const handleLogout = async () => {
+    await logout();
     navigate('/');
   };
 
-  if (!merchantData) {
+  if (!user) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
@@ -53,7 +52,7 @@ const MerchantDashboard = () => {
     );
   }
 
-  // Mock data for dashboard
+  // Mock data for dashboard (will be replaced with real data later)
   const stats = {
     totalSales: 2450.00,
     giftCardsSold: 23,
@@ -93,13 +92,13 @@ const MerchantDashboard = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold">{merchantData.shopName}</h1>
+              <h1 className="text-2xl font-bold">{user.name}</h1>
               <p className="text-muted-foreground">Dashboard Merchant</p>
             </div>
             <div className="flex items-center gap-2">
               <QRRedemptionModal />
               <MerchantSettingsModal 
-                merchantData={merchantData} 
+                merchantData={{ shopName: user.name, email: user.email }}
                 onSettingsUpdate={(settings) => console.log('Settings updated:', settings)}
               />
               <Button variant="ghost" size="sm" onClick={handleLogout}>

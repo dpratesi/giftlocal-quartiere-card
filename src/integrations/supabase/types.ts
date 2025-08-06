@@ -14,7 +14,124 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      gift_cards: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          is_active: boolean | null
+          shop_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          shop_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          shop_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gift_cards_shop_id_fkey"
+            columns: ["shop_id"]
+            isOneToOne: false
+            referencedRelation: "shops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string
+          shop_id: string | null
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id: string
+          name: string
+          shop_id?: string | null
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          shop_id?: string | null
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      shops: {
+        Row: {
+          category: string
+          city: string
+          created_at: string
+          description: string
+          distance: string
+          id: string
+          image: string
+          name: string
+          neighborhood: string
+          owner_id: string | null
+          rating: number | null
+          review_count: number | null
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          city: string
+          created_at?: string
+          description: string
+          distance: string
+          id?: string
+          image: string
+          name: string
+          neighborhood: string
+          owner_id?: string | null
+          rating?: number | null
+          review_count?: number | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          city?: string
+          created_at?: string
+          description?: string
+          distance?: string
+          id?: string
+          image?: string
+          name?: string
+          neighborhood?: string
+          owner_id?: string | null
+          rating?: number | null
+          review_count?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shops_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
