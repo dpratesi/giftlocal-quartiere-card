@@ -41,10 +41,16 @@ const OrderDetailsModal = ({ order }: OrderDetailsModalProps) => {
     const statusConfig = {
       completed: { label: "Completato", variant: "default" as const, icon: CheckCircle },
       pending: { label: "In attesa", variant: "secondary" as const, icon: RefreshCw },
-      redeemed: { label: "Utilizzato", variant: "outline" as const, icon: CheckCircle }
+      redeemed: { label: "Utilizzato", variant: "outline" as const, icon: CheckCircle },
+      cancelled: { label: "Annullato", variant: "destructive" as const, icon: XCircle }
     };
     
-    const config = statusConfig[status as keyof typeof statusConfig];
+    const config = statusConfig[status as keyof typeof statusConfig] || {
+      label: status || "Sconosciuto",
+      variant: "secondary" as const,
+      icon: RefreshCw
+    };
+    
     const Icon = config.icon;
     
     return (
