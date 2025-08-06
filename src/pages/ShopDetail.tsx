@@ -5,21 +5,26 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Header from "@/components/Header";
+import { useState } from "react";
 
 const ShopDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { shops, isLoading, error } = useShops();
   const shop = shops.find((s) => s.id === id);
+  
+  const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
 
-  const handleBuyGiftCard = (amount: number) => {
-    navigate("/checkout", {
-      state: {
-        shopId: shop?.id,
-        shopName: shop?.name,
-        amount
-      }
-    });
+  const handleBuyGiftCard = () => {
+    if (selectedAmount && shop) {
+      navigate("/checkout", {
+        state: {
+          shopId: shop.id,
+          shopName: shop.name,
+          amount: selectedAmount
+        }
+      });
+    }
   };
 
   if (isLoading) {
@@ -150,14 +155,22 @@ const ShopDetail = () => {
                 <h3 className="text-xl font-semibold mb-4">Gift Card Disponibili</h3>
                 <div className="space-y-3">
                   {shop.giftCardPrices.map((price) => (
-                    <div key={price} className="flex items-center justify-between p-3 border border-border rounded-lg hover:border-primary transition-colors cursor-pointer">
+                    <div 
+                      key={price} 
+                      className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-colors ${
+                        selectedAmount === price 
+                          ? 'border-primary bg-primary/10' 
+                          : 'border-border hover:border-primary'
+                      }`}
+                      onClick={() => setSelectedAmount(price)}
+                    >
                       <div className="flex items-center">
                         <Euro className="w-5 h-5 mr-2 text-local-green" />
                         <span className="font-medium">{price}€</span>
                       </div>
-                      <Button size="sm" onClick={() => handleBuyGiftCard(price)}>
-                        Acquista
-                      </Button>
+                      {selectedAmount === price && (
+                        <div className="w-2 h-2 bg-primary rounded-full"></div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -166,9 +179,10 @@ const ShopDetail = () => {
                   <Button 
                     className="w-full bg-primary hover:bg-primary-hover" 
                     size="lg"
-                    onClick={() => handleBuyGiftCard(shop.giftCardPrices[0])}
+                    onClick={handleBuyGiftCard}
+                    disabled={!selectedAmount}
                   >
-                    Acquista Gift Card
+                    {selectedAmount ? `Acquista Gift Card €${selectedAmount}` : 'Seleziona un importo'}
                   </Button>
                   <p className="text-xs text-muted-foreground text-center mt-3">
                     Pagamento sicuro • Consegna immediata
