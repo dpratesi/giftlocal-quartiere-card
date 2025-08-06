@@ -174,6 +174,26 @@ export async function fetchUserGiftCards(): Promise<PurchasedGiftCard[]> {
   }
 }
 
+// Fetch gift card transaction history
+export async function fetchGiftCardTransactions(giftCardId: string) {
+  const { data, error } = await supabase
+    .from('gift_card_transactions')
+    .select(`
+      *,
+      shop:shops(name, image),
+      merchant:profiles(name)
+    `)
+    .eq('gift_card_id', giftCardId)
+    .order('transaction_date', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching gift card transactions:', error);
+    throw error;
+  }
+
+  return data || [];
+}
+
 // Update user preferred city
 export async function updateUserPreferredCity(city: string): Promise<void> {
   const { error } = await supabase

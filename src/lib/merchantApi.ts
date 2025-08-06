@@ -385,6 +385,22 @@ export async function redeemGiftCard(giftCardCode: string, merchantId: string, a
     throw new Error(`Failed to redeem gift card: ${updateError.message}`);
   }
 
+  // Record the transaction
+  const { error: transactionError } = await supabase
+    .from('gift_card_transactions')
+    .insert({
+      gift_card_id: giftCardData.id,
+      shop_id: giftCardData.shop_id,
+      merchant_id: merchantId,
+      amount_used: amount,
+      description: `Riscatto presso ${giftCardData.shops?.name || 'Negozio'}`
+    });
+
+  if (transactionError) {
+    console.error('Error recording transaction:', transactionError);
+    // Don't throw here as the redemption was successful
+  }
+
   return {
     success: true,
     amount: amount,

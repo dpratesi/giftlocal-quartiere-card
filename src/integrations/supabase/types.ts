@@ -14,6 +14,61 @@ export type Database = {
   }
   public: {
     Tables: {
+      gift_card_transactions: {
+        Row: {
+          amount_used: number
+          created_at: string
+          description: string | null
+          gift_card_id: string
+          id: string
+          merchant_id: string
+          shop_id: string
+          transaction_date: string
+        }
+        Insert: {
+          amount_used: number
+          created_at?: string
+          description?: string | null
+          gift_card_id: string
+          id?: string
+          merchant_id: string
+          shop_id: string
+          transaction_date?: string
+        }
+        Update: {
+          amount_used?: number
+          created_at?: string
+          description?: string | null
+          gift_card_id?: string
+          id?: string
+          merchant_id?: string
+          shop_id?: string
+          transaction_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gift_card_transactions_gift_card_id_fkey"
+            columns: ["gift_card_id"]
+            isOneToOne: false
+            referencedRelation: "purchased_gift_cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gift_card_transactions_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gift_card_transactions_shop_id_fkey"
+            columns: ["shop_id"]
+            isOneToOne: false
+            referencedRelation: "shops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       gift_cards: {
         Row: {
           amount: number

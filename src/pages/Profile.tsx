@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Heart, CreditCard, Settings, User, MapPin, Bell, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,11 +11,14 @@ import Header from "@/components/Header";
 import { useGiftCards } from "@/hooks/useGiftCards";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
+import GiftCardDetailsModal from "@/components/GiftCardDetailsModal";
+import type { PurchasedGiftCard } from "@/lib/types";
 
 const Profile = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { giftCards, isLoading: isLoadingGiftCards } = useGiftCards();
+  const [selectedGiftCard, setSelectedGiftCard] = useState<PurchasedGiftCard | null>(null);
 
   const handleLogout = async () => {
     await logout();
@@ -85,7 +89,13 @@ const Profile = () => {
         </div>
         
         <div className="flex gap-2">
-          <Button size="sm" variant="outline">Dettagli</Button>
+          <Button 
+            size="sm" 
+            variant="outline"
+            onClick={() => setSelectedGiftCard(card)}
+          >
+            Dettagli
+          </Button>
           {isActive && (
             <Button size="sm">Usa ora</Button>
           )}
@@ -298,6 +308,15 @@ const Profile = () => {
             </div>
           </div>
         </div>
+
+        {/* Gift Card Details Modal */}
+        {selectedGiftCard && (
+          <GiftCardDetailsModal
+            isOpen={!!selectedGiftCard}
+            onClose={() => setSelectedGiftCard(null)}
+            giftCard={selectedGiftCard}
+          />
+        )}
       </div>
     </div>
   );
