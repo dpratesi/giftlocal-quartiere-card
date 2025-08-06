@@ -26,6 +26,7 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [giftCardCode, setGiftCardCode] = useState("");
+  const [amountToUse, setAmountToUse] = useState("");
   const [verificationResult, setVerificationResult] = useState<any>(null);
   const { toast } = useToast();
   const { user } = useAuth();
@@ -50,21 +51,32 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
   };
 
   const handleRedeem = async () => {
-    if (!verificationResult?.giftCard || !user) return;
+    if (!verificationResult?.giftCard || !user || !amountToUse) return;
+    
+    const amount = parseFloat(amountToUse);
+    if (isNaN(amount) || amount <= 0) {
+      toast({
+        title: "Errore",
+        description: "Inserisci un importo valido",
+        variant: "destructive",
+      });
+      return;
+    }
     
     setLoading(true);
     try {
-      await redeemGiftCard(verificationResult.giftCard.code, user.id);
+      const result = await redeemGiftCard(verificationResult.giftCard.code, user.id, amount);
       
-      onRedemption?.(verificationResult.giftCard.code, verificationResult.giftCard.amount);
+      onRedemption?.(verificationResult.giftCard.code, amount);
       
       toast({
         title: "Gift Card Utilizzata",
-        description: `Gift card da €${verificationResult.giftCard.amount} utilizzata con successo`,
+        description: `Utilizzati €${amount} dalla gift card. ${result.fullyUsed ? 'Gift card completamente utilizzata.' : `Rimanente: €${result.remainingValue}`}`,
       });
 
       // Reset and close
       setGiftCardCode("");
+      setAmountToUse("");
       setVerificationResult(null);
       setOpen(false);
     } catch (error: any) {
@@ -81,6 +93,7 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
 
   const resetForm = () => {
     setGiftCardCode("");
+    setAmountToUse("");
     setVerificationResult(null);
   };
 
@@ -187,6 +200,34 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
                           <span>{verificationResult.giftCard.purchaseDate}</span>
                         </div>
                       </div>
+                      
+                      {/* Amount to use input */}
+                      <div className="space-y-2">
+                        <Label htmlFor="amountToUse">Importo da utilizzare</Label>
+                        <div className="flex gap-2">
+                          <Input
+                            id="amountToUse"
+                            type="number"
+                            placeholder="0.00"
+                            value={amountToUse}
+                            onChange={(e) => setAmountToUse(e.target.value)}
+                            min="0"
+                            max={verificationResult.giftCard.amount}
+                            step="0.01"
+                            className="text-center"
+                          />
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setAmountToUse(verificationResult.giftCard.amount.toString())}
+                          >
+                            Tutto
+                          </Button>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Massimo €{verificationResult.giftCard.amount}
+                        </p>
+                      </div>
                     </div>
                   ) : (
                     <div className="flex items-center gap-2 text-red-600">
@@ -219,10 +260,10 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
           {verificationResult?.valid && (
             <Button 
               onClick={handleRedeem} 
-              disabled={loading}
+              disabled={loading || !amountToUse || parseFloat(amountToUse) <= 0}
               className="bg-green-600 hover:bg-green-700"
             >
-              {loading ? "Elaborazione..." : `Utilizza €${verificationResult.giftCard.amount}`}
+              {loading ? "Elaborazione..." : amountToUse ? `Utilizza €${amountToUse}` : 'Inserisci importo'}
             </Button>
           )}
         </DialogFooter>

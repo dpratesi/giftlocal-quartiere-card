@@ -333,7 +333,7 @@ export async function verifyGiftCard(giftCardCode: string) {
 }
 
 // Redeem gift card
-export async function redeemGiftCard(giftCardCode: string, merchantId: string) {
+export async function redeemGiftCard(giftCardCode: string, merchantId: string, amount: number) {
   // First verify the gift card and check if merchant owns the shop
   const { data: giftCardData, error: fetchError } = await supabase
     .from('purchased_gift_cards')
@@ -358,12 +358,25 @@ export async function redeemGiftCard(giftCardCode: string, merchantId: string) {
     throw new Error('Gift card già utilizzata');
   }
 
-  // Update gift card status to used
+  // Check if amount is valid
+  if (amount <= 0) {
+    throw new Error('Importo non valido');
+  }
+
+  if (amount > giftCardData.remaining_value) {
+    throw new Error(`Importo superiore al valore rimanente (€${giftCardData.remaining_value})`);
+  }
+
+  // Calculate new remaining value
+  const newRemainingValue = giftCardData.remaining_value - amount;
+  const newStatus = newRemainingValue === 0 ? 'used' : 'active';
+
+  // Update gift card
   const { error: updateError } = await supabase
     .from('purchased_gift_cards')
     .update({ 
-      status: 'used',
-      remaining_value: 0,
+      status: newStatus,
+      remaining_value: newRemainingValue,
       updated_at: new Date().toISOString()
     })
     .eq('gift_card_code', giftCardCode.toUpperCase());
@@ -374,7 +387,9 @@ export async function redeemGiftCard(giftCardCode: string, merchantId: string) {
 
   return {
     success: true,
-    amount: giftCardData.amount,
-    code: giftCardCode
+    amount: amount,
+    remainingValue: newRemainingValue,
+    code: giftCardCode,
+    fullyUsed: newStatus === 'used'
   };
 }
