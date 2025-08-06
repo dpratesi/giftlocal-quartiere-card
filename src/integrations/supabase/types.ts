@@ -76,6 +76,57 @@ export type Database = {
         }
         Relationships: []
       }
+      purchased_gift_cards: {
+        Row: {
+          amount: number
+          created_at: string
+          expiry_date: string
+          gift_card_code: string
+          id: string
+          message: string | null
+          purchase_date: string
+          recipient_email: string | null
+          recipient_name: string | null
+          remaining_value: number
+          shop_id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          expiry_date?: string
+          gift_card_code: string
+          id?: string
+          message?: string | null
+          purchase_date?: string
+          recipient_email?: string | null
+          recipient_name?: string | null
+          remaining_value: number
+          shop_id: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          expiry_date?: string
+          gift_card_code?: string
+          id?: string
+          message?: string | null
+          purchase_date?: string
+          recipient_email?: string | null
+          recipient_name?: string | null
+          remaining_value?: number
+          shop_id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       shops: {
         Row: {
           category: string
@@ -137,7 +188,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_gift_card_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
