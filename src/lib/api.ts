@@ -173,3 +173,31 @@ export async function fetchUserGiftCards(): Promise<PurchasedGiftCard[]> {
     throw error;
   }
 }
+
+// Update user preferred city
+export async function updateUserPreferredCity(city: string): Promise<void> {
+  const { error } = await supabase
+    .from('profiles')
+    .update({ preferred_city: city })
+    .eq('id', (await supabase.auth.getUser()).data.user?.id);
+
+  if (error) {
+    throw new Error(`Failed to update preferred city: ${error.message}`);
+  }
+}
+
+// Get user preferred city
+export async function getUserPreferredCity(): Promise<string> {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('preferred_city')
+    .eq('id', (await supabase.auth.getUser()).data.user?.id)
+    .single();
+
+  if (error) {
+    console.error('Error fetching preferred city:', error);
+    return 'Roma'; // Default fallback
+  }
+
+  return data?.preferred_city || 'Roma';
+}

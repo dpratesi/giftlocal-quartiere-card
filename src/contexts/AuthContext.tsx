@@ -8,6 +8,7 @@ export interface UserProfile {
   email: string;
   name: string;
   type: 'customer' | 'merchant';
+  preferred_city?: string;
   shopId?: string;
 }
 
@@ -18,6 +19,7 @@ interface AuthContextType {
   login: (email: string, password: string, type?: 'customer' | 'merchant') => Promise<{ success: boolean; error?: string }>;
   signup: (email: string, password: string, name: string, type: 'customer' | 'merchant') => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
+  updateUserCity?: (city: string) => void;
   isAuthenticated: boolean;
   isMerchant: boolean;
   isCustomer: boolean;
@@ -69,6 +71,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                   email: profile.email,
                   name: profile.name,
                   type: profile.type as 'customer' | 'merchant',
+                  preferred_city: profile.preferred_city,
                 });
               }
             } catch (error) {
@@ -214,6 +217,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const updateUserCity = (city: string) => {
+    if (user) {
+      setUser({
+        ...user,
+        preferred_city: city
+      });
+    }
+  };
+
   const isAuthenticated = !!user && !!session;
   const isMerchant = user?.type === 'merchant';
   const isCustomer = user?.type === 'customer';
@@ -225,6 +237,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     login,
     signup,
     logout,
+    updateUserCity,
     isAuthenticated,
     isMerchant,
     isCustomer,

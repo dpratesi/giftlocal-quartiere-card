@@ -1,6 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useShops } from "@/hooks/useShops";
+import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import CategoryFilter from "@/components/CategoryFilter";
@@ -13,6 +14,7 @@ import { Link } from "react-router-dom";
 
 const Index = () => {
   const [searchParams] = useSearchParams();
+  const { user, isAuthenticated } = useAuth();
   const initialCity = searchParams.get('city');
   const initialCategory = searchParams.get('category');
 
@@ -24,6 +26,16 @@ const Index = () => {
     minRating: 0,
     maxDistance: 1000
   }));
+
+  // Update filters when user's preferred city changes
+  useEffect(() => {
+    if (isAuthenticated && user?.preferred_city && !initialCity && filters.cities.length === 0) {
+      setFilters(prev => ({
+        ...prev,
+        cities: [user.preferred_city!]
+      }));
+    }
+  }, [user?.preferred_city, isAuthenticated, initialCity, filters.cities.length]);
 
   const { shops, isLoading, error } = useShops();
 

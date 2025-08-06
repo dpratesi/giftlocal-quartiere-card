@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
+import CitySelector from "@/components/CitySelector";
 
 const Header = () => {
   const { isAuthenticated, user, logout } = useAuth();
@@ -48,6 +49,7 @@ const Header = () => {
 
           {/* Desktop Actions */}
           <div className="hidden lg:flex items-center space-x-3">
+            <CitySelector />
             <Link to="/profile">
               <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
                 <Heart className="w-5 h-5" />
@@ -93,6 +95,9 @@ const Header = () => {
 
             {/* Mobile Actions */}
             <div className="space-y-3">
+              <div className="flex items-center justify-center">
+                <CitySelector />
+              </div>
               <div className="flex items-center justify-between">
                 <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button variant="ghost" className="flex items-center space-x-2">
