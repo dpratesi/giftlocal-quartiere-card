@@ -17,10 +17,11 @@ export async function fetchShops(): Promise<Shop[]> {
         distance,
         description,
         city,
-        gift_cards (
+        gift_cards!inner (
           amount
         )
-      `);
+      `)
+      .eq('gift_cards.is_active', true);
 
     if (error) {
       throw new Error(`Failed to fetch shops: ${error.message}`);
