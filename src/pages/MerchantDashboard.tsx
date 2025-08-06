@@ -33,7 +33,7 @@ const MerchantDashboard = () => {
   const navigate = useNavigate();
   const { user, logout, isAuthenticated, isMerchant } = useAuth();
   const [selectedShopId, setSelectedShopId] = useState<string | undefined>(undefined);
-  const { stats, orders, shopOptions, giftCards, isLoading, error } = useMerchantDashboard(selectedShopId);
+  const { stats, orders, shopOptions, giftCards, monthlyStats, giftCardStats, isLoading, error } = useMerchantDashboard(selectedShopId);
 
   console.log('MerchantDashboard render:', { 
     user: user?.id, 
@@ -423,33 +423,39 @@ const MerchantDashboard = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span>Gennaio 2024</span>
-                      <div className="flex items-center gap-2">
-                        <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
-                          <div className="h-full bg-primary w-3/4"></div>
-                        </div>
-                        <span className="text-sm font-medium">€1,850</span>
+                    {monthlyStats.length === 0 ? (
+                      <div className="text-center py-8">
+                        <p className="text-muted-foreground">Nessuna vendita negli ultimi mesi</p>
+                        <p className="text-sm text-muted-foreground mt-2">
+                          Le statistiche appariranno dopo le prime vendite
+                        </p>
                       </div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Dicembre 2023</span>
-                      <div className="flex items-center gap-2">
-                        <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
-                          <div className="h-full bg-primary w-full"></div>
-                        </div>
-                        <span className="text-sm font-medium">€2,450</span>
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Novembre 2023</span>
-                      <div className="flex items-center gap-2">
-                        <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
-                          <div className="h-full bg-primary w-1/2"></div>
-                        </div>
-                        <span className="text-sm font-medium">€1,200</span>
-                      </div>
-                    </div>
+                    ) : (
+                      monthlyStats.map((monthData, index) => {
+                        const maxTotal = Math.max(...monthlyStats.map(m => m.total));
+                        const widthPercent = Math.max((monthData.total / maxTotal) * 100, 5);
+                        
+                        return (
+                          <div key={index} className="flex justify-between items-center">
+                            <span className="min-w-[120px]">{monthData.month}</span>
+                            <div className="flex items-center gap-2 flex-1">
+                              <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full bg-primary transition-all duration-300" 
+                                  style={{ width: `${widthPercent}%` }}
+                                ></div>
+                              </div>
+                              <span className="text-sm font-medium min-w-[80px] text-right">
+                                €{monthData.total.toFixed(2)}
+                              </span>
+                              <span className="text-xs text-muted-foreground min-w-[60px] text-right">
+                                ({monthData.count} vendite)
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -460,33 +466,93 @@ const MerchantDashboard = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span>€50</span>
-                      <div className="flex items-center gap-2">
-                        <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
-                          <div className="h-full bg-green-500 w-4/5"></div>
-                        </div>
-                        <span className="text-sm font-medium">12 vendute</span>
+                    {giftCardStats.length === 0 ? (
+                      <div className="text-center py-8">
+                        <p className="text-muted-foreground">Nessuna gift card venduta</p>
+                        <p className="text-sm text-muted-foreground mt-2">
+                          Le statistiche appariranno dopo le prime vendite
+                        </p>
                       </div>
+                    ) : (
+                      giftCardStats.slice(0, 5).map((cardStat, index) => {
+                        const maxCount = Math.max(...giftCardStats.map(c => c.count));
+                        const widthPercent = Math.max((cardStat.count / maxCount) * 100, 5);
+                        const colors = ['bg-green-500', 'bg-blue-500', 'bg-purple-500', 'bg-orange-500', 'bg-red-500'];
+                        const color = colors[index % colors.length];
+                        
+                        return (
+                          <div key={index} className="flex justify-between items-center">
+                            <span className="font-medium">€{cardStat.amount}</span>
+                            <div className="flex items-center gap-2 flex-1 ml-4">
+                              <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
+                                <div 
+                                  className={`h-full ${color} transition-all duration-300`}
+                                  style={{ width: `${widthPercent}%` }}
+                                ></div>
+                              </div>
+                              <span className="text-sm font-medium min-w-[100px] text-right">
+                                {cardStat.count} vendute
+                              </span>
+                              <span className="text-xs text-muted-foreground min-w-[80px] text-right">
+                                €{(cardStat.amount * cardStat.count).toFixed(2)}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                  {giftCardStats.length > 5 && (
+                    <div className="mt-4 pt-4 border-t border-border">
+                      <p className="text-xs text-muted-foreground text-center">
+                        Mostrando le top 5 gift card più vendute
+                      </p>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span>€25</span>
-                      <div className="flex items-center gap-2">
-                        <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
-                          <div className="h-full bg-blue-500 w-3/5"></div>
-                        </div>
-                        <span className="text-sm font-medium">8 vendute</span>
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>€100</span>
-                      <div className="flex items-center gap-2">
-                        <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
-                          <div className="h-full bg-purple-500 w-1/5"></div>
-                        </div>
-                        <span className="text-sm font-medium">3 vendute</span>
-                      </div>
-                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+            
+            {/* Statistiche aggiuntive */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+              <Card>
+                <CardContent className="p-6">
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-blue-600">
+                      €{monthlyStats.reduce((sum, month) => sum + month.total, 0).toFixed(2)}
+                    </p>
+                    <p className="text-sm text-muted-foreground">Fatturato ultimi 6 mesi</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {monthlyStats.reduce((sum, month) => sum + month.count, 0)} transazioni totali
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="p-6">
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-green-600">
+                      €{monthlyStats.length > 0 ? (monthlyStats.reduce((sum, month) => sum + month.total, 0) / monthlyStats.length).toFixed(2) : '0.00'}
+                    </p>
+                    <p className="text-sm text-muted-foreground">Media mensile</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Vendite per mese negli ultimi 6 mesi
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="p-6">
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-purple-600">
+                      €{giftCardStats.length > 0 ? (giftCardStats.reduce((sum, stat) => sum + (stat.amount * stat.count), 0) / giftCardStats.reduce((sum, stat) => sum + stat.count, 0) || 0).toFixed(2) : '0.00'}
+                    </p>
+                    <p className="text-sm text-muted-foreground">Valore medio gift card</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Importo medio per transazione
+                    </p>
                   </div>
                 </CardContent>
               </Card>

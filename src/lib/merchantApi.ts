@@ -439,3 +439,88 @@ export async function fetchMerchantGiftCards(merchantId: string, shopId?: string
     message: card.message
   })) || [];
 }
+
+// Analytics functions
+export async function fetchMerchantMonthlyStats(merchantId: string, shopId?: string) {
+  let query = supabase
+    .from('purchased_gift_cards')
+    .select(`
+      amount,
+      purchase_date,
+      shops!inner(owner_id)
+    `)
+    .eq('shops.owner_id', merchantId)
+    .gte('purchase_date', new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString()); // Last year
+
+  if (shopId) {
+    query = query.eq('shop_id', shopId);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw new Error(`Failed to fetch monthly stats: ${error.message}`);
+  }
+
+  // Group by month
+  const monthlyData = new Map();
+  
+  data?.forEach(card => {
+    const date = new Date(card.purchase_date);
+    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+    const monthName = date.toLocaleDateString('it-IT', { year: 'numeric', month: 'long' });
+    
+    if (!monthlyData.has(monthKey)) {
+      monthlyData.set(monthKey, { month: monthName, total: 0, count: 0 });
+    }
+    
+    const current = monthlyData.get(monthKey);
+    current.total += card.amount;
+    current.count += 1;
+  });
+
+  // Convert to array and sort by date
+  const result = Array.from(monthlyData.entries())
+    .sort(([a], [b]) => b.localeCompare(a)) // Most recent first
+    .slice(0, 6) // Last 6 months
+    .map(([key, value]) => value);
+
+  return result;
+}
+
+export async function fetchMerchantGiftCardStats(merchantId: string, shopId?: string) {
+  let query = supabase
+    .from('purchased_gift_cards')
+    .select(`
+      amount,
+      shops!inner(owner_id)
+    `)
+    .eq('shops.owner_id', merchantId);
+
+  if (shopId) {
+    query = query.eq('shop_id', shopId);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw new Error(`Failed to fetch gift card stats: ${error.message}`);
+  }
+
+  // Group by amount and count
+  const amountStats = new Map();
+  
+  data?.forEach(card => {
+    if (!amountStats.has(card.amount)) {
+      amountStats.set(card.amount, 0);
+    }
+    amountStats.set(card.amount, amountStats.get(card.amount) + 1);
+  });
+
+  // Convert to array and sort by count
+  const result = Array.from(amountStats.entries())
+    .map(([amount, count]) => ({ amount, count }))
+    .sort((a, b) => b.count - a.count);
+
+  return result;
+}

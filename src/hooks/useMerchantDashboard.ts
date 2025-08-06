@@ -5,6 +5,8 @@ import {
   fetchMerchantOrders, 
   fetchMerchantShopsOptions,
   fetchMerchantGiftCards,
+  fetchMerchantMonthlyStats,
+  fetchMerchantGiftCardStats,
   type MerchantStats,
   type MerchantOrder,
   type ShopOption
@@ -53,6 +55,24 @@ export function useMerchantDashboard(selectedShopId?: string) {
     enabled: !!user?.id && user?.type === 'merchant',
   });
 
+  const { data: monthlyStats = [], isLoading: monthlyStatsLoading, error: monthlyStatsError } = useQuery({
+    queryKey: ['merchant-monthly-stats', user?.id, selectedShopId],
+    queryFn: () => {
+      if (!user?.id) throw new Error('User not authenticated');
+      return fetchMerchantMonthlyStats(user.id, selectedShopId);
+    },
+    enabled: !!user?.id && user?.type === 'merchant',
+  });
+
+  const { data: giftCardStats = [], isLoading: giftCardStatsLoading, error: giftCardStatsError } = useQuery({
+    queryKey: ['merchant-giftcard-stats', user?.id, selectedShopId],
+    queryFn: () => {
+      if (!user?.id) throw new Error('User not authenticated');
+      return fetchMerchantGiftCardStats(user.id, selectedShopId);
+    },
+    enabled: !!user?.id && user?.type === 'merchant',
+  });
+
   console.log('Hook state:', { 
     user: user?.id, 
     userType: user?.type, 
@@ -69,7 +89,9 @@ export function useMerchantDashboard(selectedShopId?: string) {
     orders,
     shopOptions,
     giftCards,
-    isLoading: statsLoading || ordersLoading || shopsLoading || giftCardsLoading,
-    error: statsError || ordersError || shopsError || giftCardsError
+    monthlyStats,
+    giftCardStats,
+    isLoading: statsLoading || ordersLoading || shopsLoading || giftCardsLoading || monthlyStatsLoading || giftCardStatsLoading,
+    error: statsError || ordersError || shopsError || giftCardsError || monthlyStatsError || giftCardStatsError
   };
 }
