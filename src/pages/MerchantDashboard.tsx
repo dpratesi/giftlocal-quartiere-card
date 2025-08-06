@@ -32,7 +32,19 @@ const MerchantDashboard = () => {
   const navigate = useNavigate();
   const { user, logout, isAuthenticated, isMerchant } = useAuth();
   const [selectedShopId, setSelectedShopId] = useState<string | undefined>(undefined);
-  const { stats, orders, shopOptions, isLoading } = useMerchantDashboard(selectedShopId);
+  const { stats, orders, shopOptions, isLoading, error } = useMerchantDashboard(selectedShopId);
+
+  console.log('MerchantDashboard render:', { 
+    user: user?.id, 
+    userType: user?.type, 
+    isAuthenticated, 
+    isMerchant, 
+    isLoading, 
+    error: error?.message,
+    statsCount: stats ? Object.keys(stats).length : 0,
+    ordersCount: orders?.length || 0,
+    shopsCount: shopOptions?.length || 0
+  });
 
   useEffect(() => {
     if (!isAuthenticated || !isMerchant) {
