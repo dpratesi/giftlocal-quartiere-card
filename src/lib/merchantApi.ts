@@ -137,3 +137,74 @@ export async function fetchMerchantShopsOptions(merchantId: string): Promise<Sho
 
   return data || [];
 }
+
+// Fetch all merchant shops with full details
+export async function fetchMerchantShops(merchantId: string) {
+  const { data, error } = await supabase
+    .from('shops')
+    .select('*')
+    .eq('owner_id', merchantId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    throw new Error(`Failed to fetch merchant shops: ${error.message}`);
+  }
+
+  return data || [];
+}
+
+// Update shop information
+export async function updateShop(shopId: string, shopData: {
+  name: string;
+  category: string;
+  description: string;
+  neighborhood: string;
+  city: string;
+}) {
+  const { data, error } = await supabase
+    .from('shops')
+    .update({
+      ...shopData,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', shopId)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to update shop: ${error.message}`);
+  }
+
+  return data;
+}
+
+// Update shop gift card prices (store in gift_cards table)
+export async function updateShopGiftCardPrices(shopId: string, prices: number[]) {
+  // First, deactivate existing gift cards for this shop
+  const { error: deactivateError } = await supabase
+    .from('gift_cards')
+    .update({ is_active: false })
+    .eq('shop_id', shopId);
+
+  if (deactivateError) {
+    throw new Error(`Failed to deactivate existing gift cards: ${deactivateError.message}`);
+  }
+
+  // Then, insert new gift cards for each price
+  const giftCards = prices.map(price => ({
+    shop_id: shopId,
+    amount: price,
+    is_active: true,
+  }));
+
+  const { data, error } = await supabase
+    .from('gift_cards')
+    .insert(giftCards)
+    .select();
+
+  if (error) {
+    throw new Error(`Failed to update gift card prices: ${error.message}`);
+  }
+
+  return data;
+}

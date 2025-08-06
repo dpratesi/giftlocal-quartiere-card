@@ -13,6 +13,7 @@ import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import MerchantLogin from "./pages/MerchantLogin";
 import MerchantDashboard from "./pages/MerchantDashboard";
+import MerchantShops from "./pages/MerchantShops";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -44,6 +45,11 @@ const App = () => (
           <Route path="/merchant/dashboard" element={
             <ProtectedRoute requireMerchant>
               <MerchantDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/merchant/shops" element={
+            <ProtectedRoute requireMerchant>
+              <MerchantShops />
             </ProtectedRoute>
           } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

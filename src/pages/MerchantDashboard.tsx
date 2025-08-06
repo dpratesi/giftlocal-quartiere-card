@@ -14,7 +14,8 @@ import {
   Settings,
   LogOut,
   QrCode,
-  Building2
+  Building2,
+  Store
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -278,6 +279,15 @@ const MerchantDashboard = () => {
                     <p className="text-sm text-muted-foreground">
                       {selectedShopId ? "Per questo negozio" : "Totale per tutti i negozi"}
                     </p>
+                  </div>
+                  <div className="mt-6">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => navigate('/merchant/shops')}
+                    >
+                      <Store className="mr-2 h-4 w-4" />
+                      Gestisci Negozi
+                    </Button>
                   </div>
                 </div>
               </CardContent>
