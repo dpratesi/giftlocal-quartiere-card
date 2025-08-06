@@ -117,6 +117,15 @@ const MerchantDashboard = () => {
                 </Select>
               </div>
               <div className="flex items-center gap-2">
+                <Button 
+                  variant="default" 
+                  size="sm"
+                  onClick={() => navigate('/merchant/shops')}
+                  className="bg-primary text-primary-foreground hover:bg-primary/90"
+                >
+                  <Store className="w-4 h-4 mr-2" />
+                  Gestisci Negozi
+                </Button>
                 <QRRedemptionModal />
                 <MerchantSettingsModal 
                   merchantData={{ shopName: user.name, email: user.email }}
