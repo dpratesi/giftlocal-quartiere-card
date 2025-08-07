@@ -66,7 +66,7 @@ const Profile = () => {
             </p>
           </div>
           <Badge variant={isActive ? "default" : "secondary"}>
-            {isActive ? t('giftCard.status.active') : t(`giftCard.status.${reason}`)}
+            {isActive ? t('giftCard.status.active') : t(`giftCard.status.${reason}`) || reason}
           </Badge>
         </div>
         
