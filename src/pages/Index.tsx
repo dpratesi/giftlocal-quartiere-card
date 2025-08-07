@@ -12,6 +12,7 @@ import ShopCard from "@/components/ShopCard";
 import ShopMap from "@/components/ShopMap";
 import { ShopListSkeleton } from "@/components/ShopCardSkeleton";
 import { Link } from "react-router-dom";
+import MissionBanner from "@/components/MissionBanner";
 
 const Index = () => {
   const [searchParams] = useSearchParams();
@@ -200,7 +201,7 @@ const Index = () => {
             {filteredShops.length > 0 && view === 'grid' && (
               <div className="text-center mt-12">
                 <button 
-                  className="bg-primary hover:bg-primary-hover text-primary-foreground px-8 py-3 rounded-lg font-semibold transition-colors"
+                  className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
                   onClick={() => alert('Funzionalità in arrivo!')}
                 >
                   {t('shops.loadMore')}
@@ -216,7 +217,7 @@ const Index = () => {
                 </p>
                 <button
                   onClick={clearFilters}
-                  className="bg-primary hover:bg-primary-hover text-primary-foreground px-6 py-2 rounded-lg font-semibold transition-colors"
+                  className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white px-6 py-2 rounded-lg font-semibold transition-colors"
                 >
                   {t('shops.clearFilters')}
                 </button>
@@ -227,21 +228,24 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-local-green-light py-16">
+      <section className="bg-localize-sage-light py-16">
         <div className="container mx-auto px-4 text-center">
-          <h3 className="text-2xl font-display font-bold text-foreground mb-4">
+          <h3 className="text-2xl font-display font-bold text-localize-night mb-4">
             {t('cta.title')}
           </h3>
-          <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
+          <p className="text-lg text-localize-night/80 mb-8 max-w-xl mx-auto">
             {t('cta.description')}
           </p>
           <Link to="/register-shop">
-            <button className="bg-primary hover:bg-primary-hover text-primary-foreground px-8 py-3 rounded-lg font-semibold transition-colors">
+            <button className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
               {t('cta.registerShop')}
             </button>
           </Link>
         </div>
       </section>
+
+      {/* Mission Banner */}
+      <MissionBanner />
     </div>
   );
 };

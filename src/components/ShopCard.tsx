@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import LocalizeVerifiedBadge from "@/components/LocalizeVerifiedBadge";
 import type { Shop } from "@/lib/types";
 
 interface ShopCardProps extends Shop {}
@@ -26,7 +27,7 @@ const ShopCard = ({
 
   return (
     <Link to={`/shop/${id}`}>
-      <Card className="group hover:shadow-hover transition-all duration-300 hover:-translate-y-1 bg-gradient-card border-border/50 overflow-hidden cursor-pointer h-full">
+      <Card className="group hover:shadow-hover transition-all duration-300 hover:-translate-y-1 bg-gradient-card border-border/50 overflow-hidden cursor-pointer h-full rounded-2xl">
       <div className="relative">
         <img 
           src={`/placeholder.svg?height=200&width=300&text=${encodeURIComponent(name)}`}
@@ -43,7 +44,7 @@ const ShopCard = ({
           </Button>
         </div>
         <div className="absolute top-2 sm:top-3 left-2 sm:left-3">
-          <Badge variant="secondary" className="bg-local-green text-white text-xs sm:text-sm">
+          <Badge variant="secondary" className="bg-localize-sage text-white text-xs sm:text-sm rounded-full">
             {category}
           </Badge>
         </div>
@@ -69,9 +70,11 @@ const ShopCard = ({
 
           <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{description}</p>
 
+          <LocalizeVerifiedBadge />
+
           <div className="flex items-center justify-between">
             <div className="flex items-center text-xs sm:text-sm text-foreground">
-              <Euro className="w-3 h-3 sm:w-4 sm:h-4 mr-1 text-local-green flex-shrink-0" />
+              <Euro className="w-3 h-3 sm:w-4 sm:h-4 mr-1 text-localize-sage flex-shrink-0" />
               <span className="font-medium">
                 {minPrice === maxPrice ? `${minPrice}` : `${minPrice}-${maxPrice}`}
               </span>
@@ -85,7 +88,7 @@ const ShopCard = ({
 
       <CardFooter className="p-3 sm:p-4 pt-0">
         <Button 
-          className="w-full bg-primary hover:bg-primary-hover text-primary-foreground transition-colors text-sm sm:text-base"
+          className="w-full bg-localize-terracotta hover:bg-localize-terracotta/90 text-white transition-colors text-sm sm:text-base rounded-xl"
           size="sm"
         >
           {t('shops.discoverGiftCards')}

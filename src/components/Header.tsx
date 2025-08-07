@@ -14,17 +14,19 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="bg-card shadow-card border-b border-border sticky top-0 z-50">
+    <header className="bg-localize-cream shadow-card border-b border-border sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-            <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-hero rounded-full flex items-center justify-center">
-              <ShoppingBag className="w-4 h-4 md:w-6 md:h-6 text-white" />
+          <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-localize-sage rounded-full flex items-center justify-center relative overflow-hidden">
+              <div className="w-6 h-6 md:w-8 md:h-8 bg-localize-terracotta rounded-full flex items-center justify-center">
+                <MapPin className="w-3 h-3 md:w-4 md:h-4 text-white" />
+              </div>
             </div>
             <div>
-              <h1 className="text-lg md:text-xl font-display font-bold text-foreground">GiftLocal</h1>
-              <p className="text-xs text-muted-foreground hidden sm:block">{t('header.tagline')}</p>
+              <h1 className="text-lg md:text-xl font-display font-bold text-localize-night">Localize</h1>
+              <p className="text-xs text-localize-sage hidden sm:block font-serif italic">{t('header.tagline')}</p>
             </div>
           </Link>
 
@@ -76,7 +78,7 @@ const Header = () => {
               </div>
             ) : (
               <Link to="/login-select">
-                <Button variant="default" size="sm" className="bg-primary hover:bg-primary-hover">
+                <Button variant="default" size="sm" className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white">
                   {t('header.login')}
                 </Button>
               </Link>
@@ -130,7 +132,7 @@ const Header = () => {
                 </div>
               ) : (
                 <Link to="/login-select" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Button variant="default" className="w-full bg-primary hover:bg-primary-hover">
+                  <Button variant="default" className="w-full bg-localize-terracotta hover:bg-localize-terracotta/90 text-white">
                     {t('header.login')}
                   </Button>
                 </Link>

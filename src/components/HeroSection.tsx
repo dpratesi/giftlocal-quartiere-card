@@ -13,29 +13,30 @@ const HeroSection = () => {
 
           {/* Main headline */}
           <h1 className="text-5xl md:text-6xl font-display font-bold leading-tight">
-            Regala il tuo
-            <span className="block text-local-orange">quartiere</span>
+            Vedi locale,
+            <span className="block text-localize-terracotta">vivi locale</span>
           </h1>
 
           {/* Subtitle */}
           <p className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto leading-relaxed">
-            Scopri, acquista e regala gift card dei migliori negozi vicino a te. 
-            Un'unica piattaforma per sostenere la tua comunità locale.
+            Gli occhi della tua comunità digitale. Scopri, sostieni e condividi 
+            le gift card dei commercianti del tuo quartiere. Insieme facciamo 
+            fiorire l'economia locale.
           </p>
 
           {/* Stats */}
           <div className="flex flex-wrap justify-center gap-8 text-center py-4">
             <div>
-              <div className="text-3xl font-bold">150+</div>
-              <div className="text-sm text-white/80">Negozi Partner</div>
+              <div className="text-3xl font-bold text-localize-night">150+</div>
+              <div className="text-sm text-white/80">Commercianti Locali</div>
             </div>
             <div>
-              <div className="text-3xl font-bold">5000+</div>
-              <div className="text-sm text-white/80">Gift Card Vendute</div>
+              <div className="text-3xl font-bold text-localize-night">5000+</div>
+              <div className="text-sm text-white/80">Gift Card Attivate</div>
             </div>
             <div>
-              <div className="text-3xl font-bold">12</div>
-              <div className="text-sm text-white/80">Quartieri Coperti</div>
+              <div className="text-3xl font-bold text-localize-night">12</div>
+              <div className="text-sm text-white/80">Quartieri Connessi</div>
             </div>
           </div>
 

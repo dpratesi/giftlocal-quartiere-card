@@ -30,10 +30,10 @@ const CategoryFilter = ({ selectedCategories, onCategoryToggle }: CategoryFilter
               key={category.name}
               variant={isSelected ? "default" : "secondary"}
               className={`
-                px-4 py-2 cursor-pointer transition-all duration-200 hover:scale-105
+                px-4 py-2 cursor-pointer transition-all duration-200 hover:scale-105 rounded-full border
                 ${isSelected 
-                  ? "bg-primary text-primary-foreground shadow-warm" 
-                  : "bg-muted text-muted-foreground hover:bg-primary/10"
+                  ? "bg-localize-terracotta text-white border-localize-terracotta" 
+                  : "bg-white text-localize-sage border-localize-sage hover:bg-localize-terracotta hover:text-white hover:border-localize-terracotta"
                 }
               `}
               onClick={() => onCategoryToggle(category.name)}

@@ -53,14 +53,16 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				'local-green': {
-					DEFAULT: 'hsl(var(--local-green))',
-					light: 'hsl(var(--local-green-light))'
+				'localize-sage': {
+					DEFAULT: 'hsl(var(--localize-sage))',
+					light: 'hsl(var(--localize-sage-light))'
 				},
-				'local-orange': {
-					DEFAULT: 'hsl(var(--local-orange))',
-					light: 'hsl(var(--local-orange-light))'
+				'localize-terracotta': {
+					DEFAULT: 'hsl(var(--localize-terracotta))',
+					light: 'hsl(var(--localize-terracotta-light))'
 				},
+				'localize-night': 'hsl(var(--localize-night))',
+				'localize-cream': 'hsl(var(--localize-cream))',
 				'warm-gray': 'hsl(var(--warm-gray))',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',

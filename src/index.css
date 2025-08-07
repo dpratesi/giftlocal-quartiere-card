@@ -8,30 +8,30 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* GiftLocal - Design system per marketplace locale */
-    --background: 35 15% 97%;
-    --foreground: 24 15% 15%;
+    /* Localize - Design system per comunità locale */
+    --background: 45 100% 97%; /* Crema #FFF8E7 */
+    --foreground: 210 22% 22%; /* Blu Notte #2C3E50 */
 
     --card: 0 0% 100%;
-    --card-foreground: 24 15% 15%;
+    --card-foreground: 210 22% 22%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 24 15% 15%;
+    --popover-foreground: 210 22% 22%;
 
-    /* Verde locale come colore primario */
-    --primary: 142 76% 36%;
+    /* Terracotta come colore primario */
+    --primary: 15 56% 54%; /* Terracotta #CC6B49 */
     --primary-foreground: 0 0% 98%;
-    --primary-hover: 142 76% 32%;
+    --primary-hover: 15 56% 45%;
 
-    /* Arancione caldo per accenti */
-    --secondary: 25 95% 53%;
+    /* Verde Salvia per accenti */
+    --secondary: 84 28% 67%; /* Verde Salvia #87A96B */
     --secondary-foreground: 0 0% 98%;
 
     /* Neutri caldi */
     --muted: 35 15% 95%;
     --muted-foreground: 24 10% 45%;
 
-    --accent: 25 95% 53%;
+    --accent: 84 28% 67%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 84.2% 60.2%;
@@ -39,20 +39,22 @@ All colors MUST be HSL.
 
     --border: 35 15% 88%;
     --input: 35 15% 88%;
-    --ring: 142 76% 36%;
+    --ring: 15 56% 54%;
 
-    --radius: 0.75rem;
+    --radius: 1rem; /* Più morbido per Localize */
 
-    /* Custom tokens per GiftLocal */
-    --local-green: 142 76% 36%;
-    --local-green-light: 142 50% 90%;
-    --local-orange: 25 95% 53%;
-    --local-orange-light: 25 80% 95%;
+    /* Custom tokens per Localize */
+    --localize-sage: 84 28% 67%; /* Verde Salvia #87A96B */
+    --localize-sage-light: 84 40% 85%;
+    --localize-terracotta: 15 56% 54%; /* Terracotta #CC6B49 */
+    --localize-terracotta-light: 15 80% 80%;
+    --localize-night: 210 22% 22%; /* Blu Notte #2C3E50 */
+    --localize-cream: 45 100% 97%; /* Crema #FFF8E7 */
     --warm-gray: 24 10% 45%;
     --warm-background: 35 15% 97%;
 
-    /* Gradienti */
-    --gradient-hero: linear-gradient(135deg, hsl(142 76% 36%), hsl(25 95% 53%));
+    /* Gradienti Localize */
+    --gradient-hero: linear-gradient(135deg, hsl(84 28% 67%), hsl(15 56% 54%));
     --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(35 15% 98%));
     
     /* Ombre calde */

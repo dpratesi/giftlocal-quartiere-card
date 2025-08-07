@@ -20,7 +20,7 @@ const translations = {
     'header.hello': 'Ciao',
     'header.logout': 'Esci',
     'header.login': 'Accedi',
-    'header.tagline': 'Il tuo quartiere',
+    'header.tagline': 'Local-Eyes',
     
     // Common
     'common.loading': 'Caricamento...',
@@ -35,8 +35,8 @@ const translations = {
     'common.or': 'oppure',
     
     // Shop listing
-    'shops.featuredTitle': 'Negozi in Evidenza',
-    'shops.featuredDescription': 'Scopri i migliori negozi del tuo quartiere e sostieni la tua comunità locale con le nostre gift card digitali',
+    'shops.featuredTitle': 'I volti del tuo quartiere',
+    'shops.featuredDescription': 'Ogni acquisto è uno sguardo di fiducia. Conosci le storie dei commercianti che rendono unico il tuo quartiere.',
     'shops.shopsFound': 'negozi trovati',
     'shops.loadMore': 'Carica altri negozi',
     'shops.noResults': 'Nessun negozio trovato con i filtri selezionati',
@@ -51,7 +51,7 @@ const translations = {
     
     // CTA Section
     'cta.title': 'Hai un negozio?',
-    'cta.description': 'Unisciti a GiftLocal e inizia a vendere le tue gift card online. È semplice, veloce e gratuito.',
+    'cta.description': 'Unisciti a Localize e inizia a vendere le tue gift card online. È semplice, veloce e gratuito.',
     'cta.registerShop': 'Registra il tuo negozio',
     
     // Gift cards
@@ -102,7 +102,7 @@ const translations = {
     
     // Login Select
     'loginSelect.title': 'Scegli il tipo di accesso',
-    'loginSelect.description': 'Seleziona come vuoi accedere a GiftLocal',
+    'loginSelect.description': 'Seleziona come vuoi accedere a Localize',
     'loginSelect.customer': 'Cliente',
     'loginSelect.customerDescription': 'Accedi per acquistare gift card e scoprire i negozi del tuo quartiere',
     'loginSelect.loginAsCustomer': 'Accedi come Cliente',
@@ -111,7 +111,7 @@ const translations = {
     'loginSelect.loginAsMerchant': 'Accedi come Merchant',
     
     // Login
-    'login.title': 'GiftLocal',
+    'login.title': 'Localize',
     'login.description': 'Accedi o registrati per gestire le tue gift card',
     'login.tab.login': 'Accedi',
     'login.tab.signup': 'Registrati',
@@ -129,11 +129,11 @@ const translations = {
     'login.signingUp': 'Registrazione in corso...',
     'login.continueWithGoogle': 'Continua con Google',
     'login.loginSuccess': 'Login effettuato',
-    'login.welcomeMessage': 'Benvenuto in GiftLocal!',
+    'login.welcomeMessage': 'Benvenuto in Localize!',
     'login.loginError': 'Errore di login',
     'login.invalidCredentials': 'Email o password non corretti',
     'login.signupSuccess': 'Registrazione completata',
-    'login.signupWelcome': 'Benvenuto in GiftLocal! Effettua il login per continuare.',
+    'login.signupWelcome': 'Benvenuto in Localize! Effettua il login per continuare.',
     'login.signupError': 'Errore di registrazione',
     'login.signupGenericError': 'Si è verificato un errore durante la registrazione',
     'login.passwordMismatch': 'Le password non coincidono',
@@ -182,7 +182,7 @@ const translations = {
     
     // CTA Section
     'cta.title': 'Do you have a shop?',
-    'cta.description': 'Join GiftLocal and start selling your gift cards online. It\'s simple, fast and free.',
+    'cta.description': 'Join Localize and start selling your gift cards online. It\'s simple, fast and free.',
     'cta.registerShop': 'Register your shop',
     
     // Gift cards
@@ -233,7 +233,7 @@ const translations = {
     
     // Login Select
     'loginSelect.title': 'Choose your access type',
-    'loginSelect.description': 'Select how you want to access GiftLocal',
+    'loginSelect.description': 'Select how you want to access Localize',
     'loginSelect.customer': 'Customer',
     'loginSelect.customerDescription': 'Log in to buy gift cards and discover shops in your neighborhood',
     'loginSelect.loginAsCustomer': 'Login as Customer',
@@ -242,7 +242,7 @@ const translations = {
     'loginSelect.loginAsMerchant': 'Login as Merchant',
     
     // Login
-    'login.title': 'GiftLocal',
+    'login.title': 'Localize',
     'login.description': 'Login or register to manage your gift cards',
     'login.tab.login': 'Login',
     'login.tab.signup': 'Sign Up',
@@ -260,11 +260,11 @@ const translations = {
     'login.signingUp': 'Signing up...',
     'login.continueWithGoogle': 'Continue with Google',
     'login.loginSuccess': 'Login successful',
-    'login.welcomeMessage': 'Welcome to GiftLocal!',
+    'login.welcomeMessage': 'Welcome to Localize!',
     'login.loginError': 'Login error',
     'login.invalidCredentials': 'Invalid email or password',
     'login.signupSuccess': 'Registration completed',
-    'login.signupWelcome': 'Welcome to GiftLocal! Please log in to continue.',
+    'login.signupWelcome': 'Welcome to Localize! Please log in to continue.',
     'login.signupError': 'Registration error',
     'login.signupGenericError': 'An error occurred during registration',
     'login.passwordMismatch': 'Passwords do not match',
