@@ -1,13 +1,14 @@
 import { Badge } from "@/components/ui/badge";
 import { Coffee, UtensilsCrossed, Book, Scissors, Shirt, Gift } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const categories = [
-  { name: "Tutti", icon: Gift, active: true },
-  { name: "Bar & Caffè", icon: Coffee, active: false },
-  { name: "Ristoranti", icon: UtensilsCrossed, active: false },
-  { name: "Librerie", icon: Book, active: false },
-  { name: "Bellezza", icon: Scissors, active: false },
-  { name: "Abbigliamento", icon: Shirt, active: false },
+  { key: "all", icon: Gift },
+  { key: "bar", icon: Coffee },
+  { key: "restaurant", icon: UtensilsCrossed },
+  { key: "bookstore", icon: Book },
+  { key: "beauty", icon: Scissors },
+  { key: "clothing", icon: Shirt },
 ];
 
 interface CategoryFilterProps {
@@ -16,18 +17,21 @@ interface CategoryFilterProps {
 }
 
 const CategoryFilter = ({ selectedCategories, onCategoryToggle }: CategoryFilterProps) => {
+  const { t } = useLanguage();
+  
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="flex flex-wrap gap-3 justify-center">
         {categories.map((category) => {
           const IconComponent = category.icon;
-          const isSelected = category.name === "Tutti" 
+          const categoryName = t(`categories.${category.key}`);
+          const isSelected = category.key === "all" 
             ? selectedCategories.length === 0 
-            : selectedCategories.includes(category.name);
+            : selectedCategories.includes(categoryName);
           
           return (
             <Badge
-              key={category.name}
+              key={category.key}
               variant={isSelected ? "default" : "secondary"}
               className={`
                 px-4 py-2 cursor-pointer transition-all duration-200 hover:scale-105 rounded-full border
@@ -36,10 +40,10 @@ const CategoryFilter = ({ selectedCategories, onCategoryToggle }: CategoryFilter
                   : "bg-white text-localize-sage border-localize-sage hover:bg-localize-terracotta hover:text-white hover:border-localize-terracotta"
                 }
               `}
-              onClick={() => onCategoryToggle(category.name)}
+              onClick={() => onCategoryToggle(categoryName)}
             >
               <IconComponent className="w-4 h-4 mr-2" />
-              {category.name}
+              {categoryName}
             </Badge>
           );
         })}

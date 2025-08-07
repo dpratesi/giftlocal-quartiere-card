@@ -167,6 +167,14 @@ const translations = {
     'giftCard.securePayment': 'Pagamento sicuro',
     'giftCard.instantDelivery': 'Consegna immediata',
     
+    // Categories
+    'categories.all': 'Tutti',
+    'categories.bar': 'Bar & Caffè',
+    'categories.restaurant': 'Ristoranti',
+    'categories.bookstore': 'Librerie',
+    'categories.beauty': 'Bellezza',
+    'categories.clothing': 'Abbigliamento',
+    
     // Profile dropdown
     'profile.greeting': 'Ciao',
     'profile.dashboard': 'Dashboard',
@@ -327,6 +335,14 @@ const translations = {
     'giftCard.selectAmount': 'Select an amount',
     'giftCard.securePayment': 'Secure payment',
     'giftCard.instantDelivery': 'Instant delivery',
+    
+    // Categories  
+    'categories.all': 'All',
+    'categories.bar': 'Bars & Cafés',
+    'categories.restaurant': 'Restaurants',
+    'categories.bookstore': 'Bookstores',
+    'categories.beauty': 'Beauty',
+    'categories.clothing': 'Clothing',
     
     // Profile dropdown
     'profile.greeting': 'Hello',
