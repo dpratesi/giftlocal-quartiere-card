@@ -1,16 +1,24 @@
-import { Search, MapPin, Heart, User, ShoppingBag, LogOut, Menu, X } from "lucide-react";
+import { Search, MapPin, Heart, User, ShoppingBag, LogOut, Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useState } from "react";
 import CitySelector from "@/components/CitySelector";
 import LanguageToggle from "@/components/LanguageToggle";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Header = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
@@ -56,21 +64,35 @@ const Header = () => {
           <div className="hidden lg:flex items-center space-x-3">
             <LanguageToggle />
             <CitySelector />
-            <Link to="/profile">
-              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-                <User className="w-5 h-5" />
-              </Button>
-            </Link>
             {isAuthenticated ? (
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-muted-foreground hidden xl:block">
-                  {t('header.hello')}, {user?.name}
-                </span>
-                <Button variant="outline" size="sm" onClick={logout}>
-                  <LogOut className="w-4 h-4 mr-2" />
-                  <span className="hidden xl:inline">{t('header.logout')}</span>
-                </Button>
-              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground flex items-center space-x-1">
+                    <User className="w-5 h-5" />
+                    <ChevronDown className="w-3 h-3" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 bg-background border border-border shadow-lg z-[60]">
+                  <div className="px-3 py-2 text-sm text-muted-foreground border-b border-border">
+                    Ciao, {user?.name || 'utente'}
+                  </div>
+                  <DropdownMenuItem 
+                    className="cursor-pointer"
+                    onClick={() => navigate('/profile')}
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    Dashboard
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    className="cursor-pointer text-destructive focus:text-destructive"
+                    onClick={logout}
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Esci
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <Link to="/login-select">
                 <Button variant="default" size="sm" className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white">
