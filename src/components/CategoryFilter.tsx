@@ -3,12 +3,12 @@ import { Coffee, UtensilsCrossed, Book, Scissors, Shirt, Gift } from "lucide-rea
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const categories = [
-  { key: "all", icon: Gift },
-  { key: "bar", icon: Coffee },
-  { key: "restaurant", icon: UtensilsCrossed },
-  { key: "bookstore", icon: Book },
-  { key: "beauty", icon: Scissors },
-  { key: "clothing", icon: Shirt },
+  { key: "all", icon: Gift, dbName: "" },
+  { key: "bar", icon: Coffee, dbName: "Caffetteria" },
+  { key: "restaurant", icon: UtensilsCrossed, dbName: "Ristorante" },
+  { key: "bookstore", icon: Book, dbName: "Libreria" },
+  { key: "beauty", icon: Scissors, dbName: "Moda" },
+  { key: "clothing", icon: Shirt, dbName: "abbigliamento" },
 ];
 
 interface CategoryFilterProps {
@@ -27,7 +27,7 @@ const CategoryFilter = ({ selectedCategories, onCategoryToggle }: CategoryFilter
           const categoryName = t(`categories.${category.key}`);
           const isSelected = category.key === "all" 
             ? selectedCategories.length === 0 
-            : selectedCategories.includes(categoryName);
+            : selectedCategories.includes(category.dbName);
           
           return (
             <Badge
@@ -40,7 +40,7 @@ const CategoryFilter = ({ selectedCategories, onCategoryToggle }: CategoryFilter
                   : "bg-white text-localize-sage border-localize-sage hover:bg-localize-terracotta hover:text-white hover:border-localize-terracotta"
                 }
               `}
-              onClick={() => onCategoryToggle(categoryName)}
+              onClick={() => onCategoryToggle(category.dbName)}
             >
               <IconComponent className="w-4 h-4 mr-2" />
               {categoryName}
