@@ -183,7 +183,18 @@ const translations = {
     
     // Shop cards
     'shop.sampleDescription': 'Scopri questo fantastico negozio locale che offre prodotti e servizi di qualità nel cuore del quartiere.',
-    'merchant.verified': 'Commerciante Verificato'
+    'merchant.verified': 'Commerciante Verificato',
+    
+    // Filters
+    'filters.title': 'Filtri',
+    'filters.shopsTitle': 'Filtri Negozi', 
+    'filters.clearAll': 'Cancella tutto',
+    'filters.category': 'Categoria',
+    'filters.priceRange': 'Range Prezzo Gift Card',
+    'filters.minRating': 'Valutazione minima',
+    'filters.allRatings': 'Tutte',
+    'filters.maxDistance': 'Distanza massima',
+    'filters.allDistances': 'Tutte'
   },
   en: {
     // Header
@@ -356,7 +367,18 @@ const translations = {
     
     // Shop cards  
     'shop.sampleDescription': 'Discover this fantastic local shop offering quality products and services in the heart of the neighborhood.',
-    'merchant.verified': 'Verified Merchant'
+    'merchant.verified': 'Verified Merchant',
+    
+    // Filters
+    'filters.title': 'Filters',
+    'filters.shopsTitle': 'Shop Filters',
+    'filters.clearAll': 'Clear all', 
+    'filters.category': 'Category',
+    'filters.priceRange': 'Gift Card Price Range',
+    'filters.minRating': 'Minimum rating',
+    'filters.allRatings': 'All',
+    'filters.maxDistance': 'Maximum distance',
+    'filters.allDistances': 'All'
   }
 };
 

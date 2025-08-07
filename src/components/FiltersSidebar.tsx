@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { FilterState } from "./ShopFilters";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FiltersSidebarProps {
   filters: FilterState;
@@ -15,19 +16,27 @@ interface FiltersSidebarProps {
   onClearFilters: () => void;
 }
 
-const categories = ["Bar & Caffè", "Ristoranti", "Librerie", "Bellezza", "Abbigliamento", "Alimentari"];
+// Stesso mapping usato in CategoryFilter per consistenza
+const categories = [
+  { key: "bar", dbName: "Caffetteria" },
+  { key: "restaurant", dbName: "Ristorante" },
+  { key: "bookstore", dbName: "Libreria" },
+  { key: "beauty", dbName: "Moda" },
+  { key: "clothing", dbName: "abbigliamento" },
+];
 
 const FiltersSidebar = ({ filters, onFiltersChange, onClearFilters }: FiltersSidebarProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useLanguage();
 
   const updateFilters = (key: keyof FilterState, value: any) => {
     onFiltersChange({ ...filters, [key]: value });
   };
 
-  const toggleCategory = (category: string) => {
-    const newCategories = filters.categories.includes(category)
-      ? filters.categories.filter(c => c !== category)
-      : [...filters.categories, category];
+  const toggleCategory = (dbName: string) => {
+    const newCategories = filters.categories.includes(dbName)
+      ? filters.categories.filter(c => c !== dbName)
+      : [...filters.categories, dbName];
     updateFilters('categories', newCategories);
   };
 
@@ -41,7 +50,7 @@ const FiltersSidebar = ({ filters, onFiltersChange, onClearFilters }: FiltersSid
       <SheetTrigger asChild>
         <Button variant="outline" className="gap-2">
           <Filter className="w-4 h-4" />
-          Filtri
+          {t('filters.title')}
           {activeFiltersCount > 0 && (
             <Badge variant="secondary" className="bg-primary text-primary-foreground px-1.5 py-0.5 text-xs">
               {activeFiltersCount}
@@ -54,7 +63,7 @@ const FiltersSidebar = ({ filters, onFiltersChange, onClearFilters }: FiltersSid
         <SheetHeader className="pb-4">
           <div className="flex items-center justify-between">
             <SheetTitle className="flex items-center gap-2">
-              Filtri Negozi
+              {t('filters.shopsTitle')}
               {activeFiltersCount > 0 && (
                 <Badge variant="secondary" className="bg-primary text-primary-foreground">
                   {activeFiltersCount}
@@ -68,7 +77,7 @@ const FiltersSidebar = ({ filters, onFiltersChange, onClearFilters }: FiltersSid
                 onClick={onClearFilters}
                 className="text-muted-foreground hover:text-foreground"
               >
-                Cancella tutto
+                {t('filters.clearAll')}
               </Button>
             )}
           </div>
@@ -77,20 +86,20 @@ const FiltersSidebar = ({ filters, onFiltersChange, onClearFilters }: FiltersSid
         <div className="space-y-6 pr-4">
           {/* Categories */}
           <div>
-            <Label className="text-sm font-medium mb-3 block">Categoria</Label>
+            <Label className="text-sm font-medium mb-3 block">{t('filters.category')}</Label>
             <div className="space-y-3">
               {categories.map((category) => (
-                <div key={category} className="flex items-center space-x-2">
+                <div key={category.key} className="flex items-center space-x-2">
                   <Checkbox
-                    id={`category-${category}`}
-                    checked={filters.categories.includes(category)}
-                    onCheckedChange={() => toggleCategory(category)}
+                    id={`category-${category.key}`}
+                    checked={filters.categories.includes(category.dbName)}
+                    onCheckedChange={() => toggleCategory(category.dbName)}
                   />
                   <Label
-                    htmlFor={`category-${category}`}
+                    htmlFor={`category-${category.key}`}
                     className="text-sm cursor-pointer flex-1"
                   >
-                    {category}
+                    {t(`categories.${category.key}`)}
                   </Label>
                 </div>
               ))}
@@ -101,7 +110,7 @@ const FiltersSidebar = ({ filters, onFiltersChange, onClearFilters }: FiltersSid
           <div>
             <Label className="text-sm font-medium mb-3 block flex items-center gap-1">
               <Euro className="w-4 h-4" />
-              Range Prezzo Gift Card: €{filters.priceRange[0]} - €{filters.priceRange[1]}
+              {t('filters.priceRange')}: €{filters.priceRange[0]} - €{filters.priceRange[1]}
             </Label>
             <Slider
               value={filters.priceRange}
@@ -117,7 +126,7 @@ const FiltersSidebar = ({ filters, onFiltersChange, onClearFilters }: FiltersSid
           <div>
             <Label className="text-sm font-medium mb-3 block flex items-center gap-1">
               <Star className="w-4 h-4" />
-              Valutazione minima
+              {t('filters.minRating')}
             </Label>
             <RadioGroup
               value={filters.minRating.toString()}
@@ -127,9 +136,9 @@ const FiltersSidebar = ({ filters, onFiltersChange, onClearFilters }: FiltersSid
               {[0, 4.0, 4.5, 4.8].map((rating) => (
                 <div key={rating} className="flex items-center space-x-2">
                   <RadioGroupItem value={rating.toString()} id={`rating-${rating}`} />
-                  <Label htmlFor={`rating-${rating}`} className="flex items-center gap-1 cursor-pointer">
+                   <Label htmlFor={`rating-${rating}`} className="flex items-center gap-1 cursor-pointer">
                     {rating === 0 ? (
-                      "Tutte"
+                      t('filters.allRatings')
                     ) : (
                       <>
                         <Star className="w-3 h-3 text-yellow-500 fill-current" />
@@ -146,7 +155,7 @@ const FiltersSidebar = ({ filters, onFiltersChange, onClearFilters }: FiltersSid
           <div>
             <Label className="text-sm font-medium mb-3 block flex items-center gap-1">
               <MapPin className="w-4 h-4" />
-              Distanza massima: {filters.maxDistance === 1000 ? "Tutte" : `${filters.maxDistance}m`}
+              {t('filters.maxDistance')}: {filters.maxDistance === 1000 ? t('filters.allDistances') : `${filters.maxDistance}m`}
             </Label>
             <Slider
               value={[filters.maxDistance]}
