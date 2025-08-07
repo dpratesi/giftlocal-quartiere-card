@@ -80,15 +80,13 @@ const translations = {
     'giftCard.expiresOn': 'Scade il',
     'giftCard.message': 'Messaggio',
     'giftCard.purchasedOn': 'Acquistata il',
-    'giftCard.status': {
-      'active': 'Attiva',
-      'used': 'Utilizzata',
-      'expired': 'Scaduta',
-      'cancelled': 'Annullata',
-      'estinta': 'Estinta',
-      'scaduta': 'Scaduta',
-      'inactive': 'Inattiva'
-    },
+    'giftCard.status.active': 'Attiva',
+    'giftCard.status.used': 'Utilizzata',
+    'giftCard.status.expired': 'Scaduta',
+    'giftCard.status.cancelled': 'Annullata',
+    'giftCard.status.estinta': 'Estinta',
+    'giftCard.status.scaduta': 'Scaduta',
+    'giftCard.status.inactive': 'Inattiva',
     
     // Profile
     'profile.title': 'Il mio profilo',
@@ -224,15 +222,13 @@ const translations = {
     'giftCard.expiresOn': 'Expires on',
     'giftCard.message': 'Message',
     'giftCard.purchasedOn': 'Purchased on',
-    'giftCard.status': {
-      'active': 'Active',
-      'used': 'Used',
-      'expired': 'Expired',
-      'cancelled': 'Cancelled',
-      'estinta': 'Depleted',
-      'scaduta': 'Expired',
-      'inactive': 'Inactive'
-    },
+    'giftCard.status.active': 'Active',
+    'giftCard.status.used': 'Used',
+    'giftCard.status.expired': 'Expired',
+    'giftCard.status.cancelled': 'Cancelled',
+    'giftCard.status.estinta': 'Depleted',
+    'giftCard.status.scaduta': 'Expired',
+    'giftCard.status.inactive': 'Inactive',
     
     // Profile
     'profile.title': 'My profile',
