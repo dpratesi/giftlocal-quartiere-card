@@ -11,7 +11,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 
 export interface FilterState {
   categories: string[];
-  cities: string[];
   priceRange: [number, number];
   minRating: number;
   maxDistance: number;
@@ -24,7 +23,6 @@ interface ShopFiltersProps {
 }
 
 const categories = ["Bar & Caffè", "Ristoranti", "Librerie", "Bellezza", "Abbigliamento", "Alimentari"];
-const cities = ["Borgo Vecchio", "Centro Storico", "Porta Romana", "Quartiere Moda"];
 
 const ShopFilters = ({ filters, onFiltersChange, onClearFilters }: ShopFiltersProps) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,16 +38,9 @@ const ShopFilters = ({ filters, onFiltersChange, onClearFilters }: ShopFiltersPr
     updateFilters('categories', newCategories);
   };
 
-  const toggleCity = (city: string) => {
-    const newCities = filters.cities.includes(city)
-      ? filters.cities.filter(c => c !== city)
-      : [...filters.cities, city];
-    updateFilters('cities', newCities);
-  };
 
   const activeFiltersCount = 
     filters.categories.length + 
-    filters.cities.length + 
     (filters.minRating > 0 ? 1 : 0) + 
     (filters.maxDistance < 1000 ? 1 : 0);
 
@@ -111,27 +102,6 @@ const ShopFilters = ({ filters, onFiltersChange, onClearFilters }: ShopFiltersPr
               </div>
             </div>
 
-            {/* Cities */}
-            <div>
-              <Label className="text-sm font-medium mb-3 block">Quartiere</Label>
-              <div className="grid grid-cols-2 gap-2">
-                {cities.map((city) => (
-                  <div key={city} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`city-${city}`}
-                      checked={filters.cities.includes(city)}
-                      onCheckedChange={() => toggleCity(city)}
-                    />
-                    <Label
-                      htmlFor={`city-${city}`}
-                      className="text-sm cursor-pointer"
-                    >
-                      {city}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </div>
 
             {/* Price Range */}
             <div>

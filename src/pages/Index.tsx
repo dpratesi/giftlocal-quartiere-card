@@ -21,29 +21,17 @@ const Index = () => {
   const [view, setView] = useState<'grid' | 'map'>('grid');
   const [filters, setFilters] = useState<FilterState>(() => ({
     categories: initialCategory ? [initialCategory] : [],
-    cities: initialCity ? [initialCity] : [],
     priceRange: [10, 200],
     minRating: 0,
     maxDistance: 1000
   }));
 
-  // Update filters when user's preferred city changes or URL has city param
-  useEffect(() => {
-    // If there's a city in URL, use that (has priority)
-    if (initialCity) {
-      setFilters(prev => ({
-        ...prev,
-        cities: [initialCity]
-      }));
-    }
-    // Otherwise, if user is authenticated and has preferred city and no city filter is set
-    else if (isAuthenticated && user?.preferred_city && filters.cities.length === 0) {
-      setFilters(prev => ({
-        ...prev,
-        cities: [user.preferred_city!]
-      }));
-    }
-  }, [user?.preferred_city, isAuthenticated, initialCity]);
+  // Get current city from URL or user preference
+  const currentCity = useMemo(() => {
+    if (initialCity) return initialCity;
+    if (isAuthenticated && user?.preferred_city) return user.preferred_city;
+    return null;
+  }, [initialCity, isAuthenticated, user?.preferred_city]);
 
   const { shops, isLoading, error } = useShops();
 
@@ -54,12 +42,8 @@ const Index = () => {
         return false;
       }
       
-      // City or neighborhood filter
-      if (
-        filters.cities.length > 0 &&
-        !filters.cities.includes(shop.neighborhood) &&
-        !filters.cities.includes(shop.city)
-      ) {
+      // City or neighborhood filter (based on current city)
+      if (currentCity && shop.city !== currentCity && shop.neighborhood !== currentCity) {
         return false;
       }
       
@@ -83,7 +67,7 @@ const Index = () => {
       
       return true;
     });
-  }, [filters, shops]);
+  }, [filters, shops, currentCity]);
 
   const handleCategoryToggle = (category: string) => {
     if (category === "Tutti") {
@@ -101,7 +85,6 @@ const Index = () => {
   const clearFilters = () => {
     setFilters({
       categories: [],
-      cities: [],
       priceRange: [10, 200],
       minRating: 0,
       maxDistance: 1000
@@ -191,8 +174,8 @@ const Index = () => {
               <div>
                 <p className="text-muted-foreground">
                   {filteredShops.length} negozi trovati
-                  {filters.cities.length > 0 && (
-                    <span className="text-primary font-medium"> a {filters.cities.join(', ')}</span>
+                  {currentCity && (
+                    <span className="text-primary font-medium"> a {currentCity}</span>
                   )}
                 </p>
               </div>
