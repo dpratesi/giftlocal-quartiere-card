@@ -291,7 +291,11 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     let value: any = translations[language];
     
     for (const k of keys) {
-      value = value?.[k];
+      if (value && typeof value === 'object' && k in value) {
+        value = value[k];
+      } else {
+        return key; // Return the key if path doesn't exist
+      }
     }
     
     return typeof value === 'string' ? value : key;
