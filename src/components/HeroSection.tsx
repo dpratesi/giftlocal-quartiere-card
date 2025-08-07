@@ -1,4 +1,7 @@
+import { useLanguage } from "@/contexts/LanguageContext";
+
 const HeroSection = () => {
+  const { t } = useLanguage();
   return (
     <section className="bg-gradient-hero text-white py-10 relative overflow-hidden">
       {/* Decorative elements */}
@@ -13,30 +16,28 @@ const HeroSection = () => {
 
           {/* Main headline */}
           <h1 className="text-5xl md:text-6xl font-display font-bold leading-tight">
-            Vedi locale,
-            <span className="block text-localize-terracotta">vivi locale</span>
+            {t('hero.title')}
+            <span className="block text-localize-terracotta">{t('hero.titleAccent')}</span>
           </h1>
 
           {/* Subtitle */}
           <p className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto leading-relaxed">
-            Gli occhi della tua comunità digitale. Scopri, sostieni e condividi 
-            le gift card dei commercianti del tuo quartiere. Insieme facciamo 
-            fiorire l'economia locale.
+            {t('hero.subtitle')}
           </p>
 
           {/* Stats */}
           <div className="flex flex-wrap justify-center gap-8 text-center py-4">
             <div>
               <div className="text-3xl font-bold text-localize-night">150+</div>
-              <div className="text-sm text-white/80">Commercianti Locali</div>
+              <div className="text-sm text-white/80">{t('hero.stats.merchants')}</div>
             </div>
             <div>
               <div className="text-3xl font-bold text-localize-night">5000+</div>
-              <div className="text-sm text-white/80">Gift Card Attivate</div>
+              <div className="text-sm text-white/80">{t('hero.stats.giftCards')}</div>
             </div>
             <div>
               <div className="text-3xl font-bold text-localize-night">12</div>
-              <div className="text-sm text-white/80">Quartieri Connessi</div>
+              <div className="text-sm text-white/80">{t('hero.stats.neighborhoods')}</div>
             </div>
           </div>
 
