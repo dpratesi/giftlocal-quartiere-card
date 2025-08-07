@@ -287,6 +287,13 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, [language]);
 
   const t = (key: string): string => {
+    // First try to get the translation directly (flat structure)
+    const translation = translations[language][key];
+    if (translation) {
+      return translation;
+    }
+    
+    // Fallback: try nested structure
     const keys = key.split('.');
     let value: any = translations[language];
     
