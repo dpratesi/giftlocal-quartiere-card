@@ -58,11 +58,6 @@ const Header = () => {
             <CitySelector />
             <Link to="/profile">
               <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-                <Heart className="w-5 h-5" />
-              </Button>
-            </Link>
-            <Link to="/profile">
-              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
                 <User className="w-5 h-5" />
               </Button>
             </Link>
