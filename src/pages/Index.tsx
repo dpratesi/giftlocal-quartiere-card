@@ -6,7 +6,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import CategoryFilter from "@/components/CategoryFilter";
-import ShopFilters, { FilterState } from "@/components/ShopFilters";
+import FiltersSidebar from "@/components/FiltersSidebar";
+import { FilterState } from "@/components/ShopFilters";
 import ViewToggle from "@/components/ViewToggle";
 import ShopCard from "@/components/ShopCard";
 import ShopMap from "@/components/ShopMap";
@@ -161,70 +162,65 @@ const Index = () => {
           </p>
         </div>
 
-        {/* Filters and View Toggle */}
-        <div className="flex flex-col xl:flex-row gap-6 mb-8">
-          <div className="xl:w-1/4">
-            <ShopFilters 
-              filters={filters}
-              onFiltersChange={setFilters}
-              onClearFilters={clearFilters}
-            />
-          </div>
-          
-          <div className="xl:w-3/4">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-              <div>
-                <p className="text-muted-foreground">
-                  {filteredShops.length} {t('shops.shopsFound')}
-                  {currentCity && (
-                    <span className="text-primary font-medium"> {currentCity}</span>
-                  )}
-                </p>
-              </div>
-              <ViewToggle view={view} onViewChange={setView} />
+        {/* Content with Filters Button */}
+        <div className="mb-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex items-center gap-4">
+              <FiltersSidebar 
+                filters={filters}
+                onFiltersChange={setFilters}
+                onClearFilters={clearFilters}
+              />
+              <p className="text-muted-foreground">
+                {filteredShops.length} {t('shops.shopsFound')}
+                {currentCity && (
+                  <span className="text-primary font-medium"> {currentCity}</span>
+                )}
+              </p>
             </div>
-
-            {/* Shop Display */}
-            {view === 'grid' ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 animate-fade-in">
-                {filteredShops.map((shop) => (
-                  <div key={shop.id} className="animate-scale-in">
-                    <ShopCard {...shop} />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <ShopMap shops={filteredShops} />
-            )}
-
-            {/* Load More Button */}
-            {filteredShops.length > 0 && view === 'grid' && (
-              <div className="text-center mt-12">
-                <button 
-                  className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
-                  onClick={() => alert('Funzionalità in arrivo!')}
-                >
-                  {t('shops.loadMore')}
-                </button>
-              </div>
-            )}
-
-            {/* No results */}
-            {filteredShops.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground mb-4">
-                  {t('shops.noResults')}
-                </p>
-                <button
-                  onClick={clearFilters}
-                  className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white px-6 py-2 rounded-lg font-semibold transition-colors"
-                >
-                  {t('shops.clearFilters')}
-                </button>
-              </div>
-            )}
+            <ViewToggle view={view} onViewChange={setView} />
           </div>
         </div>
+
+        {/* Shop Display */}
+        {view === 'grid' ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 animate-fade-in">
+            {filteredShops.map((shop) => (
+              <div key={shop.id} className="animate-scale-in">
+                <ShopCard {...shop} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <ShopMap shops={filteredShops} />
+        )}
+
+        {/* Load More Button */}
+        {filteredShops.length > 0 && view === 'grid' && (
+          <div className="text-center mt-12">
+            <button 
+              className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+              onClick={() => alert('Funzionalità in arrivo!')}
+            >
+              {t('shops.loadMore')}
+            </button>
+          </div>
+        )}
+
+        {/* No results */}
+        {filteredShops.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground mb-4">
+              {t('shops.noResults')}
+            </p>
+            <button
+              onClick={clearFilters}
+              className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white px-6 py-2 rounded-lg font-semibold transition-colors"
+            >
+              {t('shops.clearFilters')}
+            </button>
+          </div>
+        )}
       </section>
 
       {/* CTA Section */}
