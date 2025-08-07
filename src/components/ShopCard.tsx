@@ -3,6 +3,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 import type { Shop } from "@/lib/types";
 
 interface ShopCardProps extends Shop {}
@@ -19,6 +20,7 @@ const ShopCard = ({
   description,
   neighborhood 
 }: ShopCardProps) => {
+  const { t } = useLanguage();
   const minPrice = Math.min(...giftCardPrices);
   const maxPrice = Math.max(...giftCardPrices);
 
@@ -75,7 +77,7 @@ const ShopCard = ({
               </span>
             </div>
             <Badge variant="outline" className="text-xs">
-              {giftCardPrices.length} gift card
+              {giftCardPrices.length} {t('shops.giftCards')}
             </Badge>
           </div>
         </div>
@@ -86,7 +88,7 @@ const ShopCard = ({
           className="w-full bg-primary hover:bg-primary-hover text-primary-foreground transition-colors text-sm sm:text-base"
           size="sm"
         >
-          Scopri Gift Card
+          {t('shops.discoverGiftCards')}
         </Button>
       </CardFooter>
     </Card>

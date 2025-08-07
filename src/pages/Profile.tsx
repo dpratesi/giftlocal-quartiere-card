@@ -6,17 +6,19 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import { useGiftCards } from "@/hooks/useGiftCards";
 import { format } from "date-fns";
-import { it } from "date-fns/locale";
+import { it, enUS } from "date-fns/locale";
 import GiftCardDetailsModal from "@/components/GiftCardDetailsModal";
 import QRPaymentModal from "@/components/QRPaymentModal";
 import type { PurchasedGiftCard } from "@/lib/types";
 
 const Profile = () => {
   const { user, logout } = useAuth();
+  const { t, language } = useLanguage();
   const navigate = useNavigate();
   const { giftCards, isLoading: isLoadingGiftCards } = useGiftCards();
   const [selectedGiftCard, setSelectedGiftCard] = useState<PurchasedGiftCard | null>(null);
@@ -44,83 +46,82 @@ const Profile = () => {
     if (card.status !== 'active') return card.status;
     if (card.remaining_value === 0) return 'estinta';
     if (new Date(card.expiry_date) <= new Date()) return 'scaduta';
-    return 'inattiva';
+    return 'inactive';
   };
 
-  const renderGiftCard = (card: any, isActive: boolean) => (
-    <div key={card.id} className="border border-border rounded-lg p-4 hover:border-primary transition-colors">
-      <div className="flex items-start justify-between mb-3">
-        <div>
-          <h3 className="font-semibold">{card.shop?.name || 'Negozio'}</h3>
-          <p className="text-sm text-muted-foreground">
-            Acquistata il {format(new Date(card.purchase_date), 'dd MMMM yyyy', { locale: it })}
-          </p>
-          <p className="text-xs text-muted-foreground font-mono">
-            Codice: {card.gift_card_code}
-          </p>
+  const renderGiftCard = (card: any, isActive: boolean) => {
+    const locale = language === 'it' ? it : enUS;
+    const reason = getInactiveReason(card);
+    
+    return (
+      <div key={card.id} className="border border-border rounded-lg p-4 hover:border-primary transition-colors">
+        <div className="flex items-start justify-between mb-3">
+          <div>
+            <h3 className="font-semibold">{card.shop?.name || 'Negozio'}</h3>
+            <p className="text-sm text-muted-foreground">
+              {t('giftCard.purchasedOn')} {format(new Date(card.purchase_date), 'dd MMMM yyyy', { locale })}
+            </p>
+            <p className="text-xs text-muted-foreground font-mono">
+              {t('giftCard.code')}: {card.gift_card_code}
+            </p>
+          </div>
+          <Badge variant={isActive ? "default" : "secondary"}>
+            {isActive ? t('giftCard.status.active') : t(`giftCard.status.${reason}`)}
+          </Badge>
         </div>
-        <Badge variant={isActive ? "default" : "secondary"}>
-          {isActive ? "Attiva" : 
-            getInactiveReason(card) === 'estinta' ? "Estinta" :
-            getInactiveReason(card) === 'scaduta' ? "Scaduta" :
-            getInactiveReason(card) === 'used' ? "Utilizzata" :
-            getInactiveReason(card) === 'expired' ? "Scaduta" :
-            getInactiveReason(card) === 'cancelled' ? "Annullata" : "Inattiva"
-          }
-        </Badge>
-      </div>
-      
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <div>
-            <p className="text-sm text-muted-foreground">Valore</p>
-            <p className="font-semibold">€{card.amount}</p>
+        
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div>
+              <p className="text-sm text-muted-foreground">{t('giftCard.value')}</p>
+              <p className="font-semibold">€{card.amount}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">{t('giftCard.remaining')}</p>
+              <p className={`font-semibold ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
+                €{card.remaining_value}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">{t('giftCard.expiresOn')}</p>
+              <p className={`font-semibold ${new Date(card.expiry_date) <= new Date() ? 'text-red-600' : ''}`}>
+                {format(new Date(card.expiry_date), 'dd MMMM yyyy', { locale })}
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-sm text-muted-foreground">Rimangono</p>
-            <p className={`font-semibold ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
-              €{card.remaining_value}
-            </p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">Scade il</p>
-            <p className={`font-semibold ${new Date(card.expiry_date) <= new Date() ? 'text-red-600' : ''}`}>
-              {format(new Date(card.expiry_date), 'dd MMMM yyyy', { locale: it })}
-            </p>
+          
+          <div className="flex gap-2">
+            <Button 
+              size="sm" 
+              variant="outline"
+              onClick={() => setSelectedGiftCard(card)}
+            >
+              {t('giftCard.details')}
+            </Button>
+            {isActive && (
+              <Button size="sm" onClick={() => setQrGiftCard(card)}>{t('giftCard.useNow')}</Button>
+            )}
           </div>
         </div>
         
-        <div className="flex gap-2">
-          <Button 
-            size="sm" 
-            variant="outline"
-            onClick={() => setSelectedGiftCard(card)}
-          >
-            Dettagli
-          </Button>
-          {isActive && (
-            <Button size="sm" onClick={() => setQrGiftCard(card)}>Usa ora</Button>
-          )}
+        {card.message && (
+          <div className="mt-3 p-2 bg-muted rounded text-sm">
+            <p className="text-muted-foreground">{t('giftCard.message')}: {card.message}</p>
+          </div>
+        )}
+        
+        {/* Progress bar */}
+        <div className="mt-3">
+          <div className="w-full bg-muted rounded-full h-2">
+            <div 
+              className={`h-2 rounded-full transition-all ${isActive ? 'bg-primary' : 'bg-muted-foreground'}`}
+              style={{ width: `${(card.remaining_value / card.amount) * 100}%` }}
+            ></div>
+          </div>
         </div>
       </div>
-      
-      {card.message && (
-        <div className="mt-3 p-2 bg-muted rounded text-sm">
-          <p className="text-muted-foreground">Messaggio: {card.message}</p>
-        </div>
-      )}
-      
-      {/* Progress bar */}
-      <div className="mt-3">
-        <div className="w-full bg-muted rounded-full h-2">
-          <div 
-            className={`h-2 rounded-full transition-all ${isActive ? 'bg-primary' : 'bg-muted-foreground'}`}
-            style={{ width: `${(card.remaining_value / card.amount) * 100}%` }}
-          ></div>
-        </div>
-      </div>
-    </div>
-  );
+    );
+  };
 
   // Mock data for favorites (will be replaced with real data later)
   const favoriteShops = [
@@ -135,10 +136,10 @@ const Profile = () => {
         <Header />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
-            <h2 className="text-xl font-semibold mb-2">Accesso richiesto</h2>
-            <p className="text-muted-foreground mb-4">Effettua il login per accedere al tuo profilo</p>
+            <h2 className="text-xl font-semibold mb-2">{t('profile.accessRequired')}</h2>
+            <p className="text-muted-foreground mb-4">{t('profile.loginToAccess')}</p>
             <Link to="/login">
-              <Button>Accedi</Button>
+              <Button>{t('profile.login')}</Button>
             </Link>
           </div>
         </div>
@@ -157,7 +158,7 @@ const Profile = () => {
           <Link to="/">
             <Button variant="ghost" className="mb-6">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Torna alla Home
+              {t('profile.backToHome')}
             </Button>
           </Link>
 
@@ -181,20 +182,20 @@ const Profile = () => {
             <div className="space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Azioni rapide</CardTitle>
+                  <CardTitle className="text-lg">{t('profile.quickActions')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <Button variant="outline" className="w-full justify-start">
                     <Settings className="w-4 h-4 mr-2" />
-                    Impostazioni
+                    {t('profile.settings')}
                   </Button>
                   <Button variant="outline" className="w-full justify-start">
                     <Bell className="w-4 h-4 mr-2" />
-                    Notifiche
+                    {t('profile.notifications')}
                   </Button>
                   <Button variant="outline" className="w-full justify-start">
                     <MapPin className="w-4 h-4 mr-2" />
-                    Le mie posizioni
+                    {t('profile.myLocations')}
                   </Button>
                   <Button 
                     variant="outline" 
@@ -202,7 +203,7 @@ const Profile = () => {
                     onClick={handleLogout}
                   >
                     <LogOut className="w-4 h-4 mr-2" />
-                    Esci
+                    {t('profile.logout')}
                   </Button>
                 </CardContent>
               </Card>
@@ -212,7 +213,7 @@ const Profile = () => {
                   <CardHeader>
                     <CardTitle className="text-lg flex items-center">
                       <Heart className="w-5 h-5 mr-2 text-red-500" />
-                      Negozi preferiti
+                      {t('profile.favoriteShops')}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
@@ -223,7 +224,7 @@ const Profile = () => {
                           <p className="text-xs text-muted-foreground">{shop.category}</p>
                         </div>
                         <Link to={`/shop/${shop.id}`}>
-                          <Button size="sm" variant="ghost">Visita</Button>
+                          <Button size="sm" variant="ghost">{t('profile.visit')}</Button>
                         </Link>
                       </div>
                     ))}
@@ -239,22 +240,22 @@ const Profile = () => {
                   <CardHeader>
                     <CardTitle className="text-xl flex items-center">
                       <CreditCard className="w-6 h-6 mr-2 text-primary" />
-                      Le mie Gift Card
+                      {t('profile.giftCards')}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     {isLoadingGiftCards ? (
                       <div className="text-center py-8">
-                        <p className="text-muted-foreground">Caricamento gift card...</p>
+                        <p className="text-muted-foreground">{t('profile.loadingGiftCards')}</p>
                       </div>
                     ) : giftCards.length === 0 ? (
                       <div className="text-center py-8">
                         <CreditCard className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
                         <p className="text-muted-foreground mb-4">
-                          Non hai ancora acquistato nessuna gift card
+                          {t('profile.noGiftCards')}
                         </p>
                         <Link to="/shops">
-                          <Button>Esplora negozi</Button>
+                          <Button>{t('profile.exploreShops')}</Button>
                         </Link>
                       </div>
                     ) : (
@@ -264,7 +265,7 @@ const Profile = () => {
                           <div>
                             <h3 className="text-lg font-semibold mb-3 text-green-600 flex items-center">
                               <CreditCard className="w-5 h-5 mr-2" />
-                              Gift Card Attive ({activeGiftCards.length})
+                              {t('profile.activeGiftCards')} ({activeGiftCards.length})
                             </h3>
                             <div className="space-y-4">
                               {activeGiftCards.map((card) => renderGiftCard(card, true))}
@@ -277,7 +278,7 @@ const Profile = () => {
                           <div>
                             <h3 className="text-lg font-semibold mb-3 text-muted-foreground flex items-center">
                               <CreditCard className="w-5 h-5 mr-2" />
-                              Gift Card Disattive ({inactiveGiftCards.length})
+                              {t('profile.inactiveGiftCards')} ({inactiveGiftCards.length})
                             </h3>
                             <div className="space-y-4">
                               {inactiveGiftCards.map((card) => renderGiftCard(card, false))}
@@ -293,15 +294,15 @@ const Profile = () => {
               {user.type === 'merchant' && (
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-xl">Dashboard Merchant</CardTitle>
+                    <CardTitle className="text-xl">{t('profile.merchantDashboard')}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="text-center py-8">
                       <p className="text-muted-foreground mb-4">
-                        Accedi alla tua dashboard per gestire le gift card e monitorare le vendite
+                        {t('profile.merchantDescription')}
                       </p>
                       <Link to="/merchant/dashboard">
-                        <Button>Vai alla Dashboard</Button>
+                        <Button>{t('profile.goToDashboard')}</Button>
                       </Link>
                     </div>
                   </CardContent>

@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 
@@ -26,6 +27,7 @@ const Login = () => {
     confirmPassword: ""
   });
   const { login, signup, isLoading } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -34,14 +36,14 @@ const Login = () => {
     const result = await login(loginForm.email, loginForm.password, "customer");
     if (result.success) {
       toast({
-        title: "Login effettuato",
-        description: "Benvenuto in GiftLocal!",
+        title: t('login.loginSuccess'),
+        description: t('login.welcomeMessage'),
       });
       navigate("/");
     } else {
       toast({
-        title: "Errore di login",
-        description: result.error || "Email o password non corretti",
+        title: t('login.loginError'),
+        description: result.error || t('login.invalidCredentials'),
         variant: "destructive",
       });
     }
@@ -52,8 +54,8 @@ const Login = () => {
     
     if (signupForm.password !== signupForm.confirmPassword) {
       toast({
-        title: "Errore",
-        description: "Le password non coincidono",
+        title: t('common.error'),
+        description: t('login.passwordMismatch'),
         variant: "destructive",
       });
       return;
@@ -62,15 +64,15 @@ const Login = () => {
     const result = await signup(signupForm.email, signupForm.password, signupForm.name, "customer");
     if (result.success) {
       toast({
-        title: "Registrazione completata",
-        description: "Benvenuto in GiftLocal! Effettua il login per continuare.",
+        title: t('login.signupSuccess'),
+        description: t('login.signupWelcome'),
       });
       // Reset signup form and switch to login tab
       setSignupForm({ name: "", email: "", password: "", confirmPassword: "" });
     } else {
       toast({
-        title: "Errore di registrazione",
-        description: result.error || "Si è verificato un errore durante la registrazione",
+        title: t('login.signupError'),
+        description: result.error || t('login.signupGenericError'),
         variant: "destructive",
       });
     }
@@ -86,35 +88,35 @@ const Login = () => {
           <Link to="/">
             <Button variant="ghost" className="mb-6">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Torna alla Home
+              {t('profile.backToHome')}
             </Button>
           </Link>
 
           <Card>
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-display">GiftLocal</CardTitle>
+              <CardTitle className="text-2xl font-display">{t('login.title')}</CardTitle>
               <p className="text-muted-foreground">
-                Accedi o registrati per gestire le tue gift card
+                {t('login.description')}
               </p>
             </CardHeader>
             
             <CardContent>
               <Tabs defaultValue="login" className="space-y-6">
                 <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="login">Accedi</TabsTrigger>
-                  <TabsTrigger value="signup">Registrati</TabsTrigger>
+                  <TabsTrigger value="login">{t('login.tab.login')}</TabsTrigger>
+                  <TabsTrigger value="signup">{t('login.tab.signup')}</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="login">
                   <form onSubmit={handleLogin} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="login-email">Email</Label>
+                      <Label htmlFor="login-email">{t('login.email')}</Label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                         <Input 
                           id="login-email"
                           type="email" 
-                          placeholder="la-tua-email@esempio.com"
+                          placeholder={t('login.emailPlaceholder')}
                           className="pl-10"
                           value={loginForm.email}
                           onChange={(e) => setLoginForm(prev => ({ ...prev, email: e.target.value }))}
@@ -124,13 +126,13 @@ const Login = () => {
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="login-password">Password</Label>
+                      <Label htmlFor="login-password">{t('login.password')}</Label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                         <Input 
                           id="login-password"
                           type={showPassword ? "text" : "password"}
-                          placeholder="••••••••"
+                          placeholder={t('login.passwordPlaceholder')}
                           className="pl-10 pr-10"
                           value={loginForm.password}
                           onChange={(e) => setLoginForm(prev => ({ ...prev, password: e.target.value }))}
@@ -155,12 +157,12 @@ const Login = () => {
                           checked={loginForm.rememberMe}
                           onCheckedChange={(checked) => setLoginForm(prev => ({ ...prev, rememberMe: checked as boolean }))}
                         />
-                        <Label htmlFor="remember" className="text-sm">Ricordami</Label>
+                        <Label htmlFor="remember" className="text-sm">{t('login.rememberMe')}</Label>
                       </div>
                     </div>
 
                     <Button type="submit" className="w-full" disabled={isLoading}>
-                      {isLoading ? "Accesso in corso..." : "Accedi"}
+                      {isLoading ? t('login.loggingIn') : t('login.loginButton')}
                     </Button>
                   </form>
                 </TabsContent>
@@ -168,13 +170,13 @@ const Login = () => {
                 <TabsContent value="signup">
                   <form onSubmit={handleSignup} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="signup-name">Nome completo</Label>
+                      <Label htmlFor="signup-name">{t('login.fullName')}</Label>
                       <div className="relative">
                         <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                         <Input 
                           id="signup-name"
                           type="text" 
-                          placeholder="Il tuo nome"
+                          placeholder={t('login.namePlaceholder')}
                           className="pl-10"
                           value={signupForm.name}
                           onChange={(e) => setSignupForm(prev => ({ ...prev, name: e.target.value }))}
@@ -184,13 +186,13 @@ const Login = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="signup-email">Email</Label>
+                      <Label htmlFor="signup-email">{t('login.email')}</Label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                         <Input 
                           id="signup-email"
                           type="email" 
-                          placeholder="la-tua-email@esempio.com"
+                          placeholder={t('login.emailPlaceholder')}
                           className="pl-10"
                           value={signupForm.email}
                           onChange={(e) => setSignupForm(prev => ({ ...prev, email: e.target.value }))}
@@ -200,13 +202,13 @@ const Login = () => {
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="signup-password">Password</Label>
+                      <Label htmlFor="signup-password">{t('login.password')}</Label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                         <Input 
                           id="signup-password"
                           type={showPassword ? "text" : "password"}
-                          placeholder="••••••••"
+                          placeholder={t('login.passwordPlaceholder')}
                           className="pl-10"
                           value={signupForm.password}
                           onChange={(e) => setSignupForm(prev => ({ ...prev, password: e.target.value }))}
@@ -216,13 +218,13 @@ const Login = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="signup-confirm-password">Conferma Password</Label>
+                      <Label htmlFor="signup-confirm-password">{t('login.confirmPassword')}</Label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                         <Input 
                           id="signup-confirm-password"
                           type={showPassword ? "text" : "password"}
-                          placeholder="••••••••"
+                          placeholder={t('login.passwordPlaceholder')}
                           className="pl-10"
                           value={signupForm.confirmPassword}
                           onChange={(e) => setSignupForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
@@ -232,7 +234,7 @@ const Login = () => {
                     </div>
 
                     <Button type="submit" className="w-full" disabled={isLoading}>
-                      {isLoading ? "Registrazione in corso..." : "Registrati"}
+                      {isLoading ? t('login.signingUp') : t('login.signupButton')}
                     </Button>
                   </form>
                 </TabsContent>
@@ -245,7 +247,7 @@ const Login = () => {
                     <div className="w-full border-t border-border"></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="bg-background px-4 text-muted-foreground">oppure</span>
+                    <span className="bg-background px-4 text-muted-foreground">{t('common.or')}</span>
                   </div>
                 </div>
 
@@ -257,7 +259,7 @@ const Login = () => {
                       <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                       <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                     </svg>
-                    Continua con Google
+                    {t('login.continueWithGoogle')}
                   </Button>
                 </div>
               </div>

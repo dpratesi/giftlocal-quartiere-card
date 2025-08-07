@@ -32,6 +32,7 @@ const translations = {
     'common.edit': 'Modifica',
     'common.view': 'Visualizza',
     'common.all': 'Tutti',
+    'common.or': 'oppure',
     
     // Shop listing
     'shops.featuredTitle': 'Negozi in Evidenza',
@@ -41,6 +42,8 @@ const translations = {
     'shops.noResults': 'Nessun negozio trovato con i filtri selezionati',
     'shops.clearFilters': 'Cancella filtri',
     'shops.unableToLoad': 'Impossibile caricare i negozi',
+    'shops.discoverGiftCards': 'Scopri Gift Card',
+    'shops.giftCards': 'gift card',
     
     // View toggle
     'view.list': 'Lista',
@@ -58,10 +61,82 @@ const translations = {
     'giftCard.qrCodeTitle': 'QR Code Gift Card',
     'giftCard.showToMerchant': 'Mostra questo QR code al commerciante per utilizzare la tua gift card',
     'giftCard.code': 'Codice',
+    'giftCard.details': 'Dettagli',
+    'giftCard.value': 'Valore',
+    'giftCard.remaining': 'Rimangono',
+    'giftCard.expiresOn': 'Scade il',
+    'giftCard.message': 'Messaggio',
+    'giftCard.purchasedOn': 'Acquistata il',
+    'giftCard.status': {
+      'active': 'Attiva',
+      'used': 'Utilizzata',
+      'expired': 'Scaduta',
+      'cancelled': 'Annullata',
+      'estinta': 'Estinta',
+      'scaduta': 'Scaduta',
+      'inactive': 'Inattiva'
+    },
     
     // Profile
     'profile.title': 'Il mio profilo',
     'profile.giftCards': 'Le mie Gift Card',
+    'profile.activeGiftCards': 'Gift Card Attive',
+    'profile.inactiveGiftCards': 'Gift Card Disattive',
+    'profile.quickActions': 'Azioni rapide',
+    'profile.favoriteShops': 'Negozi preferiti',
+    'profile.settings': 'Impostazioni',
+    'profile.notifications': 'Notifiche',
+    'profile.myLocations': 'Le mie posizioni',
+    'profile.logout': 'Esci',
+    'profile.visit': 'Visita',
+    'profile.noGiftCards': 'Non hai ancora acquistato nessuna gift card',
+    'profile.exploreShops': 'Esplora negozi',
+    'profile.loadingGiftCards': 'Caricamento gift card...',
+    'profile.accessRequired': 'Accesso richiesto',
+    'profile.loginToAccess': 'Effettua il login per accedere al tuo profilo',
+    'profile.login': 'Accedi',
+    'profile.backToHome': 'Torna alla Home',
+    'profile.merchantDashboard': 'Dashboard Merchant',
+    'profile.merchantDescription': 'Accedi alla tua dashboard per gestire le gift card e monitorare le vendite',
+    'profile.goToDashboard': 'Vai alla Dashboard',
+    
+    // Login Select
+    'loginSelect.title': 'Scegli il tipo di accesso',
+    'loginSelect.description': 'Seleziona come vuoi accedere a GiftLocal',
+    'loginSelect.customer': 'Cliente',
+    'loginSelect.customerDescription': 'Accedi per acquistare gift card e scoprire i negozi del tuo quartiere',
+    'loginSelect.loginAsCustomer': 'Accedi come Cliente',
+    'loginSelect.merchant': 'Merchant',
+    'loginSelect.merchantDescription': 'Gestisci il tuo negozio, le gift card e monitora le vendite',
+    'loginSelect.loginAsMerchant': 'Accedi come Merchant',
+    
+    // Login
+    'login.title': 'GiftLocal',
+    'login.description': 'Accedi o registrati per gestire le tue gift card',
+    'login.tab.login': 'Accedi',
+    'login.tab.signup': 'Registrati',
+    'login.email': 'Email',
+    'login.emailPlaceholder': 'la-tua-email@esempio.com',
+    'login.password': 'Password',
+    'login.passwordPlaceholder': '••••••••',
+    'login.confirmPassword': 'Conferma Password',
+    'login.fullName': 'Nome completo',
+    'login.namePlaceholder': 'Il tuo nome',
+    'login.rememberMe': 'Ricordami',
+    'login.loginButton': 'Accedi',
+    'login.signupButton': 'Registrati',
+    'login.loggingIn': 'Accesso in corso...',
+    'login.signingUp': 'Registrazione in corso...',
+    'login.continueWithGoogle': 'Continua con Google',
+    'login.loginSuccess': 'Login effettuato',
+    'login.welcomeMessage': 'Benvenuto in GiftLocal!',
+    'login.loginError': 'Errore di login',
+    'login.invalidCredentials': 'Email o password non corretti',
+    'login.signupSuccess': 'Registrazione completata',
+    'login.signupWelcome': 'Benvenuto in GiftLocal! Effettua il login per continuare.',
+    'login.signupError': 'Errore di registrazione',
+    'login.signupGenericError': 'Si è verificato un errore durante la registrazione',
+    'login.passwordMismatch': 'Le password non coincidono',
     
     // 404
     'notFound.title': '404',
@@ -88,6 +163,7 @@ const translations = {
     'common.edit': 'Edit',
     'common.view': 'View',
     'common.all': 'All',
+    'common.or': 'or',
     
     // Shop listing
     'shops.featuredTitle': 'Featured Shops',
@@ -97,6 +173,8 @@ const translations = {
     'shops.noResults': 'No shops found with selected filters',
     'shops.clearFilters': 'Clear filters',
     'shops.unableToLoad': 'Unable to load shops',
+    'shops.discoverGiftCards': 'Discover Gift Cards',
+    'shops.giftCards': 'gift cards',
     
     // View toggle
     'view.list': 'List',
@@ -114,10 +192,82 @@ const translations = {
     'giftCard.qrCodeTitle': 'Gift Card QR Code',
     'giftCard.showToMerchant': 'Show this QR code to the merchant to use your gift card',
     'giftCard.code': 'Code',
+    'giftCard.details': 'Details',
+    'giftCard.value': 'Value',
+    'giftCard.remaining': 'Remaining',
+    'giftCard.expiresOn': 'Expires on',
+    'giftCard.message': 'Message',
+    'giftCard.purchasedOn': 'Purchased on',
+    'giftCard.status': {
+      'active': 'Active',
+      'used': 'Used',
+      'expired': 'Expired',
+      'cancelled': 'Cancelled',
+      'estinta': 'Depleted',
+      'scaduta': 'Expired',
+      'inactive': 'Inactive'
+    },
     
     // Profile
     'profile.title': 'My profile',
     'profile.giftCards': 'My Gift Cards',
+    'profile.activeGiftCards': 'Active Gift Cards',
+    'profile.inactiveGiftCards': 'Inactive Gift Cards',
+    'profile.quickActions': 'Quick Actions',
+    'profile.favoriteShops': 'Favorite Shops',
+    'profile.settings': 'Settings',
+    'profile.notifications': 'Notifications',
+    'profile.myLocations': 'My Locations',
+    'profile.logout': 'Logout',
+    'profile.visit': 'Visit',
+    'profile.noGiftCards': 'You haven\'t purchased any gift cards yet',
+    'profile.exploreShops': 'Explore Shops',
+    'profile.loadingGiftCards': 'Loading gift cards...',
+    'profile.accessRequired': 'Access Required',
+    'profile.loginToAccess': 'Please log in to access your profile',
+    'profile.login': 'Login',
+    'profile.backToHome': 'Back to Home',
+    'profile.merchantDashboard': 'Merchant Dashboard',
+    'profile.merchantDescription': 'Access your dashboard to manage gift cards and monitor sales',
+    'profile.goToDashboard': 'Go to Dashboard',
+    
+    // Login Select
+    'loginSelect.title': 'Choose your access type',
+    'loginSelect.description': 'Select how you want to access GiftLocal',
+    'loginSelect.customer': 'Customer',
+    'loginSelect.customerDescription': 'Log in to buy gift cards and discover shops in your neighborhood',
+    'loginSelect.loginAsCustomer': 'Login as Customer',
+    'loginSelect.merchant': 'Merchant',
+    'loginSelect.merchantDescription': 'Manage your shop, gift cards and monitor sales',
+    'loginSelect.loginAsMerchant': 'Login as Merchant',
+    
+    // Login
+    'login.title': 'GiftLocal',
+    'login.description': 'Login or register to manage your gift cards',
+    'login.tab.login': 'Login',
+    'login.tab.signup': 'Sign Up',
+    'login.email': 'Email',
+    'login.emailPlaceholder': 'your-email@example.com',
+    'login.password': 'Password',
+    'login.passwordPlaceholder': '••••••••',
+    'login.confirmPassword': 'Confirm Password',
+    'login.fullName': 'Full Name',
+    'login.namePlaceholder': 'Your name',
+    'login.rememberMe': 'Remember me',
+    'login.loginButton': 'Login',
+    'login.signupButton': 'Sign Up',
+    'login.loggingIn': 'Logging in...',
+    'login.signingUp': 'Signing up...',
+    'login.continueWithGoogle': 'Continue with Google',
+    'login.loginSuccess': 'Login successful',
+    'login.welcomeMessage': 'Welcome to GiftLocal!',
+    'login.loginError': 'Login error',
+    'login.invalidCredentials': 'Invalid email or password',
+    'login.signupSuccess': 'Registration completed',
+    'login.signupWelcome': 'Welcome to GiftLocal! Please log in to continue.',
+    'login.signupError': 'Registration error',
+    'login.signupGenericError': 'An error occurred during registration',
+    'login.passwordMismatch': 'Passwords do not match',
     
     // 404
     'notFound.title': '404',
@@ -137,7 +287,14 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, [language]);
 
   const t = (key: string): string => {
-    return translations[language][key as keyof typeof translations[typeof language]] || key;
+    const keys = key.split('.');
+    let value: any = translations[language];
+    
+    for (const k of keys) {
+      value = value?.[k];
+    }
+    
+    return typeof value === 'string' ? value : key;
   };
 
   return (

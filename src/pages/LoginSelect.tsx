@@ -3,8 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Store, ArrowLeft } from "lucide-react";
 import Header from "@/components/Header";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const LoginSelect = () => {
+  const { t } = useLanguage();
+  
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -13,13 +16,13 @@ const LoginSelect = () => {
           <div className="text-center space-y-2">
             <Link to="/" className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Torna alla Home
+              {t('profile.backToHome')}
             </Link>
             <h1 className="text-3xl font-display font-bold text-foreground">
-              Scegli il tipo di accesso
+              {t('loginSelect.title')}
             </h1>
             <p className="text-muted-foreground">
-              Seleziona come vuoi accedere a GiftLocal
+              {t('loginSelect.description')}
             </p>
           </div>
 
@@ -30,14 +33,14 @@ const LoginSelect = () => {
                   <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <User className="w-8 h-8 text-primary" />
                   </div>
-                  <CardTitle className="text-xl">Cliente</CardTitle>
+                  <CardTitle className="text-xl">{t('loginSelect.customer')}</CardTitle>
                   <CardDescription>
-                    Accedi per acquistare gift card e scoprire i negozi del tuo quartiere
+                    {t('loginSelect.customerDescription')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Button className="w-full" size="lg">
-                    Accedi come Cliente
+                    {t('loginSelect.loginAsCustomer')}
                   </Button>
                 </CardContent>
               </Card>
@@ -49,14 +52,14 @@ const LoginSelect = () => {
                   <div className="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Store className="w-8 h-8 text-secondary" />
                   </div>
-                  <CardTitle className="text-xl">Merchant</CardTitle>
+                  <CardTitle className="text-xl">{t('loginSelect.merchant')}</CardTitle>
                   <CardDescription>
-                    Gestisci il tuo negozio, le gift card e monitora le vendite
+                    {t('loginSelect.merchantDescription')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Button variant="secondary" className="w-full" size="lg">
-                    Accedi come Merchant
+                    {t('loginSelect.loginAsMerchant')}
                   </Button>
                 </CardContent>
               </Card>
