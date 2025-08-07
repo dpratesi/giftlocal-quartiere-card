@@ -1,6 +1,7 @@
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Routes, Route } from "react-router-dom";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Home from "./pages/Home";
 import Index from "./pages/Index";
@@ -17,9 +18,10 @@ import MerchantShops from "./pages/MerchantShops";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
-  <TooltipProvider>
-    <Sonner />
-    <Routes>
+  <LanguageProvider>
+    <TooltipProvider>
+      <Sonner />
+      <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/shops" element={<Index />} />
           <Route path="/shop/:id" element={<ShopDetail />} />
@@ -55,7 +57,8 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-  </TooltipProvider>
+    </TooltipProvider>
+  </LanguageProvider>
 );
 
 export default App;

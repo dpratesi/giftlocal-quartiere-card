@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useShops } from "@/hooks/useShops";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import CategoryFilter from "@/components/CategoryFilter";
@@ -15,6 +16,7 @@ import { Link } from "react-router-dom";
 const Index = () => {
   const [searchParams] = useSearchParams();
   const { user, isAuthenticated } = useAuth();
+  const { t } = useLanguage();
   const initialCity = searchParams.get('city');
   const initialCategory = searchParams.get('category');
 
@@ -70,7 +72,7 @@ const Index = () => {
   }, [filters, shops, currentCity]);
 
   const handleCategoryToggle = (category: string) => {
-    if (category === "Tutti") {
+    if (category === t('common.all') || category === "Tutti") {
       setFilters(prev => ({ ...prev, categories: [] }));
     } else {
       setFilters(prev => ({
@@ -132,7 +134,7 @@ const Index = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <div className="container mx-auto px-4 py-12 text-center">
-          Impossibile caricare i negozi
+          {t('shops.unableToLoad')}
         </div>
       </div>
     );
@@ -151,11 +153,10 @@ const Index = () => {
       <section className="container mx-auto px-4 py-12">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-display font-bold text-foreground mb-4">
-            Negozi in Evidenza
+            {t('shops.featuredTitle')}
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Scoprix i migliori negozi del tuo quartiere e sostieni la tua comunità locale 
-            con le nostre gift card digitali
+            {t('shops.featuredDescription')}
           </p>
         </div>
 
@@ -173,9 +174,9 @@ const Index = () => {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
               <div>
                 <p className="text-muted-foreground">
-                  {filteredShops.length} negozi trovati
+                  {filteredShops.length} {t('shops.shopsFound')}
                   {currentCity && (
-                    <span className="text-primary font-medium"> a {currentCity}</span>
+                    <span className="text-primary font-medium"> {currentCity}</span>
                   )}
                 </p>
               </div>
@@ -202,7 +203,7 @@ const Index = () => {
                   className="bg-primary hover:bg-primary-hover text-primary-foreground px-8 py-3 rounded-lg font-semibold transition-colors"
                   onClick={() => alert('Funzionalità in arrivo!')}
                 >
-                  Carica altri negozi
+                  {t('shops.loadMore')}
                 </button>
               </div>
             )}
@@ -211,13 +212,13 @@ const Index = () => {
             {filteredShops.length === 0 && (
               <div className="text-center py-12">
                 <p className="text-muted-foreground mb-4">
-                  Nessun negozio trovato con i filtri selezionati
+                  {t('shops.noResults')}
                 </p>
                 <button
                   onClick={clearFilters}
                   className="bg-primary hover:bg-primary-hover text-primary-foreground px-6 py-2 rounded-lg font-semibold transition-colors"
                 >
-                  Cancella filtri
+                  {t('shops.clearFilters')}
                 </button>
               </div>
             )}
@@ -229,15 +230,14 @@ const Index = () => {
       <section className="bg-local-green-light py-16">
         <div className="container mx-auto px-4 text-center">
           <h3 className="text-2xl font-display font-bold text-foreground mb-4">
-            Hai un negozio?
+            {t('cta.title')}
           </h3>
           <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
-            Unisciti a GiftLocal e inizia a vendere le tue gift card online. 
-            È semplice, veloce e gratuito.
+            {t('cta.description')}
           </p>
           <Link to="/register-shop">
             <button className="bg-primary hover:bg-primary-hover text-primary-foreground px-8 py-3 rounded-lg font-semibold transition-colors">
-              Registra il tuo negozio
+              {t('cta.registerShop')}
             </button>
           </Link>
         </div>

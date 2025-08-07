@@ -3,11 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useState } from "react";
 import CitySelector from "@/components/CitySelector";
+import LanguageToggle from "@/components/LanguageToggle";
 
 const Header = () => {
   const { isAuthenticated, user, logout } = useAuth();
+  const { t } = useLanguage();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
@@ -21,7 +24,7 @@ const Header = () => {
             </div>
             <div>
               <h1 className="text-lg md:text-xl font-display font-bold text-foreground">GiftLocal</h1>
-              <p className="text-xs text-muted-foreground hidden sm:block">Il tuo quartiere</p>
+              <p className="text-xs text-muted-foreground hidden sm:block">{t('header.tagline')}</p>
             </div>
           </Link>
 
@@ -30,7 +33,7 @@ const Header = () => {
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input
-                placeholder="Cerca negozi, categorie..."
+                placeholder={t('header.searchPlaceholder')}
                 className="pl-10 pr-10 bg-muted border-muted-foreground/20 focus:border-primary"
               />
               <MapPin className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4 cursor-pointer hover:text-primary transition-colors" />
@@ -49,6 +52,7 @@ const Header = () => {
 
           {/* Desktop Actions */}
           <div className="hidden lg:flex items-center space-x-3">
+            <LanguageToggle />
             <CitySelector />
             <Link to="/profile">
               <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
@@ -63,17 +67,17 @@ const Header = () => {
             {isAuthenticated ? (
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-muted-foreground hidden xl:block">
-                  Ciao, {user?.name}
+                  {t('header.hello')}, {user?.name}
                 </span>
                 <Button variant="outline" size="sm" onClick={logout}>
                   <LogOut className="w-4 h-4 mr-2" />
-                  <span className="hidden xl:inline">Esci</span>
+                  <span className="hidden xl:inline">{t('header.logout')}</span>
                 </Button>
               </div>
             ) : (
               <Link to="/login-select">
                 <Button variant="default" size="sm" className="bg-primary hover:bg-primary-hover">
-                  Accedi
+                  {t('header.login')}
                 </Button>
               </Link>
             )}
@@ -87,7 +91,7 @@ const Header = () => {
             <div className="relative mt-4 mb-4">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input
-                placeholder="Cerca negozi, categorie..."
+                placeholder={t('header.searchPlaceholder')}
                 className="pl-10 pr-10 bg-muted border-muted-foreground/20 focus:border-primary"
               />
               <MapPin className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4 cursor-pointer hover:text-primary transition-colors" />
@@ -95,20 +99,21 @@ const Header = () => {
 
             {/* Mobile Actions */}
             <div className="space-y-3">
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center gap-4">
+                <LanguageToggle />
                 <CitySelector />
               </div>
               <div className="flex items-center justify-between">
                 <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button variant="ghost" className="flex items-center space-x-2">
                     <Heart className="w-5 h-5" />
-                    <span>Preferiti</span>
+                    <span>{t('header.favorites')}</span>
                   </Button>
                 </Link>
                 <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button variant="ghost" className="flex items-center space-x-2">
                     <User className="w-5 h-5" />
-                    <span>Profilo</span>
+                    <span>{t('header.profile')}</span>
                   </Button>
                 </Link>
               </div>
@@ -116,17 +121,17 @@ const Header = () => {
               {isAuthenticated ? (
                 <div className="space-y-2">
                   <div className="text-sm text-muted-foreground text-center">
-                    Ciao, {user?.name}
+                    {t('header.hello')}, {user?.name}
                   </div>
                   <Button variant="outline" className="w-full" onClick={() => { logout(); setIsMobileMenuOpen(false); }}>
                     <LogOut className="w-4 h-4 mr-2" />
-                    Esci
+                    {t('header.logout')}
                   </Button>
                 </div>
               ) : (
                 <Link to="/login-select" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button variant="default" className="w-full bg-primary hover:bg-primary-hover">
-                    Accedi
+                    {t('header.login')}
                   </Button>
                 </Link>
               )}

@@ -1,5 +1,6 @@
 import { LayoutGrid, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ViewToggleProps {
   view: 'grid' | 'map';
@@ -7,6 +8,8 @@ interface ViewToggleProps {
 }
 
 const ViewToggle = ({ view, onViewChange }: ViewToggleProps) => {
+  const { t } = useLanguage();
+  
   return (
     <div className="flex bg-muted rounded-lg p-1">
       <Button
@@ -16,7 +19,7 @@ const ViewToggle = ({ view, onViewChange }: ViewToggleProps) => {
         className="flex items-center gap-2"
       >
         <LayoutGrid className="w-4 h-4" />
-        Lista
+        {t('view.list')}
       </Button>
       <Button
         variant={view === 'map' ? 'default' : 'ghost'}
@@ -25,7 +28,7 @@ const ViewToggle = ({ view, onViewChange }: ViewToggleProps) => {
         className="flex items-center gap-2"
       >
         <Map className="w-4 h-4" />
-        Mappa
+        {t('view.map')}
       </Button>
     </div>
   );

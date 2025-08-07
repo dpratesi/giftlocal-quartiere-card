@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, ButtonProps } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface LoadingButtonProps extends ButtonProps {
   loading?: boolean;
@@ -10,6 +11,8 @@ interface LoadingButtonProps extends ButtonProps {
 
 export const LoadingButton = React.forwardRef<HTMLButtonElement, LoadingButtonProps>(
   ({ loading = false, loadingText, children, className, disabled, ...props }, ref) => {
+    const { t } = useLanguage();
+    
     return (
       <Button
         ref={ref}
@@ -18,7 +21,7 @@ export const LoadingButton = React.forwardRef<HTMLButtonElement, LoadingButtonPr
         {...props}
       >
         {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        {loading ? loadingText || 'Caricamento...' : children}
+        {loading ? loadingText || t('common.loading') : children}
       </Button>
     );
   }
