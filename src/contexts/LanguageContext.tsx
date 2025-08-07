@@ -151,7 +151,7 @@ const translations = {
     'header.hello': 'Hello',
     'header.logout': 'Logout',
     'header.login': 'Login',
-    'header.tagline': 'Your neighborhood',
+    'header.tagline': 'Local-Eyes',
     
     // Common
     'common.loading': 'Loading...',
@@ -166,8 +166,8 @@ const translations = {
     'common.or': 'or',
     
     // Shop listing
-    'shops.featuredTitle': 'Featured Shops',
-    'shops.featuredDescription': 'Discover the best shops in your neighborhood and support your local community with our digital gift cards',
+    'shops.featuredTitle': 'The faces of your neighborhood',
+    'shops.featuredDescription': 'Every purchase is a look of trust. Get to know the stories of the merchants that make your neighborhood unique.',
     'shops.shopsFound': 'shops found',
     'shops.loadMore': 'Load more shops',
     'shops.noResults': 'No shops found with selected filters',
