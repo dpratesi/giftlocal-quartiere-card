@@ -17,16 +17,16 @@ const MissionBanner = () => {
       <div className="container mx-auto px-4 text-center relative z-10">
         <div className="max-w-3xl mx-auto space-y-6">
           <h3 className="text-3xl md:text-4xl font-display font-bold text-white">
-            La nostra missione
+            {t('mission.title')}
           </h3>
           <p className="text-xl text-white/90 leading-relaxed italic font-serif">
-            "Riportiamo lo sguardo al locale. Ogni gift card è un investimento nel futuro del tuo quartiere."
+            "{t('mission.quote')}"
           </p>
           <Button 
             size="lg" 
             className="bg-localize-cream text-localize-night hover:bg-localize-cream/90 font-semibold px-8 py-6 text-lg"
           >
-            Unisciti al movimento
+            {t('mission.button')}
           </Button>
         </div>
       </div>

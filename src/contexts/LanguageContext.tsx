@@ -30,6 +30,11 @@ const translations = {
     'hero.stats.giftCards': 'Gift Card Attivate', 
     'hero.stats.neighborhoods': 'Quartieri Connessi',
     
+    // Mission Banner
+    'mission.title': 'La nostra missione',
+    'mission.quote': 'Riportiamo lo sguardo al locale. Ogni gift card è un investimento nel futuro del tuo quartiere.',
+    'mission.button': 'Unisciti al movimento',
+    
     // Common
     'common.loading': 'Caricamento...',
     'common.error': 'Errore',
@@ -168,6 +173,11 @@ const translations = {
     'hero.stats.merchants': 'Local Merchants',
     'hero.stats.giftCards': 'Gift Cards Activated',
     'hero.stats.neighborhoods': 'Connected Neighborhoods',
+    
+    // Mission Banner
+    'mission.title': 'Our mission',
+    'mission.quote': 'We bring the gaze back to local. Every gift card is an investment in the future of your neighborhood.',
+    'mission.button': 'Join the movement',
     
     // Common
     'common.loading': 'Loading...',
