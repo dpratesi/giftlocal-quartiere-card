@@ -6,12 +6,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Header from "@/components/Header";
 import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const ShopDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { shops, isLoading, error } = useShops();
   const shop = shops.find((s) => s.id === id);
+  const { t } = useLanguage();
   
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
 
@@ -31,7 +33,7 @@ const ShopDetail = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <div className="container mx-auto px-4 py-12 text-center">Caricamento...</div>
+        <div className="container mx-auto px-4 py-12 text-center">{t('loading')}</div>
       </div>
     );
   }
@@ -41,7 +43,7 @@ const ShopDetail = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <div className="container mx-auto px-4 py-12 text-center">
-          Impossibile caricare i negozi
+          {t('error.loading')}
         </div>
       </div>
     );
@@ -52,9 +54,9 @@ const ShopDetail = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <div className="container mx-auto px-4 py-12 text-center">
-          <h1 className="text-2xl font-bold mb-4">Negozio non trovato</h1>
+          <h1 className="text-2xl font-bold mb-4">{t('shop.notFound')}</h1>
           <Link to="/shops">
-            <Button>Torna alla Home</Button>
+            <Button>{t('backToHome')}</Button>
           </Link>
         </div>
       </div>
@@ -70,7 +72,7 @@ const ShopDetail = () => {
         <Link to="/shops">
           <Button variant="ghost" className="mb-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Torna al catalogo
+            {t('backToCatalog')}
           </Button>
         </Link>
       </div>
@@ -113,32 +115,32 @@ const ShopDetail = () => {
                   </div>
                   <div className="flex items-center">
                     <Star className="w-4 h-4 mr-1 text-yellow-500 fill-current" />
-                    {shop.rating} ({shop.reviewCount} recensioni)
+                    {shop.rating} ({shop.reviewCount} {t('reviews')})
                   </div>
                 </div>
               </div>
 
               <div>
-                <h2 className="text-xl font-semibold mb-3">Descrizione</h2>
+                <h2 className="text-xl font-semibold mb-3">{t('shop.description')}</h2>
                 <p className="text-muted-foreground leading-relaxed">{shop.description}</p>
               </div>
 
               {/* Contact Info */}
               <Card>
                 <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold mb-4">Informazioni di contatto</h3>
+                  <h3 className="text-lg font-semibold mb-4">{t('shop.contactInfo')}</h3>
                   <div className="space-y-3">
                     <div className="flex items-center">
                       <Clock className="w-5 h-5 mr-3 text-muted-foreground" />
                       <div>
-                        <p className="font-medium">Orari di apertura</p>
-                        <p className="text-sm text-muted-foreground">Lun-Sab: 09:00 - 19:00</p>
+                        <p className="font-medium">{t('shop.openingHours')}</p>
+                        <p className="text-sm text-muted-foreground">{t('shop.schedule')}</p>
                       </div>
                     </div>
                     <div className="flex items-center">
                       <Phone className="w-5 h-5 mr-3 text-muted-foreground" />
                       <div>
-                        <p className="font-medium">Telefono</p>
+                        <p className="font-medium">{t('shop.phone')}</p>
                         <p className="text-sm text-muted-foreground">+39 123 456 7890</p>
                       </div>
                     </div>
@@ -152,7 +154,7 @@ const ShopDetail = () => {
           <div className="lg:col-span-1">
             <Card className="sticky top-4">
               <CardContent className="p-6">
-                <h3 className="text-xl font-semibold mb-4">Gift Card Disponibili</h3>
+                <h3 className="text-xl font-semibold mb-4">{t('giftCard.available')}</h3>
                 <div className="space-y-3">
                   {shop.giftCardPrices.map((price) => (
                     <div 
@@ -182,10 +184,10 @@ const ShopDetail = () => {
                     onClick={handleBuyGiftCard}
                     disabled={!selectedAmount}
                   >
-                    {selectedAmount ? `Acquista Gift Card €${selectedAmount}` : 'Seleziona un importo'}
+                    {selectedAmount ? `${t('giftCard.buy')} €${selectedAmount}` : t('giftCard.selectAmount')}
                   </Button>
                   <p className="text-xs text-muted-foreground text-center mt-3">
-                    Pagamento sicuro • Consegna immediata
+                    {t('giftCard.securePayment')} • {t('giftCard.instantDelivery')}
                   </p>
                 </div>
               </CardContent>

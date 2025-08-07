@@ -152,7 +152,23 @@ const translations = {
     // 404
     'notFound.title': '404',
     'notFound.description': 'Oops! Pagina non trovata',
-    'notFound.returnHome': 'Torna alla Home'
+    'notFound.returnHome': 'Torna alla Home',
+    
+    // Shop Detail
+    'shop.notFound': 'Negozio non trovato',
+    'shop.description': 'Descrizione',
+    'shop.contactInfo': 'Informazioni di contatto',
+    'shop.openingHours': 'Orari di apertura',
+    'shop.schedule': 'Lun-Sab: 09:00 - 19:00',
+    'shop.phone': 'Telefono',
+    'backToCatalog': 'Torna al catalogo',
+    'backToHome': 'Torna alla Home',
+    'reviews': 'recensioni',
+    'giftCard.available': 'Gift Card Disponibili',
+    'giftCard.buy': 'Acquista Gift Card',
+    'giftCard.selectAmount': 'Seleziona un importo',
+    'giftCard.securePayment': 'Pagamento sicuro',
+    'giftCard.instantDelivery': 'Consegna immediata'
   },
   en: {
     // Header
@@ -294,7 +310,23 @@ const translations = {
     // 404
     'notFound.title': '404',
     'notFound.description': 'Oops! Page not found',
-    'notFound.returnHome': 'Return to Home'
+    'notFound.returnHome': 'Return to Home',
+    
+    // Shop Detail
+    'shop.notFound': 'Shop not found',
+    'shop.description': 'Description',
+    'shop.contactInfo': 'Contact Information',
+    'shop.openingHours': 'Opening Hours',
+    'shop.schedule': 'Mon-Sat: 09:00 - 19:00',
+    'shop.phone': 'Phone',
+    'backToCatalog': 'Back to catalog',
+    'backToHome': 'Back to Home',
+    'reviews': 'reviews',
+    'giftCard.available': 'Available Gift Cards',
+    'giftCard.buy': 'Buy Gift Card',
+    'giftCard.selectAmount': 'Select an amount',
+    'giftCard.securePayment': 'Secure payment',
+    'giftCard.instantDelivery': 'Instant delivery'
   }
 };
 
