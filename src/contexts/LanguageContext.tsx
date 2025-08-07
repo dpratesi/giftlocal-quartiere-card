@@ -294,6 +294,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (value && typeof value === 'object' && k in value) {
         value = value[k];
       } else {
+        console.warn(`Translation key not found: ${key}`);
         return key; // Return the key if path doesn't exist
       }
     }
