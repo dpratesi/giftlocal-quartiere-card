@@ -45,8 +45,8 @@ const Index = () => {
         return false;
       }
       
-      // City or neighborhood filter (based on current city)
-      if (currentCity && shop.city !== currentCity && shop.neighborhood !== currentCity) {
+      // City filter (exact match)
+      if (currentCity && shop.city !== currentCity) {
         return false;
       }
       
