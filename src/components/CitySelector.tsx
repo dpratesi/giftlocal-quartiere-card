@@ -10,7 +10,6 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { updateUserPreferredCity } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import { useLocation, useNavigate } from "react-router-dom";
 
 const cities = [
   "Roma",
@@ -34,8 +33,6 @@ const CitySelector = () => {
   const { user, updateUserCity } = useAuth();
   const [isUpdating, setIsUpdating] = useState(false);
   const { toast } = useToast();
-  const location = useLocation();
-  const navigate = useNavigate();
   
   const currentCity = user?.preferred_city || 'Roma';
 
@@ -51,15 +48,6 @@ const CitySelector = () => {
         title: "Città aggiornata",
         description: `La tua città preferita è ora ${city}`,
       });
-
-      // Se siamo sulla pagina shops, ricarichiamo con la nuova città
-      if (location.pathname === '/shops') {
-        navigate(`/shops?city=${city}`, { replace: true });
-        // Piccolo delay per permettere al cambio di città di propagarsi
-        setTimeout(() => {
-          window.location.reload();
-        }, 100);
-      }
     } catch (error) {
       console.error('Error updating city:', error);
       toast({
