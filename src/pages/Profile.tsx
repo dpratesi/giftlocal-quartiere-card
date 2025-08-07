@@ -12,6 +12,7 @@ import { useGiftCards } from "@/hooks/useGiftCards";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 import GiftCardDetailsModal from "@/components/GiftCardDetailsModal";
+import QRPaymentModal from "@/components/QRPaymentModal";
 import type { PurchasedGiftCard } from "@/lib/types";
 
 const Profile = () => {
@@ -19,6 +20,7 @@ const Profile = () => {
   const navigate = useNavigate();
   const { giftCards, isLoading: isLoadingGiftCards } = useGiftCards();
   const [selectedGiftCard, setSelectedGiftCard] = useState<PurchasedGiftCard | null>(null);
+  const [qrGiftCard, setQrGiftCard] = useState<PurchasedGiftCard | null>(null);
 
   const handleLogout = async () => {
     await logout();
@@ -97,7 +99,7 @@ const Profile = () => {
             Dettagli
           </Button>
           {isActive && (
-            <Button size="sm">Usa ora</Button>
+            <Button size="sm" onClick={() => setQrGiftCard(card)}>Usa ora</Button>
           )}
         </div>
       </div>
@@ -315,6 +317,15 @@ const Profile = () => {
             isOpen={!!selectedGiftCard}
             onClose={() => setSelectedGiftCard(null)}
             giftCard={selectedGiftCard}
+          />
+        )}
+
+        {/* QR Payment Modal */}
+        {qrGiftCard && (
+          <QRPaymentModal
+            isOpen={!!qrGiftCard}
+            onClose={() => setQrGiftCard(null)}
+            giftCard={qrGiftCard}
           />
         )}
       </div>
