@@ -96,9 +96,7 @@ const translations = {
     'profile.quickActions': 'Azioni rapide',
     'profile.favoriteShops': 'Negozi preferiti',
     'profile.settings': 'Impostazioni',
-    'profile.notifications': 'Notifiche',
     'profile.myLocations': 'Le mie posizioni',
-    'profile.logout': 'Esci',
     'profile.visit': 'Visita',
     'profile.noGiftCards': 'Non hai ancora acquistato nessuna gift card',
     'profile.exploreShops': 'Esplora negozi',
@@ -168,7 +166,13 @@ const translations = {
     'giftCard.buy': 'Acquista Gift Card',
     'giftCard.selectAmount': 'Seleziona un importo',
     'giftCard.securePayment': 'Pagamento sicuro',
-    'giftCard.instantDelivery': 'Consegna immediata'
+    'giftCard.instantDelivery': 'Consegna immediata',
+    
+    // Profile dropdown
+    'profile.greeting': 'Ciao',
+    'profile.dashboard': 'Dashboard',
+    'profile.logout': 'Esci',
+    'profile.defaultUser': 'utente'
   },
   en: {
     // Header
@@ -254,9 +258,7 @@ const translations = {
     'profile.quickActions': 'Quick Actions',
     'profile.favoriteShops': 'Favorite Shops',
     'profile.settings': 'Settings',
-    'profile.notifications': 'Notifications',
     'profile.myLocations': 'My Locations',
-    'profile.logout': 'Logout',
     'profile.visit': 'Visit',
     'profile.noGiftCards': 'You haven\'t purchased any gift cards yet',
     'profile.exploreShops': 'Explore Shops',
@@ -326,7 +328,13 @@ const translations = {
     'giftCard.buy': 'Buy Gift Card',
     'giftCard.selectAmount': 'Select an amount',
     'giftCard.securePayment': 'Secure payment',
-    'giftCard.instantDelivery': 'Instant delivery'
+    'giftCard.instantDelivery': 'Instant delivery',
+    
+    // Profile dropdown
+    'profile.greeting': 'Hello',
+    'profile.dashboard': 'Dashboard',
+    'profile.logout': 'Sign out',
+    'profile.defaultUser': 'user'
   }
 };
 

@@ -74,14 +74,14 @@ const Header = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 bg-background border border-border shadow-lg z-[60]">
                   <div className="px-3 py-2 text-sm text-muted-foreground border-b border-border">
-                    Ciao, {user?.name || 'utente'}
+                    {t('profile.greeting')}, {user?.name || t('profile.defaultUser')}
                   </div>
                   <DropdownMenuItem 
                     className="cursor-pointer"
                     onClick={() => navigate('/profile')}
                   >
                     <User className="w-4 h-4 mr-2" />
-                    Dashboard
+                    {t('profile.dashboard')}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
@@ -89,7 +89,7 @@ const Header = () => {
                     onClick={logout}
                   >
                     <LogOut className="w-4 h-4 mr-2" />
-                    Esci
+                    {t('profile.logout')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
