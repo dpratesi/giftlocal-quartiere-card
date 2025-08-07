@@ -179,7 +179,11 @@ const translations = {
     'profile.greeting': 'Ciao',
     'profile.dashboard': 'Dashboard',
     'profile.logout': 'Esci',
-    'profile.defaultUser': 'utente'
+    'profile.defaultUser': 'utente',
+    
+    // Shop cards
+    'shop.sampleDescription': 'Scopri questo fantastico negozio locale che offre prodotti e servizi di qualità nel cuore del quartiere.',
+    'merchant.verified': 'Commerciante Verificato'
   },
   en: {
     // Header
@@ -348,7 +352,11 @@ const translations = {
     'profile.greeting': 'Hello',
     'profile.dashboard': 'Dashboard',
     'profile.logout': 'Sign out',
-    'profile.defaultUser': 'user'
+    'profile.defaultUser': 'user',
+    
+    // Shop cards  
+    'shop.sampleDescription': 'Discover this fantastic local shop offering quality products and services in the heart of the neighborhood.',
+    'merchant.verified': 'Verified Merchant'
   }
 };
 

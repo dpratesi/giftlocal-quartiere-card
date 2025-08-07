@@ -20,8 +20,20 @@ const ShopCard = ({
   giftCardPrices, 
   description,
   neighborhood 
-}: ShopCardProps) => {
+ }: ShopCardProps) => {
   const { t } = useLanguage();
+  
+  const getCategoryTranslation = (category: string) => {
+    const categoryMap: { [key: string]: string } = {
+      'Caffetteria': t('categories.bar'),
+      'Ristorante': t('categories.restaurant'), 
+      'Libreria': t('categories.bookstore'),
+      'Moda': t('categories.beauty'),
+      'abbigliamento': t('categories.clothing')
+    };
+    return categoryMap[category] || category;
+  };
+  
   const minPrice = Math.min(...giftCardPrices);
   const maxPrice = Math.max(...giftCardPrices);
 
@@ -45,7 +57,7 @@ const ShopCard = ({
         </div>
         <div className="absolute top-2 sm:top-3 left-2 sm:left-3">
           <Badge variant="secondary" className="bg-localize-sage text-white text-xs sm:text-sm rounded-full">
-            {category}
+            {getCategoryTranslation(category)}
           </Badge>
         </div>
       </div>
@@ -68,7 +80,7 @@ const ShopCard = ({
             <span className="text-xs text-muted-foreground">({reviewCount})</span>
           </div>
 
-          <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{description}</p>
+          <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{t('shop.sampleDescription')}</p>
 
           <LocalizeVerifiedBadge />
 
