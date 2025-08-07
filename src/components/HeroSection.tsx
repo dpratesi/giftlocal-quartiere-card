@@ -15,9 +15,8 @@ const HeroSection = () => {
         <div className="max-w-4xl mx-auto space-y-6">
 
           {/* Main headline */}
-          <h1 className="text-5xl md:text-6xl font-display font-bold leading-tight">
+          <h1 className="text-5xl md:text-6xl font-display font-bold leading-tight whitespace-nowrap">
             {t('hero.title')}
-            <span className="block text-localize-terracotta">{t('hero.titleAccent')}</span>
           </h1>
 
           {/* Subtitle */}

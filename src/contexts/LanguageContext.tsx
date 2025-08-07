@@ -23,8 +23,7 @@ const translations = {
     'header.tagline': 'Local-Eyes',
     
     // Hero section
-    'hero.title': 'Vedi locale,',
-    'hero.titleAccent': 'vivi locale',
+    'hero.title': 'Vedi locale, Vivi locale',
     'hero.subtitle': 'Gli occhi della tua comunità digitale. Scopri, sostieni e condividi le gift card dei commercianti del tuo quartiere. Insieme facciamo fiorire l\'economia locale.',
     'hero.stats.merchants': 'Commercianti Locali',
     'hero.stats.giftCards': 'Gift Card Attivate', 
@@ -185,8 +184,7 @@ const translations = {
     'header.tagline': 'Local-Eyes',
     
     // Hero section
-    'hero.title': 'See local,',
-    'hero.titleAccent': 'live local',
+    'hero.title': 'See local, Live local',
     'hero.subtitle': 'The eyes of your digital community. Discover, support and share gift cards from merchants in your neighborhood. Together we make the local economy flourish.',
     'hero.stats.merchants': 'Local Merchants',
     'hero.stats.giftCards': 'Gift Cards Activated',
