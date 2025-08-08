@@ -246,6 +246,11 @@ const translations = {
     'merchant.shops.statusActive': 'Attivo',
     'merchant.shops.statusInactive': 'Inattivo',
     'merchant.shops.statusPending': 'In revisione',
+    'merchant.shops.statusUpdated': 'Stato aggiornato',
+    'merchant.shops.shopActivated': 'Il negozio è stato attivato con successo.',
+    'merchant.shops.shopDeactivated': 'Il negozio è stato disattivato con successo.',
+    'merchant.shops.updateError': 'Errore aggiornamento',
+    'merchant.shops.statusUpdateError': 'Si è verificato un errore durante l\'aggiornamento dello stato.',
 
     'merchant.settings.title': 'Impostazioni',
     'merchant.settings.merchantSettings': 'Impostazioni Merchant',
@@ -619,6 +624,11 @@ const translations = {
     'merchant.shops.statusActive': 'Active',
     'merchant.shops.statusInactive': 'Inactive',
     'merchant.shops.statusPending': 'Under review',
+    'merchant.shops.statusUpdated': 'Status updated',
+    'merchant.shops.shopActivated': 'The shop has been successfully activated.',
+    'merchant.shops.shopDeactivated': 'The shop has been successfully deactivated.',
+    'merchant.shops.updateError': 'Update error',
+    'merchant.shops.statusUpdateError': 'An error occurred while updating the status.',
 
     'merchant.settings.title': 'Settings',
     'merchant.settings.merchantSettings': 'Merchant Settings',
