@@ -19,7 +19,7 @@ const MissionBanner = () => {
           <h3 className="text-3xl md:text-4xl font-display font-bold text-white">
             {t('mission.title')}
           </h3>
-          <p className="text-xl text-white/90 leading-relaxed italic font-serif">
+          <p className="text-xl text-white/90 leading-relaxed italic font-serif whitespace-nowrap text-center w-full">
             "{t('mission.quote')}"
           </p>
           <Button 
