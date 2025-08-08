@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Store, Edit, Settings, Plus, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useMerchantShops } from '@/hooks/useMerchantShops';
@@ -27,7 +27,7 @@ interface ExtendedShop {
   review_count: number;
   min_gift_card_amount: number;
   gift_card_prices?: number[];
-  status?: 'active' | 'inactive' | 'pending';
+  status?: string;
 }
 
 const MerchantShops = () => {
@@ -37,6 +37,7 @@ const MerchantShops = () => {
   const { shops, isLoading, error, refetch } = useMerchantShops(user?.id);
   const [selectedShop, setSelectedShop] = useState<any | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [updatingShopId, setUpdatingShopId] = useState<string | null>(null);
 
   const handleEditShop = (shop: any) => {
     setSelectedShop(shop);
@@ -55,6 +56,7 @@ const MerchantShops = () => {
 
   const handleStatusToggle = async (shop: ExtendedShop) => {
     try {
+      setUpdatingShopId(shop.id);
       const newStatus = shop.status === 'active' ? 'inactive' : 'active';
       await updateShopStatus(shop.id, newStatus);
       
@@ -72,27 +74,30 @@ const MerchantShops = () => {
         description: t('merchant.shops.statusUpdateError'),
         variant: 'destructive',
       });
+    } finally {
+      setUpdatingShopId(null);
     }
   };
 
-  const getStatusBadge = (shop: ExtendedShop) => {
+  const getStatusToggle = (shop: ExtendedShop) => {
     const status = shop.status || 'active';
-    const statusConfig = {
-      active: { label: t('merchant.shops.statusActive'), variant: "default" as const },
-      inactive: { label: t('merchant.shops.statusInactive'), variant: "secondary" as const },
-      pending: { label: t('merchant.shops.statusPending'), variant: "outline" as const }
-    };
-    
-    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.active;
+    const isActive = status === 'active';
+    const isUpdating = updatingShopId === shop.id;
     
     return (
-      <Badge 
-        variant={config.variant}
-        className="cursor-pointer hover:opacity-80 transition-opacity"
-        onClick={() => handleStatusToggle(shop)}
-      >
-        {config.label}
-      </Badge>
+      <div className="flex items-center space-x-2">
+        <span className={`text-sm font-medium transition-colors ${
+          isActive ? 'text-green-600' : 'text-gray-500'
+        }`}>
+          {isActive ? t('merchant.shops.statusActive') : t('merchant.shops.statusInactive')}
+        </span>
+        <Switch
+          checked={isActive}
+          onCheckedChange={() => handleStatusToggle(shop)}
+          disabled={isUpdating}
+          className="data-[state=checked]:bg-green-500"
+        />
+      </div>
     );
   };
 
@@ -173,7 +178,7 @@ const MerchantShops = () => {
                         <p className="text-sm text-muted-foreground">{shop.category}</p>
                       </div>
                     </div>
-                    {getStatusBadge(shop)}
+                    {getStatusToggle(shop)}
                   </div>
                 </CardHeader>
                 
