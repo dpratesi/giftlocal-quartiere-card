@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { FilterState } from "./ShopFilters";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useCategories } from "@/hooks/useCategories";
 
 interface FiltersSidebarProps {
   filters: FilterState;
@@ -16,27 +17,20 @@ interface FiltersSidebarProps {
   onClearFilters: () => void;
 }
 
-// Stesso mapping usato in CategoryFilter per consistenza
-const categories = [
-  { key: "bar", dbName: "Caffetteria" },
-  { key: "restaurant", dbName: "Ristorante" },
-  { key: "bookstore", dbName: "Libreria" },
-  { key: "beauty", dbName: "Moda" },
-  { key: "clothing", dbName: "abbigliamento" },
-];
 
 const FiltersSidebar = ({ filters, onFiltersChange, onClearFilters }: FiltersSidebarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useLanguage();
+  const { categories, isLoading, getCategoryName } = useCategories();
 
   const updateFilters = (key: keyof FilterState, value: any) => {
     onFiltersChange({ ...filters, [key]: value });
   };
 
-  const toggleCategory = (dbName: string) => {
-    const newCategories = filters.categories.includes(dbName)
-      ? filters.categories.filter(c => c !== dbName)
-      : [...filters.categories, dbName];
+  const toggleCategory = (categoryKey: string) => {
+    const newCategories = filters.categories.includes(categoryKey)
+      ? filters.categories.filter(c => c !== categoryKey)
+      : [...filters.categories, categoryKey];
     updateFilters('categories', newCategories);
   };
 
@@ -87,23 +81,33 @@ const FiltersSidebar = ({ filters, onFiltersChange, onClearFilters }: FiltersSid
           {/* Categories */}
           <div>
             <Label className="text-sm font-medium mb-3 block">{t('filters.category')}</Label>
-            <div className="space-y-3">
-              {categories.map((category) => (
-                <div key={category.key} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`category-${category.key}`}
-                    checked={filters.categories.includes(category.dbName)}
-                    onCheckedChange={() => toggleCategory(category.dbName)}
-                  />
-                  <Label
-                    htmlFor={`category-${category.key}`}
-                    className="text-sm cursor-pointer flex-1"
-                  >
-                    {t(`categories.${category.key}`)}
-                  </Label>
-                </div>
-              ))}
-            </div>
+            {isLoading ? (
+              <div className="space-y-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="h-6 bg-gray-200 animate-pulse rounded" />
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {categories
+                  .filter(cat => cat.key !== 'all')
+                  .map((category) => (
+                    <div key={category.key} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`category-${category.key}`}
+                        checked={filters.categories.includes(category.key)}
+                        onCheckedChange={() => toggleCategory(category.key)}
+                      />
+                      <Label
+                        htmlFor={`category-${category.key}`}
+                        className="text-sm cursor-pointer flex-1"
+                      >
+                        {getCategoryName(category)}
+                      </Label>
+                    </div>
+                  ))}
+              </div>
+            )}
           </div>
 
           {/* Price Range */}
