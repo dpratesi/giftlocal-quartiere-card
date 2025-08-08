@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -15,7 +14,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
-import { Settings, Store, Bell, Shield, Palette } from "lucide-react";
+import { Settings, User, Bell, Shield, Palette } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -30,14 +29,13 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
   const { toast } = useToast();
   const { t } = useLanguage();
   
-  const [shopSettings, setShopSettings] = useState({
-    shopName: merchantData?.shopName || "",
-    description: "Specializzati in prodotti di alta qualità con un servizio clienti eccezionale.",
-    address: "Via Roma 123, 20121 Milano",
-    phone: "+39 02 123 456 789",
+  const [profileSettings, setProfileSettings] = useState({
+    firstName: merchantData?.firstName || "",
+    lastName: merchantData?.lastName || "",
     email: merchantData?.email || "",
-    website: "www.negozio.it",
-    openingHours: "Lun-Sab: 9:00-19:00, Dom: 10:00-18:00"
+    phone: merchantData?.phone || "",
+    businessLicense: merchantData?.businessLicense || "",
+    vatNumber: merchantData?.vatNumber || ""
   });
 
   const [giftCardSettings, setGiftCardSettings] = useState({
@@ -69,7 +67,7 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       const updatedSettings = {
-        shop: shopSettings,
+        profile: profileSettings,
         giftCards: giftCardSettings,
         notifications: notificationSettings,
         security: securitySettings
@@ -106,95 +104,86 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Settings className="w-5 h-5" />
-            {t('merchant.settings.merchantSettings')}
+            Impostazioni Account
           </DialogTitle>
           <DialogDescription>
-            {t('merchant.settings.manageShop')}
+            Gestisci le tue impostazioni globali dell'account merchant
           </DialogDescription>
         </DialogHeader>
         
-        <Tabs defaultValue="shop" className="w-full">
+        <Tabs defaultValue="profile" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="shop">{t('merchant.settings.shop')}</TabsTrigger>
-            <TabsTrigger value="giftcards">{t('merchant.settings.giftCards')}</TabsTrigger>
-            <TabsTrigger value="notifications">{t('merchant.settings.notifications')}</TabsTrigger>
-            <TabsTrigger value="security">{t('merchant.settings.security')}</TabsTrigger>
+            <TabsTrigger value="profile">Profilo</TabsTrigger>
+            <TabsTrigger value="giftcards">Gift Cards</TabsTrigger>
+            <TabsTrigger value="notifications">Notifiche</TabsTrigger>
+            <TabsTrigger value="security">Sicurezza</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="shop" className="space-y-4">
+          <TabsContent value="profile" className="space-y-4">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Store className="w-4 h-4" />
-                  {t('merchant.settings.shopInfo')}
+                  <User className="w-4 h-4" />
+                  Profilo Merchant
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="shopName">{t('merchant.settings.shopName')}</Label>
+                    <Label htmlFor="firstName">Nome</Label>
                     <Input
-                      id="shopName"
-                      value={shopSettings.shopName}
-                      onChange={(e) => setShopSettings({ ...shopSettings, shopName: e.target.value })}
+                      id="firstName"
+                      value={profileSettings.firstName}
+                      onChange={(e) => setProfileSettings({ ...profileSettings, firstName: e.target.value })}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phone">{t('merchant.settings.phone')}</Label>
+                    <Label htmlFor="lastName">Cognome</Label>
                     <Input
-                      id="phone"
-                      value={shopSettings.phone}
-                      onChange={(e) => setShopSettings({ ...shopSettings, phone: e.target.value })}
+                      id="lastName"
+                      value={profileSettings.lastName}
+                      onChange={(e) => setProfileSettings({ ...profileSettings, lastName: e.target.value })}
                     />
                   </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="description">{t('merchant.settings.description')}</Label>
-                  <Textarea
-                    id="description"
-                    value={shopSettings.description}
-                    onChange={(e) => setShopSettings({ ...shopSettings, description: e.target.value })}
-                    className="min-h-[80px]"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="address">{t('merchant.settings.address')}</Label>
-                  <Input
-                    id="address"
-                    value={shopSettings.address}
-                    onChange={(e) => setShopSettings({ ...shopSettings, address: e.target.value })}
-                  />
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">{t('login.email')}</Label>
+                    <Label htmlFor="email">Email</Label>
                     <Input
                       id="email"
                       type="email"
-                      value={shopSettings.email}
-                      onChange={(e) => setShopSettings({ ...shopSettings, email: e.target.value })}
+                      value={profileSettings.email}
+                      onChange={(e) => setProfileSettings({ ...profileSettings, email: e.target.value })}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="website">{t('merchant.settings.website')}</Label>
+                    <Label htmlFor="phone">Telefono</Label>
                     <Input
-                      id="website"
-                      value={shopSettings.website}
-                      onChange={(e) => setShopSettings({ ...shopSettings, website: e.target.value })}
+                      id="phone"
+                      value={profileSettings.phone}
+                      onChange={(e) => setProfileSettings({ ...profileSettings, phone: e.target.value })}
                     />
                   </div>
                 </div>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="openingHours">{t('merchant.settings.openingHours')}</Label>
-                  <Input
-                    id="openingHours"
-                    value={shopSettings.openingHours}
-                    onChange={(e) => setShopSettings({ ...shopSettings, openingHours: e.target.value })}
-                  />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="businessLicense">Licenza Commerciale</Label>
+                    <Input
+                      id="businessLicense"
+                      value={profileSettings.businessLicense}
+                      onChange={(e) => setProfileSettings({ ...profileSettings, businessLicense: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="vatNumber">Partita IVA</Label>
+                    <Input
+                      id="vatNumber"
+                      value={profileSettings.vatNumber}
+                      onChange={(e) => setProfileSettings({ ...profileSettings, vatNumber: e.target.value })}
+                    />
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -205,13 +194,20 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Palette className="w-4 h-4" />
-                  {t('merchant.settings.giftCardConfig')}
+                  Configurazioni Gift Card Globali
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg mb-4">
+                  <p className="text-sm text-blue-700 dark:text-blue-300">
+                    Queste impostazioni si applicano a tutti i tuoi negozi come valori predefiniti. 
+                    Ogni negozio può sovrascrivere queste configurazioni nelle proprie impostazioni specifiche.
+                  </p>
+                </div>
+                
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="minAmount">{t('merchant.settings.minAmount')}</Label>
+                    <Label htmlFor="minAmount">Importo Minimo Predefinito (€)</Label>
                     <Input
                       id="minAmount"
                       type="number"
@@ -220,7 +216,7 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="maxAmount">{t('merchant.settings.maxAmount')}</Label>
+                    <Label htmlFor="maxAmount">Importo Massimo Predefinito (€)</Label>
                     <Input
                       id="maxAmount"
                       type="number"
@@ -231,7 +227,7 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="validityMonths">{t('merchant.settings.defaultValidity')}</Label>
+                  <Label htmlFor="validityMonths">Validità Predefinita (mesi)</Label>
                   <Input
                     id="validityMonths"
                     type="number"
@@ -241,7 +237,7 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                 </div>
                 
                 <div className="space-y-2">
-                  <Label>{t('merchant.settings.defaultAmounts')}</Label>
+                  <Label>Importi Predefiniti Suggeriti (€)</Label>
                   <div className="flex flex-wrap gap-2">
                     {giftCardSettings.defaultAmounts.map((amount, index) => (
                       <div key={index} className="flex items-center gap-2">
@@ -262,9 +258,9 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>{t('merchant.settings.customDesign')}</Label>
+                    <Label>Design Personalizzato</Label>
                     <p className="text-sm text-muted-foreground">
-                      {t('merchant.settings.customDesignDesc')}
+                      Abilita design personalizzati per le gift card
                     </p>
                   </div>
                   <Switch
