@@ -14,14 +14,17 @@ import ShopMap from "@/components/ShopMap";
 import { ShopListSkeleton } from "@/components/ShopCardSkeleton";
 import { Link } from "react-router-dom";
 import MissionBanner from "@/components/MissionBanner";
-
 const Index = () => {
   const [searchParams] = useSearchParams();
-  const { user, isAuthenticated } = useAuth();
-  const { t } = useLanguage();
+  const {
+    user,
+    isAuthenticated
+  } = useAuth();
+  const {
+    t
+  } = useLanguage();
   const initialCity = searchParams.get('city');
   const initialCategory = searchParams.get('category');
-
   const [view, setView] = useState<'grid' | 'map'>('grid');
   const [filters, setFilters] = useState<FilterState>(() => ({
     categories: initialCategory ? [initialCategory] : [],
@@ -36,56 +39,56 @@ const Index = () => {
     if (isAuthenticated && user?.preferred_city) return user.preferred_city;
     return null;
   }, [initialCity, isAuthenticated, user?.preferred_city]);
-
-  const { shops, isLoading, error } = useShops();
-
+  const {
+    shops,
+    isLoading,
+    error
+  } = useShops();
   const filteredShops = useMemo(() => {
     return shops.filter(shop => {
       // Category filter
       if (filters.categories.length > 0 && !filters.categories.includes(shop.category)) {
         return false;
       }
-      
+
       // City filter (exact match)
       if (currentCity && shop.city !== currentCity) {
         return false;
       }
-      
+
       // Price range filter
       const minPrice = Math.min(...shop.giftCardPrices);
       const maxPrice = Math.max(...shop.giftCardPrices);
       if (maxPrice < filters.priceRange[0] || minPrice > filters.priceRange[1]) {
         return false;
       }
-      
+
       // Rating filter
       if (shop.rating < filters.minRating) {
         return false;
       }
-      
+
       // Distance filter
       const distanceValue = parseInt(shop.distance.replace('m', ''));
       if (distanceValue > filters.maxDistance) {
         return false;
       }
-      
       return true;
     });
   }, [filters, shops, currentCity]);
-
   const handleCategoryToggle = (category: string) => {
     if (category === t('common.all') || category === "Tutti") {
-      setFilters(prev => ({ ...prev, categories: [] }));
+      setFilters(prev => ({
+        ...prev,
+        categories: []
+      }));
     } else {
       setFilters(prev => ({
         ...prev,
-        categories: prev.categories.includes(category)
-          ? prev.categories.filter(c => c !== category)
-          : [...prev.categories, category]
+        categories: prev.categories.includes(category) ? prev.categories.filter(c => c !== category) : [...prev.categories, category]
       }));
     }
   };
-
   const clearFilters = () => {
     setFilters({
       categories: [],
@@ -94,16 +97,11 @@ const Index = () => {
       maxDistance: 1000
     });
   };
-
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background">
+    return <div className="min-h-screen bg-background">
         <Header />
         <HeroSection />
-        <CategoryFilter 
-          selectedCategories={[]}
-          onCategoryToggle={() => {}}
-        />
+        <CategoryFilter selectedCategories={[]} onCategoryToggle={() => {}} />
         <section className="container mx-auto px-4 py-12">
           <div className="text-center mb-8">
             <div className="animate-pulse">
@@ -127,65 +125,29 @@ const Index = () => {
             </div>
           </div>
         </section>
-      </div>
-    );
+      </div>;
   }
-
   if (error) {
-    return (
-      <div className="min-h-screen bg-background">
+    return <div className="min-h-screen bg-background">
         <Header />
         <div className="container mx-auto px-4 py-12 text-center">
           {t('shops.unableToLoad')}
         </div>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       <Header />
       <HeroSection />
       
       {/* Solo per utenti non autenticati: mostra solo i banner informativi */}
-      {!isAuthenticated ? (
-        <>
-          <CategoryFilter 
-            selectedCategories={[]}
-            onCategoryToggle={() => {}}
-          />
+      {!isAuthenticated ? <>
+          <CategoryFilter selectedCategories={[]} onCategoryToggle={() => {}} />
           
           {/* Banner informativo - nessun negozio mostrato */}
-          <section className="container mx-auto px-4 py-12">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-display font-bold text-foreground mb-4">
-                {t('shops.featuredTitle')}
-              </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                {t('shops.featuredDescription')}
-              </p>
-            </div>
-            
-            {/* Messaggio per utenti non loggati */}
-            <div className="text-center py-12">
-              <p className="text-muted-foreground mb-4">
-                Effettua il login per vedere i negozi disponibili
-              </p>
-              <Link to="/login-select">
-                <button className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
-                  Accedi
-                </button>
-              </Link>
-            </div>
-          </section>
-        </>
-      ) : (
-        <>
+          
+        </> : <>
           {/* Per utenti autenticati: mostra i negozi come prima */}
-          <CategoryFilter 
-            selectedCategories={filters.categories}
-            onCategoryToggle={handleCategoryToggle}
-          />
+          <CategoryFilter selectedCategories={filters.categories} onCategoryToggle={handleCategoryToggle} />
           
           <section className="container mx-auto px-4 py-12">
             <div className="text-center mb-8">
@@ -200,61 +162,38 @@ const Index = () => {
             <div className="mb-8">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div className="flex items-center gap-4">
-                  <FiltersSidebar 
-                    filters={filters}
-                    onFiltersChange={setFilters}
-                    onClearFilters={clearFilters}
-                  />
+                  <FiltersSidebar filters={filters} onFiltersChange={setFilters} onClearFilters={clearFilters} />
                   <p className="text-muted-foreground">
                     {filteredShops.length} {t('shops.shopsFound')}
-                    {currentCity && (
-                      <span className="text-primary font-medium"> {currentCity}</span>
-                    )}
+                    {currentCity && <span className="text-primary font-medium"> {currentCity}</span>}
                   </p>
                 </div>
                 <ViewToggle view={view} onViewChange={setView} />
               </div>
             </div>
 
-            {view === 'grid' ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 animate-fade-in">
-                {filteredShops.map((shop) => (
-                  <div key={shop.id} className="animate-scale-in">
+            {view === 'grid' ? <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 animate-fade-in">
+                {filteredShops.map(shop => <div key={shop.id} className="animate-scale-in">
                     <ShopCard {...shop} />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <ShopMap shops={filteredShops} />
-            )}
+                  </div>)}
+              </div> : <ShopMap shops={filteredShops} />}
 
-            {filteredShops.length > 0 && view === 'grid' && (
-              <div className="text-center mt-12">
-                <button 
-                  className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
-                  onClick={() => alert('Funzionalità in arrivo!')}
-                >
+            {filteredShops.length > 0 && view === 'grid' && <div className="text-center mt-12">
+                <button className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white px-8 py-3 rounded-lg font-semibold transition-colors" onClick={() => alert('Funzionalità in arrivo!')}>
                   {t('shops.loadMore')}
                 </button>
-              </div>
-            )}
+              </div>}
 
-            {filteredShops.length === 0 && (
-              <div className="text-center py-12">
+            {filteredShops.length === 0 && <div className="text-center py-12">
                 <p className="text-muted-foreground mb-4">
                   {t('shops.noResults')}
                 </p>
-                <button
-                  onClick={clearFilters}
-                  className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white px-6 py-2 rounded-lg font-semibold transition-colors"
-                >
+                <button onClick={clearFilters} className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
                   {t('shops.clearFilters')}
                 </button>
-              </div>
-            )}
+              </div>}
           </section>
-        </>
-      )}
+        </>}
 
       {/* Mission Banner */}
       <MissionBanner />
@@ -275,8 +214,6 @@ const Index = () => {
           </Link>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
