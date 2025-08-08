@@ -38,6 +38,14 @@ const MerchantShops = () => {
   const [selectedShop, setSelectedShop] = useState<any | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [updatingShopId, setUpdatingShopId] = useState<string | null>(null);
+  const [localShops, setLocalShops] = useState<ExtendedShop[]>([]);
+
+  // Sincronizza shops locali quando cambiano i dati dal server (solo al primo caricamento)
+  React.useEffect(() => {
+    if (shops && localShops.length === 0) {
+      setLocalShops(shops);
+    }
+  }, [shops, localShops.length]);
 
   const handleEditShop = (shop: any) => {
     setSelectedShop(shop);
@@ -47,7 +55,12 @@ const MerchantShops = () => {
   const handleShopUpdated = () => {
     setIsEditModalOpen(false);
     setSelectedShop(null);
-    refetch();
+    // Ricarica tutti i dati solo quando si modifica un negozio (non solo lo status)
+    refetch().then(() => {
+      if (shops) {
+        setLocalShops(shops);
+      }
+    });
     toast({
       title: t('merchant.shops.shopUpdated'),
       description: t('merchant.shops.updatedSuccess'),
@@ -60,10 +73,16 @@ const MerchantShops = () => {
       const newStatus = shop.status === 'active' ? 'inactive' : 'active';
       
       // Chiamata API e attesa della risposta
-      await updateShopStatus(shop.id, newStatus);
+      const updatedShop = await updateShopStatus(shop.id, newStatus);
       
-      // Solo dopo il successo, aggiorna i dati
-      await refetch();
+      // Aggiorna solo lo shop specifico mantenendo la posizione originale
+      setLocalShops(prevShops => 
+        prevShops.map(s => 
+          s.id === shop.id 
+            ? { ...s, status: updatedShop.status, updated_at: updatedShop.updated_at }
+            : s
+        )
+      );
       
       toast({
         title: t('merchant.shops.statusUpdated'),
@@ -168,9 +187,9 @@ const MerchantShops = () => {
         </div>
 
         {/* Shops Grid */}
-        {shops && shops.length > 0 ? (
+        {localShops && localShops.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {shops.map((shop) => (
+            {localShops.map((shop) => (
               <Card key={shop.id} className="group hover:shadow-hover transition-all duration-300">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
