@@ -21,6 +21,7 @@ const translations = {
     'header.logout': 'Esci',
     'header.login': 'Accedi',
     'header.tagline': 'Local-Eyes',
+    'header.about': 'About',
     
     // Hero section
     'hero.title': 'Vedi locale, Vivi locale',
@@ -388,7 +389,28 @@ const translations = {
     'fromGiftCard': 'dalla gift card',
     'errorUsingGiftCard': 'Errore durante l\'utilizzo della gift card',
     'giftCard.label': 'Gift Card',
-    'insertAmount': 'Inserisci importo'
+    'insertAmount': 'Inserisci importo',
+
+    // About page
+    'about.title': 'About Localize',
+    'about.mission.title': 'La nostra missione',
+    'about.mission.description': 'Localize nasce dalla volontà di riportare lo sguardo al locale, valorizzando i commercianti del territorio e creando una comunità digitale che sostiene l\'economia di quartiere.',
+    'about.mission.details': 'Attraverso le gift card digitali, ogni acquisto diventa un gesto di fiducia e sostegno verso i commercianti che rendono unico il nostro territorio.',
+    'about.features.title': 'Le nostre funzionalità',
+    'about.features.discovery.title': 'Scoperta locale',
+    'about.features.discovery.description': 'Trova facilmente i negozi del tuo quartiere, scopri le loro storie e i loro prodotti unici.',
+    'about.features.giftcards.title': 'Gift Card digitali',
+    'about.features.giftcards.description': 'Acquista e utilizza gift card digitali per sostenere i tuoi commercianti preferiti.',
+    'about.features.community.title': 'Comunità',
+    'about.features.community.description': 'Crea connessioni autentiche tra clienti e commercianti del territorio.',
+    'about.features.sustainability.title': 'Sostenibilità',
+    'about.features.sustainability.description': 'Promuovi un modello di consumo responsabile e sostenibile per il territorio.',
+    'about.vision.title': 'La nostra visione',
+    'about.vision.description': 'Immaginiamo un futuro dove ogni quartiere sia una comunità viva e prosperosa, dove il commercio locale sia il cuore pulsante dell\'economia e dove ogni cittadino possa contribuire attivamente al benessere del proprio territorio.',
+    'about.cta.title': 'Unisciti a noi',
+    'about.cta.description': 'Fai parte della rivoluzione locale. Scopri i negozi del tuo quartiere o registra il tuo commercio.',
+    'about.cta.exploreShops': 'Esplora i negozi',
+    'about.cta.joinMerchants': 'Diventa merchant'
   },
   en: {
     // Header
@@ -399,6 +421,7 @@ const translations = {
     'header.logout': 'Logout',
     'header.login': 'Login',
     'header.tagline': 'Local-Eyes',
+    'header.about': 'About',
     
     // Hero section
     'hero.title': 'See local, Live local',
@@ -772,7 +795,28 @@ const translations = {
     
     // More translations
     'giftCard.label': 'Gift Card',
-    'insertAmount': 'Insert amount'
+    'insertAmount': 'Insert amount',
+
+    // About page
+    'about.title': 'About Localize',
+    'about.mission.title': 'Our mission',
+    'about.mission.description': 'Localize was born from the desire to bring the gaze back to local, enhancing territorial merchants and creating a digital community that supports neighborhood economy.',
+    'about.mission.details': 'Through digital gift cards, every purchase becomes a gesture of trust and support towards the merchants who make our territory unique.',
+    'about.features.title': 'Our features',
+    'about.features.discovery.title': 'Local discovery',
+    'about.features.discovery.description': 'Easily find shops in your neighborhood, discover their stories and unique products.',
+    'about.features.giftcards.title': 'Digital Gift Cards',
+    'about.features.giftcards.description': 'Purchase and use digital gift cards to support your favorite merchants.',
+    'about.features.community.title': 'Community',
+    'about.features.community.description': 'Create authentic connections between customers and territorial merchants.',
+    'about.features.sustainability.title': 'Sustainability',
+    'about.features.sustainability.description': 'Promote a responsible and sustainable consumption model for the territory.',
+    'about.vision.title': 'Our vision',
+    'about.vision.description': 'We imagine a future where every neighborhood is a thriving community, where local commerce is the beating heart of the economy and where every citizen can actively contribute to the well-being of their territory.',
+    'about.cta.title': 'Join us',
+    'about.cta.description': 'Be part of the local revolution. Discover shops in your neighborhood or register your business.',
+    'about.cta.exploreShops': 'Explore shops',
+    'about.cta.joinMerchants': 'Become a merchant'
   }
 };
 
