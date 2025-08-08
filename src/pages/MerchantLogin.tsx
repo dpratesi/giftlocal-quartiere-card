@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import { useEffect } from "react";
@@ -26,14 +27,15 @@ const MerchantLogin = () => {
     confirmPassword: ""
   });
   const { login, signup, isLoading, user, logout } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   // Check if user is already logged in as customer and offer logout
   useEffect(() => {
     if (user && user.type === 'customer') {
       toast({
-        title: "Account cliente già connesso",
-        description: "Devi disconnetterti dall'account cliente per accedere come merchant.",
+        title: t('merchant.login.customerAccountConnected'),
+        description: t('merchant.login.mustLogoutCustomer'),
         action: (
           <Button
             variant="outline"
@@ -41,17 +43,17 @@ const MerchantLogin = () => {
             onClick={async () => {
               await logout();
               toast({
-                title: "Disconnesso",
-                description: "Ora puoi accedere come merchant.",
+                title: t('merchant.login.disconnected'),
+                description: t('merchant.login.canLoginMerchant'),
               });
             }}
           >
-            Disconnetti
+            {t('merchant.login.disconnect')}
           </Button>
         ),
       });
     }
-  }, [user, logout]);
+  }, [user, logout, t]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,15 +61,15 @@ const MerchantLogin = () => {
     const result = await login(loginForm.email, loginForm.password, "merchant");
     if (result.success) {
       toast({
-        title: "Login effettuato",
-        description: "Benvenuto nella dashboard merchant!",
+        title: t('login.loginSuccess'),
+        description: t('login.welcomeMessage'),
       });
       // Use replace to avoid back button issues
       navigate("/merchant/dashboard", { replace: true });
     } else {
       toast({
-        title: "Errore di login",
-        description: result.error || "Email o password non corretti",
+        title: t('login.loginError'),
+        description: result.error || t('login.invalidCredentials'),
         variant: "destructive",
       });
     }
@@ -78,8 +80,8 @@ const MerchantLogin = () => {
     
     if (signupForm.password !== signupForm.confirmPassword) {
       toast({
-        title: "Errore",
-        description: "Le password non coincidono",
+        title: t('common.error'),
+        description: t('login.passwordMismatch'),
         variant: "destructive",
       });
       return;
@@ -88,14 +90,14 @@ const MerchantLogin = () => {
     const result = await signup(signupForm.email, signupForm.password, signupForm.name, "merchant");
     if (result.success) {
       toast({
-        title: "Registrazione completata",
-        description: "Benvenuto! Effettua il login per accedere alla dashboard.",
+        title: t('merchant.login.registrationComplete'),
+        description: t('merchant.login.registrationWelcome'),
       });
       setSignupForm({ name: "", email: "", password: "", confirmPassword: "" });
     } else {
       toast({
-        title: "Errore di registrazione",
-        description: result.error || "Si è verificato un errore durante la registrazione",
+        title: t('merchant.login.registrationError'),
+        description: result.error || t('login.signupGenericError'),
         variant: "destructive",
       });
     }
@@ -109,7 +111,7 @@ const MerchantLogin = () => {
         <Link to="/">
           <Button variant="ghost" className="mb-6">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Torna alla home
+            {t('merchant.login.backHome')}
           </Button>
         </Link>
 
@@ -120,9 +122,9 @@ const MerchantLogin = () => {
                 <Store className="w-8 h-8 text-primary" />
               </div>
               <div>
-                <CardTitle className="text-2xl">Area Merchant</CardTitle>
+                <CardTitle className="text-2xl">{t('merchant.login.title')}</CardTitle>
                 <p className="text-muted-foreground">
-                  Accedi o registrati per gestire le gift card
+                  {t('merchant.login.description')}
                 </p>
               </div>
             </CardHeader>
@@ -130,14 +132,14 @@ const MerchantLogin = () => {
             <CardContent>
               <Tabs defaultValue="login" className="space-y-6">
                 <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="login">Accedi</TabsTrigger>
-                  <TabsTrigger value="signup">Registrati</TabsTrigger>
+                  <TabsTrigger value="login">{t('login.tab.login')}</TabsTrigger>
+                  <TabsTrigger value="signup">{t('login.tab.signup')}</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="login">
                   <form onSubmit={handleLogin} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="login-email">Email</Label>
+                      <Label htmlFor="login-email">{t('login.email')}</Label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -147,14 +149,14 @@ const MerchantLogin = () => {
                           value={loginForm.email}
                           onChange={(e) => setLoginForm(prev => ({ ...prev, email: e.target.value }))}
                           className="pl-10"
-                          placeholder="merchant@example.com"
+                          placeholder={t('login.emailPlaceholder')}
                           required
                         />
                       </div>
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="login-password">Password</Label>
+                      <Label htmlFor="login-password">{t('login.password')}</Label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -164,7 +166,7 @@ const MerchantLogin = () => {
                           value={loginForm.password}
                           onChange={(e) => setLoginForm(prev => ({ ...prev, password: e.target.value }))}
                           className="pl-10 pr-10"
-                          placeholder="••••••••"
+                          placeholder={t('login.passwordPlaceholder')}
                           required
                         />
                         <Button
@@ -189,7 +191,7 @@ const MerchantLogin = () => {
                       size="lg"
                       disabled={isLoading}
                     >
-                      {isLoading ? "Accesso in corso..." : "Accedi"}
+                      {isLoading ? t('merchant.login.loggingIn') : t('login.loginButton')}
                     </Button>
                   </form>
                 </TabsContent>
@@ -197,7 +199,7 @@ const MerchantLogin = () => {
                 <TabsContent value="signup">
                   <form onSubmit={handleSignup} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="signup-name">Nome negozio</Label>
+                      <Label htmlFor="signup-name">{t('merchant.login.shopName')}</Label>
                       <div className="relative">
                         <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -206,14 +208,14 @@ const MerchantLogin = () => {
                           value={signupForm.name}
                           onChange={(e) => setSignupForm(prev => ({ ...prev, name: e.target.value }))}
                           className="pl-10"
-                          placeholder="Nome del tuo negozio"
+                          placeholder={t('merchant.login.shopNamePlaceholder')}
                           required
                         />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="signup-email">Email</Label>
+                      <Label htmlFor="signup-email">{t('login.email')}</Label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -222,14 +224,14 @@ const MerchantLogin = () => {
                           value={signupForm.email}
                           onChange={(e) => setSignupForm(prev => ({ ...prev, email: e.target.value }))}
                           className="pl-10"
-                          placeholder="merchant@example.com"
+                          placeholder={t('login.emailPlaceholder')}
                           required
                         />
                       </div>
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="signup-password">Password</Label>
+                      <Label htmlFor="signup-password">{t('login.password')}</Label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -238,14 +240,14 @@ const MerchantLogin = () => {
                           value={signupForm.password}
                           onChange={(e) => setSignupForm(prev => ({ ...prev, password: e.target.value }))}
                           className="pl-10"
-                          placeholder="••••••••"
+                          placeholder={t('login.passwordPlaceholder')}
                           required
                         />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="signup-confirm-password">Conferma Password</Label>
+                      <Label htmlFor="signup-confirm-password">{t('merchant.login.confirmPassword')}</Label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -254,7 +256,7 @@ const MerchantLogin = () => {
                           value={signupForm.confirmPassword}
                           onChange={(e) => setSignupForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
                           className="pl-10"
-                          placeholder="••••••••"
+                          placeholder={t('login.passwordPlaceholder')}
                           required
                         />
                       </div>
@@ -266,7 +268,7 @@ const MerchantLogin = () => {
                       size="lg"
                       disabled={isLoading}
                     >
-                      {isLoading ? "Registrazione in corso..." : "Registrati come Merchant"}
+                      {isLoading ? t('merchant.login.registrationInProgress') : t('merchant.login.registerButton')}
                     </Button>
                   </form>
                 </TabsContent>
@@ -274,9 +276,9 @@ const MerchantLogin = () => {
 
               <div className="text-center mt-6">
                 <p className="text-sm text-muted-foreground">
-                  Sei un cliente?{" "}
+                  {t('merchant.login.customerLogin')}{" "}
                   <Link to="/login" className="text-primary hover:underline">
-                    Accedi come cliente
+                    {t('merchant.login.loginAsCustomer')}
                   </Link>
                 </p>
               </div>

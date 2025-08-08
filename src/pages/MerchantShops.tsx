@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { useMerchantShops } from '@/hooks/useMerchantShops';
 import { ShopEditModal } from '@/components/ShopEditModal';
 import Header from '@/components/Header';
@@ -30,6 +31,7 @@ interface ExtendedShop {
 const MerchantShops = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useLanguage();
   const { shops, isLoading, error, refetch } = useMerchantShops(user?.id);
   const [selectedShop, setSelectedShop] = useState<any | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -44,16 +46,16 @@ const MerchantShops = () => {
     setSelectedShop(null);
     refetch();
     toast({
-      title: "Negozio aggiornato",
-      description: "Le modifiche sono state salvate con successo.",
+      title: t('merchant.shops.shopUpdated'),
+      description: t('merchant.shops.updatedSuccess'),
     });
   };
 
   const getStatusBadge = (status: string = 'active') => {
     const statusConfig = {
-      active: { label: "Attivo", variant: "default" as const },
-      inactive: { label: "Inattivo", variant: "secondary" as const },
-      pending: { label: "In revisione", variant: "outline" as const }
+      active: { label: t('merchant.shops.statusActive'), variant: "default" as const },
+      inactive: { label: t('merchant.shops.statusInactive'), variant: "secondary" as const },
+      pending: { label: t('merchant.shops.statusPending'), variant: "outline" as const }
     };
     
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.active;
@@ -84,9 +86,9 @@ const MerchantShops = () => {
         <Header />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
-            <p className="text-destructive">Errore nel caricamento dei negozi</p>
+            <p className="text-destructive">{t('merchant.shops.loadingError')}</p>
             <Button onClick={() => refetch()} className="mt-4">
-              Riprova
+              {t('merchant.shops.retry')}
             </Button>
           </div>
         </div>
@@ -106,23 +108,23 @@ const MerchantShops = () => {
           className="mb-6"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Torna alla Dashboard
+          {t('merchant.shops.backToDashboard')}
         </Button>
 
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-display font-bold text-foreground">
-              I tuoi negozi
+              {t('merchant.shops.title')}
             </h1>
             <p className="text-muted-foreground mt-2">
-              Gestisci le informazioni e le configurazioni dei tuoi negozi
+              {t('merchant.shops.description')}
             </p>
           </div>
           
           <Button onClick={() => navigate('/register-shop')}>
             <Plus className="w-4 h-4 mr-2" />
-            Aggiungi negozio
+            {t('merchant.shops.addShop')}
           </Button>
         </div>
 
@@ -170,7 +172,7 @@ const MerchantShops = () => {
                       onClick={() => handleEditShop(shop)}
                     >
                       <Edit className="w-4 h-4 mr-2" />
-                      Modifica
+                      {t('merchant.shops.modify')}
                     </Button>
                     <Button 
                       variant="ghost" 
@@ -178,8 +180,8 @@ const MerchantShops = () => {
                       onClick={() => {
                         // TODO: Implementare configurazioni avanzate
                         toast({
-                          title: "Funzionalità in arrivo",
-                          description: "Le configurazioni avanzate saranno disponibili presto.",
+                          title: t('merchant.shops.featureComingSoon'),
+                          description: t('merchant.shops.advancedSettings'),
                         });
                       }}
                     >
@@ -194,13 +196,13 @@ const MerchantShops = () => {
           <Card className="text-center py-12">
             <CardContent>
               <Store className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Nessun negozio registrato</h3>
+              <h3 className="text-lg font-semibold mb-2">{t('merchant.shops.noShops')}</h3>
               <p className="text-muted-foreground mb-6">
-                Inizia registrando il tuo primo negozio per vendere gift card online
+                {t('merchant.shops.registerFirst')}
               </p>
               <Button onClick={() => navigate('/register-shop')}>
                 <Plus className="w-4 h-4 mr-2" />
-                Registra il primo negozio
+                {t('merchant.shops.registerFirstShop')}
               </Button>
             </CardContent>
           </Card>

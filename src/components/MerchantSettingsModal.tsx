@@ -17,6 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Settings, Store, Bell, Shield, Palette } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface MerchantSettingsModalProps {
   merchantData: any;
@@ -27,6 +28,7 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
   
   const [shopSettings, setShopSettings] = useState({
     shopName: merchantData?.shopName || "",
@@ -76,15 +78,15 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
       onSettingsUpdate?.(updatedSettings);
       
       toast({
-        title: "Impostazioni Salvate",
-        description: "Le tue impostazioni sono state aggiornate con successo",
+        title: t('merchant.settings.saved'),
+        description: t('merchant.settings.savedDesc'),
       });
 
       setOpen(false);
     } catch (error) {
       toast({
-        title: "Errore",
-        description: "Errore durante il salvataggio delle impostazioni",
+        title: t('merchant.settings.error'),
+        description: t('merchant.settings.errorDesc'),
         variant: "destructive",
       });
     } finally {
@@ -97,26 +99,26 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
           <Settings className="w-4 h-4 mr-2" />
-          Impostazioni
+          {t('merchant.settings.title')}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Settings className="w-5 h-5" />
-            Impostazioni Merchant
+            {t('merchant.settings.merchantSettings')}
           </DialogTitle>
           <DialogDescription>
-            Gestisci le impostazioni del tuo negozio e delle gift card
+            {t('merchant.settings.manageShop')}
           </DialogDescription>
         </DialogHeader>
         
         <Tabs defaultValue="shop" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="shop">Negozio</TabsTrigger>
-            <TabsTrigger value="giftcards">Gift Card</TabsTrigger>
-            <TabsTrigger value="notifications">Notifiche</TabsTrigger>
-            <TabsTrigger value="security">Sicurezza</TabsTrigger>
+            <TabsTrigger value="shop">{t('merchant.settings.shop')}</TabsTrigger>
+            <TabsTrigger value="giftcards">{t('merchant.settings.giftCards')}</TabsTrigger>
+            <TabsTrigger value="notifications">{t('merchant.settings.notifications')}</TabsTrigger>
+            <TabsTrigger value="security">{t('merchant.settings.security')}</TabsTrigger>
           </TabsList>
           
           <TabsContent value="shop" className="space-y-4">
@@ -124,13 +126,13 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Store className="w-4 h-4" />
-                  Informazioni Negozio
+                  {t('merchant.settings.shopInfo')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="shopName">Nome Negozio</Label>
+                    <Label htmlFor="shopName">{t('merchant.settings.shopName')}</Label>
                     <Input
                       id="shopName"
                       value={shopSettings.shopName}
@@ -138,7 +140,7 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Telefono</Label>
+                    <Label htmlFor="phone">{t('merchant.settings.phone')}</Label>
                     <Input
                       id="phone"
                       value={shopSettings.phone}
@@ -148,7 +150,7 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="description">Descrizione</Label>
+                  <Label htmlFor="description">{t('merchant.settings.description')}</Label>
                   <Textarea
                     id="description"
                     value={shopSettings.description}
@@ -158,7 +160,7 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="address">Indirizzo</Label>
+                  <Label htmlFor="address">{t('merchant.settings.address')}</Label>
                   <Input
                     id="address"
                     value={shopSettings.address}
@@ -168,7 +170,7 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">{t('login.email')}</Label>
                     <Input
                       id="email"
                       type="email"
@@ -177,7 +179,7 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="website">Sito Web</Label>
+                    <Label htmlFor="website">{t('merchant.settings.website')}</Label>
                     <Input
                       id="website"
                       value={shopSettings.website}
@@ -187,7 +189,7 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="openingHours">Orari di Apertura</Label>
+                  <Label htmlFor="openingHours">{t('merchant.settings.openingHours')}</Label>
                   <Input
                     id="openingHours"
                     value={shopSettings.openingHours}
@@ -203,13 +205,13 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Palette className="w-4 h-4" />
-                  Configurazione Gift Card
+                  {t('merchant.settings.giftCardConfig')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="minAmount">Importo Minimo (€)</Label>
+                    <Label htmlFor="minAmount">{t('merchant.settings.minAmount')}</Label>
                     <Input
                       id="minAmount"
                       type="number"
@@ -218,7 +220,7 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="maxAmount">Importo Massimo (€)</Label>
+                    <Label htmlFor="maxAmount">{t('merchant.settings.maxAmount')}</Label>
                     <Input
                       id="maxAmount"
                       type="number"
@@ -229,7 +231,7 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="validityMonths">Validità Default (mesi)</Label>
+                  <Label htmlFor="validityMonths">{t('merchant.settings.defaultValidity')}</Label>
                   <Input
                     id="validityMonths"
                     type="number"
@@ -239,7 +241,7 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                 </div>
                 
                 <div className="space-y-2">
-                  <Label>Importi Predefiniti (€)</Label>
+                  <Label>{t('merchant.settings.defaultAmounts')}</Label>
                   <div className="flex flex-wrap gap-2">
                     {giftCardSettings.defaultAmounts.map((amount, index) => (
                       <div key={index} className="flex items-center gap-2">
@@ -260,9 +262,9 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>Design Personalizzato</Label>
+                    <Label>{t('merchant.settings.customDesign')}</Label>
                     <p className="text-sm text-muted-foreground">
-                      Abilita design personalizzato per le gift card
+                      {t('merchant.settings.customDesignDesc')}
                     </p>
                   </div>
                   <Switch
@@ -279,16 +281,16 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Bell className="w-4 h-4" />
-                  Preferenze Notifiche
+                  {t('merchant.settings.notificationPrefs')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label>Notifiche Ordini Email</Label>
+                      <Label>{t('merchant.settings.emailOrders')}</Label>
                       <p className="text-sm text-muted-foreground">
-                        Ricevi email per ogni nuovo ordine
+                        {t('merchant.settings.emailOrdersDesc')}
                       </p>
                     </div>
                     <Switch
@@ -299,9 +301,9 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                   
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label>Notifiche Utilizzo Email</Label>
+                      <Label>{t('merchant.settings.emailRedemptions')}</Label>
                       <p className="text-sm text-muted-foreground">
-                        Ricevi email quando una gift card viene utilizzata
+                        {t('merchant.settings.emailRedemptionsDesc')}
                       </p>
                     </div>
                     <Switch
@@ -312,9 +314,9 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                   
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label>Notifiche SMS</Label>
+                      <Label>{t('merchant.settings.smsNotifications')}</Label>
                       <p className="text-sm text-muted-foreground">
-                        Ricevi SMS per eventi importanti
+                        {t('merchant.settings.smsDesc')}
                       </p>
                     </div>
                     <Switch
@@ -325,9 +327,9 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                   
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label>Report Settimanali</Label>
+                      <Label>{t('merchant.settings.weeklyReports')}</Label>
                       <p className="text-sm text-muted-foreground">
-                        Ricevi report delle vendite ogni settimana
+                        {t('merchant.settings.weeklyReportsDesc')}
                       </p>
                     </div>
                     <Switch
@@ -338,9 +340,9 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                   
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label>Report Mensili</Label>
+                      <Label>{t('merchant.settings.monthlyReports')}</Label>
                       <p className="text-sm text-muted-foreground">
-                        Ricevi report dettagliati ogni mese
+                        {t('merchant.settings.monthlyReportsDesc')}
                       </p>
                     </div>
                     <Switch
@@ -358,15 +360,15 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Shield className="w-4 h-4" />
-                  Impostazioni Sicurezza
+                  {t('merchant.settings.securitySettings')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>Autenticazione a Due Fattori</Label>
+                    <Label>{t('merchant.settings.twoFactorAuth')}</Label>
                     <p className="text-sm text-muted-foreground">
-                      Aggiungi un livello extra di sicurezza al tuo account
+                      {t('merchant.settings.twoFactorDesc')}
                     </p>
                   </div>
                   <Switch
@@ -376,7 +378,7 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="sessionTimeout">Timeout Sessione (minuti)</Label>
+                  <Label htmlFor="sessionTimeout">{t('merchant.settings.sessionTimeout')}</Label>
                   <Input
                     id="sessionTimeout"
                     type="number"
@@ -386,7 +388,7 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="passwordExpiry">Scadenza Password (giorni)</Label>
+                  <Label htmlFor="passwordExpiry">{t('merchant.settings.passwordExpiry')}</Label>
                   <Input
                     id="passwordExpiry"
                     type="number"
@@ -396,7 +398,7 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
                 </div>
                 
                 <Button variant="outline" className="w-full">
-                  Cambia Password
+                  {t('merchant.settings.changePassword')}
                 </Button>
               </CardContent>
             </Card>
@@ -405,10 +407,10 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
 
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)} disabled={loading}>
-            Annulla
+            {t('merchant.settings.cancel')}
           </Button>
           <Button onClick={handleSaveSettings} disabled={loading}>
-            {loading ? "Salvataggio..." : "Salva Impostazioni"}
+            {loading ? t('merchant.settings.saving') : t('merchant.settings.save')}
           </Button>
         </DialogFooter>
       </DialogContent>
