@@ -355,6 +355,7 @@ const MerchantDashboard = () => {
                                 <p className="font-medium text-green-600">€{card.remainingValue}</p>
                                 <p className="text-xs text-muted-foreground">di €{card.amount}</p>
                                 <p className="text-xs text-muted-foreground">{card.purchaseDate}</p>
+                                <p className="text-xs text-orange-600 font-medium">Scade: {card.expiryDate}</p>
                               </div>
                             </div>
                             {card.recipientName && (
@@ -416,6 +417,7 @@ const MerchantDashboard = () => {
                                 <p className="font-medium text-gray-600">€{card.amount}</p>
                                 <p className="text-xs text-muted-foreground line-through">€0 {t('remaining')}</p>
                                 <p className="text-xs text-muted-foreground">{card.purchaseDate}</p>
+                                <p className="text-xs text-orange-600 font-medium">Scade: {card.expiryDate}</p>
                               </div>
                             </div>
                             {card.recipientName && (
