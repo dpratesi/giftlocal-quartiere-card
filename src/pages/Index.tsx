@@ -223,6 +223,9 @@ const Index = () => {
         )}
       </section>
 
+      {/* Mission Banner */}
+      <MissionBanner />
+
       {/* CTA Section */}
       <section className="bg-localize-sage-light py-16">
         <div className="container mx-auto px-4 text-center">
@@ -239,9 +242,6 @@ const Index = () => {
           </Link>
         </div>
       </section>
-
-      {/* Mission Banner */}
-      <MissionBanner />
     </div>
   );
 };
