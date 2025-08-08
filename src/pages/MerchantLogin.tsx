@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Store, Mail, Lock, Eye, EyeOff, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,7 +15,12 @@ import Header from "@/components/Header";
 import { useEffect } from "react";
 
 const MerchantLogin = () => {
+  const [searchParams] = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
+  const [activeTab, setActiveTab] = useState(() => {
+    // Check URL parameter for initial tab
+    return searchParams.get('tab') === 'signup' ? 'signup' : 'login';
+  });
   const [loginForm, setLoginForm] = useState({
     email: "",
     password: ""
@@ -130,7 +135,7 @@ const MerchantLogin = () => {
             </CardHeader>
             
             <CardContent>
-              <Tabs defaultValue="login" className="space-y-6">
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="login">{t('login.tab.login')}</TabsTrigger>
                   <TabsTrigger value="signup">{t('login.tab.signup')}</TabsTrigger>

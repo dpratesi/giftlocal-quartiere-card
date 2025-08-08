@@ -207,7 +207,7 @@ const Index = () => {
           <p className="text-lg text-localize-night/80 mb-8 mx-auto whitespace-nowrap text-center w-full">
             {t('cta.description')}
           </p>
-          <Link to="/register-shop">
+          <Link to="/merchant/login?tab=signup">
             <button className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
               {t('cta.registerShop')}
             </button>
