@@ -1,11 +1,12 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useShops } from "@/hooks/useShops";
-import { ArrowLeft, MapPin, Star, Clock, Phone, Euro, Heart, Share2 } from "lucide-react";
+import { useShopDiscounts } from "@/hooks/useShopDiscounts";
+import { ArrowLeft, MapPin, Star, Clock, Phone, Euro, Heart, Share2, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Header from "@/components/Header";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const ShopDetail = () => {
@@ -13,19 +14,59 @@ const ShopDetail = () => {
   const navigate = useNavigate();
   const { shops, isLoading, error } = useShops();
   const shop = shops.find((s) => s.id === id);
+  const { discounts, isLoading: discountsLoading } = useShopDiscounts(id || '');
   const { t } = useLanguage();
   
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
+  const [selectedOriginalPrice, setSelectedOriginalPrice] = useState<number | null>(null);
   const [customAmount, setCustomAmount] = useState<string>("");
   const [isCustomSelected, setIsCustomSelected] = useState(false);
 
+  // Combine regular prices with discounted offers
+  const giftCardOptions = useMemo(() => {
+    if (!shop) return [];
+    
+    const options: Array<{
+      amount: number;
+      originalPrice: number;
+      discountedPrice?: number;
+      discountPercentage?: number;
+      isDiscounted: boolean;
+    }> = [];
+
+    // Add regular prices
+    shop.giftCardPrices.forEach(price => {
+      options.push({
+        amount: price,
+        originalPrice: price,
+        isDiscounted: false
+      });
+    });
+
+    // Add discounted offers
+    discounts.forEach(discount => {
+      const discountedPrice = Math.round(discount.gift_card_amount * (1 - discount.discount_percentage / 100));
+      options.push({
+        amount: discount.gift_card_amount,
+        originalPrice: discount.gift_card_amount,
+        discountedPrice,
+        discountPercentage: discount.discount_percentage,
+        isDiscounted: true
+      });
+    });
+
+    // Sort by original price
+    return options.sort((a, b) => a.originalPrice - b.originalPrice);
+  }, [shop, discounts]);
+
   const handleBuyGiftCard = () => {
-    if (selectedAmount && shop) {
+    if (selectedAmount && selectedOriginalPrice && shop) {
       navigate("/checkout", {
         state: {
           shopId: shop.id,
           shopName: shop.name,
-          amount: selectedAmount
+          amount: selectedOriginalPrice,
+          actualPrice: selectedAmount
         }
       });
     }
@@ -158,27 +199,50 @@ const ShopDetail = () => {
               <CardContent className="p-6">
                 <h3 className="text-xl font-semibold mb-4">{t('giftCard.available')}</h3>
                 <div className="space-y-3">
-                  {shop.giftCardPrices.map((price) => (
+                  {giftCardOptions.map((option, index) => (
                     <div 
-                      key={price} 
-                      className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-colors ${
-                        selectedAmount === price && !isCustomSelected
+                      key={`${option.originalPrice}-${option.isDiscounted ? 'discounted' : 'regular'}-${index}`}
+                      className={`p-3 border rounded-lg cursor-pointer transition-colors ${
+                        selectedOriginalPrice === option.originalPrice && selectedAmount === (option.discountedPrice || option.originalPrice) && !isCustomSelected
                           ? 'border-primary bg-primary/10' 
                           : 'border-border hover:border-primary'
-                      }`}
+                      } ${option.isDiscounted ? 'relative' : ''}`}
                       onClick={() => {
-                        setSelectedAmount(price);
+                        setSelectedAmount(option.discountedPrice || option.originalPrice);
+                        setSelectedOriginalPrice(option.originalPrice);
                         setIsCustomSelected(false);
                         setCustomAmount("");
                       }}
                     >
-                      <div className="flex items-center">
-                        <Euro className="w-5 h-5 mr-2 text-local-green" />
-                        <span className="font-medium">{price}€</span>
-                      </div>
-                      {selectedAmount === price && !isCustomSelected && (
-                        <div className="w-2 h-2 bg-primary rounded-full"></div>
+                      {option.isDiscounted && (
+                        <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                          <Tag className="w-3 h-3 inline mr-1" />
+                          -{option.discountPercentage}%
+                        </div>
                       )}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <Euro className="w-5 h-5 mr-2 text-local-green" />
+                          <div className="flex flex-col">
+                            <span className="font-medium">
+                              Gift Card {option.originalPrice}€
+                            </span>
+                            {option.isDiscounted && (
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm text-muted-foreground line-through">
+                                  {option.originalPrice}€
+                                </span>
+                                <span className="text-sm font-bold text-red-500">
+                                  {option.discountedPrice}€
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        {selectedOriginalPrice === option.originalPrice && selectedAmount === (option.discountedPrice || option.originalPrice) && !isCustomSelected && (
+                          <div className="w-2 h-2 bg-primary rounded-full"></div>
+                        )}
+                      </div>
                     </div>
                   ))}
                   
@@ -193,6 +257,7 @@ const ShopDetail = () => {
                         if (!customAmount) {
                           setCustomAmount(shop.min_gift_card_amount.toString());
                           setSelectedAmount(shop.min_gift_card_amount);
+                          setSelectedOriginalPrice(shop.min_gift_card_amount);
                         }
                       }}
                     >
@@ -213,7 +278,9 @@ const ShopDetail = () => {
                           const value = e.target.value;
                           setCustomAmount(value);
                           const numValue = parseInt(value) || shop.min_gift_card_amount;
-                          setSelectedAmount(Math.max(shop.min_gift_card_amount, numValue));
+                          const finalAmount = Math.max(shop.min_gift_card_amount, numValue);
+                          setSelectedAmount(finalAmount);
+                          setSelectedOriginalPrice(finalAmount);
                         }}
                         placeholder={`Minimo ${shop.min_gift_card_amount}€`}
                         className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm"
@@ -227,9 +294,13 @@ const ShopDetail = () => {
                     className="w-full bg-primary hover:bg-primary-hover" 
                     size="lg"
                     onClick={handleBuyGiftCard}
-                    disabled={!selectedAmount}
+                    disabled={!selectedAmount || !selectedOriginalPrice}
                   >
-                    {selectedAmount ? `${t('giftCard.buy')} €${selectedAmount}` : t('giftCard.selectAmount')}
+                    {selectedAmount && selectedOriginalPrice ? 
+                      (selectedAmount !== selectedOriginalPrice ? 
+                        `${t('giftCard.buy')} €${selectedAmount} (${selectedOriginalPrice}€)` : 
+                        `${t('giftCard.buy')} €${selectedAmount}`) : 
+                      t('giftCard.selectAmount')}
                   </Button>
                   <p className="text-xs text-muted-foreground text-center mt-3">
                     {t('giftCard.securePayment')} • {t('giftCard.instantDelivery')}
