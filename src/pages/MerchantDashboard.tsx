@@ -24,6 +24,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageToggle from "@/components/LanguageToggle";
 import GiftCardModal from "@/components/GiftCardModal";
 import GiftCardDetailsModal from "@/components/GiftCardDetailsModal";
 import OrderDetailsModal from "@/components/OrderDetailsModal";
@@ -144,33 +145,34 @@ const MerchantDashboard = () => {
             <div>
               <h1 className="text-2xl font-bold">{user.name}</h1>
               <p className="text-muted-foreground">Dashboard Merchant - {getShopDisplayName()}</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-muted-foreground" />
-                <Select value={selectedShopId || "all"} onValueChange={(value) => setSelectedShopId(value === "all" ? undefined : value)}>
-                  <SelectTrigger className="w-48">
-                    <SelectValue placeholder="Seleziona negozio" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Tutti i negozi</SelectItem>
-                    {shopOptions.map(shop => (
-                      <SelectItem key={shop.id} value={shop.id}>
-                        {shop.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
               </div>
-              <div className="flex items-center gap-2">
-                <Button 
-                  variant="default" 
-                  size="sm"
-                  onClick={() => navigate('/merchant/shops')}
-                  className="bg-primary text-primary-foreground hover:bg-primary/90"
-                >
-                  <Store className="w-4 h-4 mr-2" />
-                  Gestisci Negozi
+              <div className="flex items-center gap-4">
+                <LanguageToggle />
+                <div className="flex items-center gap-2">
+                  <Building2 className="w-4 h-4 text-muted-foreground" />
+                  <Select value={selectedShopId || "all"} onValueChange={(value) => setSelectedShopId(value === "all" ? undefined : value)}>
+                    <SelectTrigger className="w-48">
+                      <SelectValue placeholder="Seleziona negozio" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Tutti i negozi</SelectItem>
+                      {shopOptions.map(shop => (
+                        <SelectItem key={shop.id} value={shop.id}>
+                          {shop.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="default" 
+                    size="sm"
+                    onClick={() => navigate('/merchant/shops')}
+                    className="bg-primary text-primary-foreground hover:bg-primary/90"
+                  >
+                    <Store className="w-4 h-4 mr-2" />
+                    Gestisci Negozi
                 </Button>
                 <QRRedemptionModal />
                 <MerchantSettingsModal 
