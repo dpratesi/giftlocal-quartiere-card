@@ -785,7 +785,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (value && typeof value === 'object' && k in value) {
         value = value[k];
       } else {
-        console.warn(`Translation key not found: ${key}`);
+        console.warn(`Translation key not found: ${key} for language: ${language}`);
+        console.log('Available keys:', Object.keys(translations[language]).filter(k => k.startsWith(key.split('.')[0])));
         return key; // Return the key if path doesn't exist
       }
     }
