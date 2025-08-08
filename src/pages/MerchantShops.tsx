@@ -38,6 +38,14 @@ const MerchantShops = () => {
   const [selectedShop, setSelectedShop] = useState<any | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [updatingShopId, setUpdatingShopId] = useState<string | null>(null);
+  const [localShops, setLocalShops] = useState<ExtendedShop[]>([]);
+
+  // Sincronizza shops locali quando cambiano i dati dal server
+  React.useEffect(() => {
+    if (shops) {
+      setLocalShops(shops);
+    }
+  }, [shops]);
 
   const handleEditShop = (shop: any) => {
     setSelectedShop(shop);
@@ -58,9 +66,19 @@ const MerchantShops = () => {
     try {
       setUpdatingShopId(shop.id);
       const newStatus = shop.status === 'active' ? 'inactive' : 'active';
+      
+      // Aggiornamento ottimistico - aggiorna subito l'interfaccia
+      setLocalShops(prev => 
+        prev.map(s => 
+          s.id === shop.id 
+            ? { ...s, status: newStatus }
+            : s
+        )
+      );
+      
+      // Chiamata API in background
       await updateShopStatus(shop.id, newStatus);
       
-      refetch();
       toast({
         title: t('merchant.shops.statusUpdated'),
         description: newStatus === 'active' 
@@ -69,6 +87,16 @@ const MerchantShops = () => {
       });
     } catch (error) {
       console.error('Error updating shop status:', error);
+      
+      // Rollback in caso di errore
+      setLocalShops(prev => 
+        prev.map(s => 
+          s.id === shop.id 
+            ? { ...s, status: shop.status }
+            : s
+        )
+      );
+      
       toast({
         title: t('merchant.shops.updateError'),
         description: t('merchant.shops.statusUpdateError'),
@@ -163,9 +191,9 @@ const MerchantShops = () => {
         </div>
 
         {/* Shops Grid */}
-        {shops && shops.length > 0 ? (
+        {localShops && localShops.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {shops.map((shop) => (
+            {localShops.map((shop) => (
               <Card key={shop.id} className="group hover:shadow-hover transition-all duration-300">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
