@@ -11,13 +11,23 @@ const Home = () => {
     // Don't redirect while auth is loading
     if (isLoading) return;
 
-    // If user is authenticated and has a preferred city, redirect to shops page
-    if (isAuthenticated && user?.preferred_city && user.type === 'customer') {
-      navigate(`/shops?city=${encodeURIComponent(user.preferred_city)}`, { replace: true });
+    // If user is authenticated, redirect based on their type
+    if (isAuthenticated && user) {
+      if (user.type === 'customer') {
+        // Customer goes to shops page
+        if (user.preferred_city) {
+          navigate(`/shops?city=${encodeURIComponent(user.preferred_city)}`, { replace: true });
+        } else {
+          navigate('/shops', { replace: true });
+        }
+      } else if (user.type === 'merchant') {
+        // Merchant goes to their dashboard
+        navigate('/merchant/dashboard', { replace: true });
+      }
     }
-  }, [isAuthenticated, user?.preferred_city, user?.type, navigate, isLoading]);
+  }, [isAuthenticated, user, navigate, isLoading]);
 
-  // If user is authenticated but no preferred city yet, or if merchant, or if not authenticated, show the normal home
+  // If not authenticated, show the landing page (Index component)
   return <Index />;
 };
 

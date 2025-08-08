@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Link } from "react-router-dom";
 
 const MissionBanner = () => {
   const { t } = useLanguage();
@@ -24,12 +25,14 @@ const MissionBanner = () => {
               "{t('mission.quote')}"
             </p>
           </div>
-          <Button 
-            size="lg" 
-            className="bg-localize-cream text-localize-night hover:bg-localize-cream/90 font-semibold px-8 py-6 text-lg"
-          >
-            {t('mission.button')}
-          </Button>
+          <Link to="/login">
+            <Button 
+              size="lg" 
+              className="bg-localize-cream text-localize-night hover:bg-localize-cream/90 font-semibold px-8 py-6 text-lg"
+            >
+              {t('mission.button')}
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

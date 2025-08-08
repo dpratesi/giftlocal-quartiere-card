@@ -146,82 +146,115 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <HeroSection />
-      <CategoryFilter 
-        selectedCategories={filters.categories}
-        onCategoryToggle={handleCategoryToggle}
-      />
       
-      {/* Featured Shops Section */}
-      <section className="container mx-auto px-4 py-12">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-display font-bold text-foreground mb-4">
-            {t('shops.featuredTitle')}
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            {t('shops.featuredDescription')}
-          </p>
-        </div>
-
-        {/* Content with Filters Button */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div className="flex items-center gap-4">
-              <FiltersSidebar 
-                filters={filters}
-                onFiltersChange={setFilters}
-                onClearFilters={clearFilters}
-              />
-              <p className="text-muted-foreground">
-                {filteredShops.length} {t('shops.shopsFound')}
-                {currentCity && (
-                  <span className="text-primary font-medium"> {currentCity}</span>
-                )}
+      {/* Solo per utenti non autenticati: mostra solo i banner informativi */}
+      {!isAuthenticated ? (
+        <>
+          <CategoryFilter 
+            selectedCategories={[]}
+            onCategoryToggle={() => {}}
+          />
+          
+          {/* Banner informativo - nessun negozio mostrato */}
+          <section className="container mx-auto px-4 py-12">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-display font-bold text-foreground mb-4">
+                {t('shops.featuredTitle')}
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                {t('shops.featuredDescription')}
               </p>
             </div>
-            <ViewToggle view={view} onViewChange={setView} />
-          </div>
-        </div>
+            
+            {/* Messaggio per utenti non loggati */}
+            <div className="text-center py-12">
+              <p className="text-muted-foreground mb-4">
+                Effettua il login per vedere i negozi disponibili
+              </p>
+              <Link to="/login-select">
+                <button className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+                  Accedi
+                </button>
+              </Link>
+            </div>
+          </section>
+        </>
+      ) : (
+        <>
+          {/* Per utenti autenticati: mostra i negozi come prima */}
+          <CategoryFilter 
+            selectedCategories={filters.categories}
+            onCategoryToggle={handleCategoryToggle}
+          />
+          
+          <section className="container mx-auto px-4 py-12">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-display font-bold text-foreground mb-4">
+                {t('shops.featuredTitle')}
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                {t('shops.featuredDescription')}
+              </p>
+            </div>
 
-        {/* Shop Display */}
-        {view === 'grid' ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 animate-fade-in">
-            {filteredShops.map((shop) => (
-              <div key={shop.id} className="animate-scale-in">
-                <ShopCard {...shop} />
+            <div className="mb-8">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div className="flex items-center gap-4">
+                  <FiltersSidebar 
+                    filters={filters}
+                    onFiltersChange={setFilters}
+                    onClearFilters={clearFilters}
+                  />
+                  <p className="text-muted-foreground">
+                    {filteredShops.length} {t('shops.shopsFound')}
+                    {currentCity && (
+                      <span className="text-primary font-medium"> {currentCity}</span>
+                    )}
+                  </p>
+                </div>
+                <ViewToggle view={view} onViewChange={setView} />
               </div>
-            ))}
-          </div>
-        ) : (
-          <ShopMap shops={filteredShops} />
-        )}
+            </div>
 
-        {/* Load More Button */}
-        {filteredShops.length > 0 && view === 'grid' && (
-          <div className="text-center mt-12">
-            <button 
-              className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
-              onClick={() => alert('Funzionalità in arrivo!')}
-            >
-              {t('shops.loadMore')}
-            </button>
-          </div>
-        )}
+            {view === 'grid' ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 animate-fade-in">
+                {filteredShops.map((shop) => (
+                  <div key={shop.id} className="animate-scale-in">
+                    <ShopCard {...shop} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <ShopMap shops={filteredShops} />
+            )}
 
-        {/* No results */}
-        {filteredShops.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground mb-4">
-              {t('shops.noResults')}
-            </p>
-            <button
-              onClick={clearFilters}
-              className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white px-6 py-2 rounded-lg font-semibold transition-colors"
-            >
-              {t('shops.clearFilters')}
-            </button>
-          </div>
-        )}
-      </section>
+            {filteredShops.length > 0 && view === 'grid' && (
+              <div className="text-center mt-12">
+                <button 
+                  className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+                  onClick={() => alert('Funzionalità in arrivo!')}
+                >
+                  {t('shops.loadMore')}
+                </button>
+              </div>
+            )}
+
+            {filteredShops.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground mb-4">
+                  {t('shops.noResults')}
+                </p>
+                <button
+                  onClick={clearFilters}
+                  className="bg-localize-terracotta hover:bg-localize-terracotta/90 text-white px-6 py-2 rounded-lg font-semibold transition-colors"
+                >
+                  {t('shops.clearFilters')}
+                </button>
+              </div>
+            )}
+          </section>
+        </>
+      )}
 
       {/* Mission Banner */}
       <MissionBanner />
