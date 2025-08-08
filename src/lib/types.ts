@@ -11,6 +11,7 @@ export interface Shop {
   description: string;
   city: string;
   min_gift_card_amount: number;
+  maxDiscountPercentage?: number;
 }
 
 export interface PurchasedGiftCard {

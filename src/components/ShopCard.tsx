@@ -1,4 +1,4 @@
-import { MapPin, Star, Euro, Heart } from "lucide-react";
+import { MapPin, Star, Euro, Heart, Tag } from "lucide-react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +20,8 @@ const ShopCard = ({
   distance, 
   giftCardPrices, 
   description,
-  neighborhood 
+  neighborhood,
+  maxDiscountPercentage
  }: ShopCardProps) => {
   const { t } = useLanguage();
   const { getCategoryNameByKey } = useCategories();
@@ -46,10 +47,16 @@ const ShopCard = ({
             <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
           </Button>
         </div>
-        <div className="absolute top-2 sm:top-3 left-2 sm:left-3">
+        <div className="absolute top-2 sm:top-3 left-2 sm:left-3 flex flex-col gap-2">
           <Badge variant="secondary" className="bg-localize-sage text-white text-xs sm:text-sm rounded-full">
             {getCategoryNameByKey(category)}
           </Badge>
+          {maxDiscountPercentage && (
+            <Badge className="bg-red-500 text-white text-xs rounded-full flex items-center gap-1">
+              <Tag className="w-3 h-3" />
+              -{maxDiscountPercentage}%
+            </Badge>
+          )}
         </div>
       </div>
 

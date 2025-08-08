@@ -40,6 +40,23 @@ export async function fetchShops(): Promise<Shop[]> {
       throw new Error(`Failed to fetch shops: ${error.message}`);
     }
 
+    // Get all active discounts for all shops
+    const { data: discounts, error: discountsError } = await supabase
+      .from('shop_discounts')
+      .select('shop_id, discount_percentage')
+      .eq('is_active', true);
+
+    if (discountsError) {
+      console.warn('Failed to fetch discounts:', discountsError);
+    }
+
+    // Create a map of shop discounts
+    const shopDiscounts = new Map<string, number>();
+    discounts?.forEach(discount => {
+      const currentMax = shopDiscounts.get(discount.shop_id) || 0;
+      shopDiscounts.set(discount.shop_id, Math.max(currentMax, discount.discount_percentage));
+    });
+
     // Transform data to match the Shop interface
     const shops: Shop[] = data?.map(shop => ({
       id: shop.id,
@@ -53,7 +70,8 @@ export async function fetchShops(): Promise<Shop[]> {
       description: shop.description,
       city: shop.city,
       min_gift_card_amount: shop.min_gift_card_amount || 25,
-      giftCardPrices: calculateGiftCardAmounts(shop.min_gift_card_amount || 25)
+      giftCardPrices: calculateGiftCardAmounts(shop.min_gift_card_amount || 25),
+      maxDiscountPercentage: shopDiscounts.get(shop.id) || undefined
     })) || [];
 
     return shops;
