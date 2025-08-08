@@ -38,13 +38,6 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
     vatNumber: merchantData?.vatNumber || ""
   });
 
-  const [giftCardSettings, setGiftCardSettings] = useState({
-    defaultAmounts: [25, 50, 100, 150],
-    maxAmount: 500,
-    minAmount: 10,
-    validityMonths: 12,
-    customDesign: true
-  });
 
   const [notificationSettings, setNotificationSettings] = useState({
     emailOrders: true,
@@ -68,7 +61,6 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
       
       const updatedSettings = {
         profile: profileSettings,
-        giftCards: giftCardSettings,
         notifications: notificationSettings,
         security: securitySettings
       };
@@ -112,9 +104,8 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
         </DialogHeader>
         
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="profile">Profilo</TabsTrigger>
-            <TabsTrigger value="giftcards">Gift Cards</TabsTrigger>
             <TabsTrigger value="notifications">Notifiche</TabsTrigger>
             <TabsTrigger value="security">Sicurezza</TabsTrigger>
           </TabsList>
@@ -189,88 +180,6 @@ const MerchantSettingsModal = ({ merchantData, onSettingsUpdate }: MerchantSetti
             </Card>
           </TabsContent>
           
-          <TabsContent value="giftcards" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Palette className="w-4 h-4" />
-                  Configurazioni Gift Card Globali
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-blue-700 dark:text-blue-300">
-                    Queste impostazioni si applicano a tutti i tuoi negozi come valori predefiniti. 
-                    Ogni negozio può sovrascrivere queste configurazioni nelle proprie impostazioni specifiche.
-                  </p>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="minAmount">Importo Minimo Predefinito (€)</Label>
-                    <Input
-                      id="minAmount"
-                      type="number"
-                      value={giftCardSettings.minAmount}
-                      onChange={(e) => setGiftCardSettings({ ...giftCardSettings, minAmount: parseInt(e.target.value) })}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="maxAmount">Importo Massimo Predefinito (€)</Label>
-                    <Input
-                      id="maxAmount"
-                      type="number"
-                      value={giftCardSettings.maxAmount}
-                      onChange={(e) => setGiftCardSettings({ ...giftCardSettings, maxAmount: parseInt(e.target.value) })}
-                    />
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="validityMonths">Validità Predefinita (mesi)</Label>
-                  <Input
-                    id="validityMonths"
-                    type="number"
-                    value={giftCardSettings.validityMonths}
-                    onChange={(e) => setGiftCardSettings({ ...giftCardSettings, validityMonths: parseInt(e.target.value) })}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label>Importi Predefiniti Suggeriti (€)</Label>
-                  <div className="flex flex-wrap gap-2">
-                    {giftCardSettings.defaultAmounts.map((amount, index) => (
-                      <div key={index} className="flex items-center gap-2">
-                        <Input
-                          type="number"
-                          value={amount}
-                          onChange={(e) => {
-                            const newAmounts = [...giftCardSettings.defaultAmounts];
-                            newAmounts[index] = parseInt(e.target.value);
-                            setGiftCardSettings({ ...giftCardSettings, defaultAmounts: newAmounts });
-                          }}
-                          className="w-20"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Design Personalizzato</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Abilita design personalizzati per le gift card
-                    </p>
-                  </div>
-                  <Switch
-                    checked={giftCardSettings.customDesign}
-                    onCheckedChange={(checked) => setGiftCardSettings({ ...giftCardSettings, customDesign: checked })}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
           
           <TabsContent value="notifications" className="space-y-4">
             <Card>
