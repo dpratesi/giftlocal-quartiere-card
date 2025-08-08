@@ -27,7 +27,11 @@ const App = () => (
           <Route path="/shop/:id" element={<ShopDetail />} />
           <Route path="/login-select" element={<LoginSelect />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/register-shop" element={<RegisterShop />} />
+          <Route path="/register-shop" element={
+            <ProtectedRoute requireMerchant>
+              <RegisterShop />
+            </ProtectedRoute>
+          } />
           <Route path="/profile" element={
             <ProtectedRoute requireCustomer>
               <Profile />

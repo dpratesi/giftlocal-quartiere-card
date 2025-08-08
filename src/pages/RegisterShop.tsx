@@ -61,16 +61,6 @@ const RegisterShop = () => {
 
   const onSubmit = async (data: ShopFormData) => {
     try {
-      if (!user) {
-        toast({
-          title: "Errore",
-          description: "Devi essere autenticato per registrare un negozio.",
-          variant: "destructive",
-        });
-        navigate('/merchant/login');
-        return;
-      }
-
       await createShop({
         name: data.shopName,
         category: data.category,
