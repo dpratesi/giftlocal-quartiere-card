@@ -225,7 +225,7 @@ const ShopDetail = () => {
                           <Euro className="w-5 h-5 mr-2 text-local-green" />
                           <div className="flex flex-col">
                             <span className="font-medium">
-                              Gift Card {option.originalPrice}€
+                              {option.originalPrice}€
                             </span>
                             {option.isDiscounted && (
                               <div className="flex items-center gap-2">
