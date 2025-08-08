@@ -72,8 +72,12 @@ const MerchantShops = () => {
       setUpdatingShopId(shop.id);
       const newStatus = shop.status === 'active' ? 'inactive' : 'active';
       
+      console.log('Updating shop status to:', newStatus);
+      
       // Chiamata API e attesa della risposta
       const updatedShop = await updateShopStatus(shop.id, newStatus);
+      
+      console.log('Updated shop received:', updatedShop);
       
       // Aggiorna solo lo shop specifico mantenendo la posizione originale
       setLocalShops(prevShops => 
@@ -84,18 +88,30 @@ const MerchantShops = () => {
         )
       );
       
+      const titleKey = 'merchant.shops.statusUpdated';
+      const descriptionKey = newStatus === 'active' 
+        ? 'merchant.shops.shopActivated'
+        : 'merchant.shops.shopDeactivated';
+      
+      console.log('Toast title key:', titleKey, '-> translated:', t(titleKey));
+      console.log('Toast description key:', descriptionKey, '-> translated:', t(descriptionKey));
+      
       toast({
-        title: t('merchant.shops.statusUpdated'),
-        description: newStatus === 'active' 
-          ? t('merchant.shops.shopActivated')
-          : t('merchant.shops.shopDeactivated'),
+        title: t(titleKey),
+        description: t(descriptionKey),
       });
     } catch (error) {
       console.error('Error updating shop status:', error);
       
+      const errorTitleKey = 'merchant.shops.updateError';
+      const errorDescKey = 'merchant.shops.statusUpdateError';
+      
+      console.log('Error toast title key:', errorTitleKey, '-> translated:', t(errorTitleKey));
+      console.log('Error toast description key:', errorDescKey, '-> translated:', t(errorDescKey));
+      
       toast({
-        title: t('merchant.shops.updateError'),
-        description: t('merchant.shops.statusUpdateError'),
+        title: t(errorTitleKey),
+        description: t(errorDescKey),
         variant: 'destructive',
       });
     } finally {
