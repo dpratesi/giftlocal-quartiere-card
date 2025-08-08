@@ -198,7 +198,7 @@ const ShopDetail = () => {
                     >
                       <div className="flex items-center">
                         <Euro className="w-5 h-5 mr-2 text-local-green" />
-                        <span className="font-medium">Importo personalizzato</span>
+                        <span className="font-medium">{t('giftCard.customAmount')}</span>
                       </div>
                       {isCustomSelected && (
                         <div className="w-2 h-2 bg-primary rounded-full"></div>
