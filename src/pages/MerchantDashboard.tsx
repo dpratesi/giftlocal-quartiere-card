@@ -23,7 +23,9 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import GiftCardModal from "@/components/GiftCardModal";
+import GiftCardDetailsModal from "@/components/GiftCardDetailsModal";
 import OrderDetailsModal from "@/components/OrderDetailsModal";
 import QRRedemptionModal from "@/components/QRRedemptionModal";
 import MerchantSettingsModal from "@/components/MerchantSettingsModal";
@@ -32,8 +34,21 @@ import { useMerchantDashboard } from "@/hooks/useMerchantDashboard";
 const MerchantDashboard = () => {
   const navigate = useNavigate();
   const { user, logout, isAuthenticated, isMerchant } = useAuth();
+  const { t } = useLanguage();
   const [selectedShopId, setSelectedShopId] = useState<string | undefined>(undefined);
+  const [selectedGiftCard, setSelectedGiftCard] = useState<any>(null);
+  const [isGiftCardDetailsOpen, setIsGiftCardDetailsOpen] = useState(false);
   const { stats, orders, shopOptions, giftCards, monthlyStats, giftCardStats, isLoading, error } = useMerchantDashboard(selectedShopId);
+
+  const handleViewGiftCardDetails = (giftCard: any) => {
+    setSelectedGiftCard(giftCard);
+    setIsGiftCardDetailsOpen(true);
+  };
+
+  const handleCloseGiftCardDetails = () => {
+    setIsGiftCardDetailsOpen(false);
+    setSelectedGiftCard(null);
+  };
 
   console.log('MerchantDashboard render:', { 
     user: user?.id, 
@@ -71,17 +86,17 @@ const MerchantDashboard = () => {
   }
 
   const getShopDisplayName = () => {
-    if (!selectedShopId) return "Tutti i negozi";
+    if (!selectedShopId) return t('allShops');
     const shop = shopOptions.find(s => s.id === selectedShopId);
-    return shop?.name || "Negozio selezionato";
+    return shop?.name || t('selectedShop');
   };
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      active: { label: "Attiva", variant: "default" as const },
-      used: { label: "Utilizzata", variant: "secondary" as const },
-      expired: { label: "Scaduta", variant: "destructive" as const },
-      cancelled: { label: "Annullata", variant: "outline" as const }
+      active: { label: t('active'), variant: "default" as const },
+      used: { label: t('used'), variant: "secondary" as const },
+      expired: { label: t('expired'), variant: "destructive" as const },
+      cancelled: { label: t('cancelled'), variant: "outline" as const }
     };
     
     const config = statusConfig[status as keyof typeof statusConfig] || 
@@ -296,7 +311,7 @@ const MerchantDashboard = () => {
                       giftCards
                         .filter(card => card.status === 'active')
                         .map((card) => (
-                          <div key={card.id} className="p-3 border border-green-200 rounded-lg bg-green-50">
+                           <div key={card.id} className="p-3 border border-green-200 rounded-lg bg-green-50">
                             <div className="flex justify-between items-start">
                               <div className="flex-1">
                                 <p className="font-mono text-sm font-medium">{card.code}</p>
@@ -316,6 +331,17 @@ const MerchantDashboard = () => {
                                 </p>
                               </div>
                             )}
+                            <div className="mt-2 flex justify-end">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleViewGiftCardDetails(card)}
+                                className="text-xs"
+                              >
+                                <Eye className="w-3 h-3 mr-1" />
+                                {t('details')}
+                              </Button>
+                            </div>
                           </div>
                         ))
                     )}
@@ -346,7 +372,7 @@ const MerchantDashboard = () => {
                       giftCards
                         .filter(card => card.status === 'used')
                         .map((card) => (
-                          <div key={card.id} className="p-3 border border-gray-200 rounded-lg bg-gray-50">
+                           <div key={card.id} className="p-3 border border-gray-200 rounded-lg bg-gray-50">
                             <div className="flex justify-between items-start">
                               <div className="flex-1">
                                 <p className="font-mono text-sm font-medium text-gray-600">{card.code}</p>
@@ -366,10 +392,19 @@ const MerchantDashboard = () => {
                                 </p>
                               </div>
                             )}
-                            <div className="mt-2">
+                            <div className="mt-2 flex justify-between items-center">
                               <Badge variant="secondary" className="text-xs">
                                 Completamente utilizzata
                               </Badge>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleViewGiftCardDetails(card)}
+                                className="text-xs"
+                              >
+                                <Eye className="w-3 h-3 mr-1" />
+                                {t('details')}
+                              </Button>
                             </div>
                           </div>
                         ))
@@ -560,6 +595,15 @@ const MerchantDashboard = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Gift Card Details Modal */}
+      {selectedGiftCard && (
+        <GiftCardDetailsModal
+          isOpen={isGiftCardDetailsOpen}
+          onClose={handleCloseGiftCardDetails}
+          giftCard={selectedGiftCard}
+        />
+      )}
     </div>
   );
 };

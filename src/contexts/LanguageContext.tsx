@@ -194,7 +194,16 @@ const translations = {
     'filters.minRating': 'Valutazione minima',
     'filters.allRatings': 'Tutte',
     'filters.maxDistance': 'Distanza massima',
-    'filters.allDistances': 'Tutte'
+    'filters.allDistances': 'Tutte',
+
+    // Dashboard translations
+    'allShops': 'Tutti i negozi',
+    'selectedShop': 'Negozio selezionato',
+    'details': 'Dettagli',
+    'active': 'Attiva',
+    'used': 'Utilizzata',
+    'expired': 'Scaduta',
+    'cancelled': 'Annullata'
   },
   en: {
     // Header
@@ -378,7 +387,16 @@ const translations = {
     'filters.minRating': 'Minimum rating',
     'filters.allRatings': 'All',
     'filters.maxDistance': 'Maximum distance',
-    'filters.allDistances': 'All'
+    'filters.allDistances': 'All',
+
+    // Dashboard translations
+    'allShops': 'All shops',
+    'selectedShop': 'Selected shop',
+    'details': 'Details',
+    'active': 'Active',
+    'used': 'Used',
+    'expired': 'Expired',
+    'cancelled': 'Cancelled'
   }
 };
 
