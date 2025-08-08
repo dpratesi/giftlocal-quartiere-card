@@ -19,9 +19,11 @@ const MissionBanner = () => {
           <h3 className="text-3xl md:text-4xl font-display font-bold text-white">
             {t('mission.title')}
           </h3>
-          <p className="text-xl text-white/90 leading-relaxed italic font-serif whitespace-nowrap text-center mx-auto">
-            "{t('mission.quote')}"
-          </p>
+          <div className="flex justify-center w-full">
+            <p className="text-xl text-white/90 leading-relaxed italic font-serif whitespace-nowrap">
+              "{t('mission.quote')}"
+            </p>
+          </div>
           <Button 
             size="lg" 
             className="bg-localize-cream text-localize-night hover:bg-localize-cream/90 font-semibold px-8 py-6 text-lg"
