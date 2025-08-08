@@ -110,17 +110,17 @@ const MerchantDashboard = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">Caricamento...</h2>
-          <p className="text-muted-foreground">Verifica dell'autenticazione in corso</p>
+          <h2 className="text-xl font-semibold mb-2">{t('merchant.loading')}</h2>
+          <p className="text-muted-foreground">{t('merchant.authenticationInProgress')}</p>
         </div>
       </div>
     );
   }
 
   const getShopDisplayName = () => {
-    if (!selectedShopId) return t('allShops');
+    if (!selectedShopId) return t('merchant.allShops');
     const shop = shopOptions.find(s => s.id === selectedShopId);
-    return shop?.name || t('selectedShop');
+    return shop?.name || t('merchant.selectedShop');
   };
 
   const getStatusBadge = (status: string) => {
@@ -144,7 +144,7 @@ const MerchantDashboard = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold">{user.name}</h1>
-              <p className="text-muted-foreground">Dashboard Merchant - {getShopDisplayName()}</p>
+              <p className="text-muted-foreground">{t('merchant.dashboard')} - {getShopDisplayName()}</p>
               </div>
               <div className="flex items-center gap-4">
                 <LanguageToggle />
@@ -152,10 +152,10 @@ const MerchantDashboard = () => {
                   <Building2 className="w-4 h-4 text-muted-foreground" />
                   <Select value={selectedShopId || "all"} onValueChange={(value) => setSelectedShopId(value === "all" ? undefined : value)}>
                     <SelectTrigger className="w-48">
-                      <SelectValue placeholder="Seleziona negozio" />
+                      <SelectValue placeholder={t('merchant.selectShop')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">Tutti i negozi</SelectItem>
+                      <SelectItem value="all">{t('merchant.allShops')}</SelectItem>
                       {shopOptions.map(shop => (
                         <SelectItem key={shop.id} value={shop.id}>
                           {shop.name}
@@ -172,7 +172,7 @@ const MerchantDashboard = () => {
                     className="bg-primary text-primary-foreground hover:bg-primary/90"
                   >
                     <Store className="w-4 h-4 mr-2" />
-                    Gestisci Negozi
+                    {t('merchant.manageShops')}
                 </Button>
                 <QRRedemptionModal />
                 <MerchantSettingsModal 
@@ -181,7 +181,7 @@ const MerchantDashboard = () => {
                 />
                 <Button variant="ghost" size="sm" onClick={handleLogout}>
                   <LogOut className="w-4 h-4 mr-2" />
-                  Esci
+                  {t('merchant.logout')}
                 </Button>
               </div>
             </div>
@@ -196,7 +196,7 @@ const MerchantDashboard = () => {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Vendite Totali</p>
+                  <p className="text-sm text-muted-foreground">{t('merchant.totalSales')}</p>
                   <p className="text-2xl font-bold">€{stats.totalSales.toFixed(2)}</p>
                 </div>
                 <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
@@ -206,7 +206,7 @@ const MerchantDashboard = () => {
               <div className="flex items-center mt-2 text-sm">
                 <TrendingUp className="w-4 h-4 text-green-500 mr-1" />
                 <span className="text-green-500">+12.5%</span>
-                <span className="text-muted-foreground ml-1">vs mese scorso</span>
+                <span className="text-muted-foreground ml-1">{t('merchant.vsLastMonth')}</span>
               </div>
             </CardContent>
           </Card>
@@ -215,7 +215,7 @@ const MerchantDashboard = () => {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Gift Card Vendute</p>
+                  <p className="text-sm text-muted-foreground">{t('merchant.giftCardsSold')}</p>
                   <p className="text-2xl font-bold">{stats.giftCardsSold}</p>
                 </div>
                 <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
@@ -225,7 +225,7 @@ const MerchantDashboard = () => {
               <div className="flex items-center mt-2 text-sm">
                 <TrendingUp className="w-4 h-4 text-green-500 mr-1" />
                 <span className="text-green-500">+8.2%</span>
-                <span className="text-muted-foreground ml-1">vs mese scorso</span>
+                <span className="text-muted-foreground ml-1">{t('merchant.vsLastMonth')}</span>
               </div>
             </CardContent>
           </Card>
@@ -234,7 +234,7 @@ const MerchantDashboard = () => {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Da Utilizzare</p>
+                  <p className="text-sm text-muted-foreground">{t('merchant.pendingRedemptions')}</p>
                   <p className="text-2xl font-bold">{stats.pendingRedemptions}</p>
                 </div>
                 <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
@@ -242,7 +242,7 @@ const MerchantDashboard = () => {
                 </div>
               </div>
               <div className="text-sm text-muted-foreground mt-2">
-                Gift card in attesa
+                {t('merchant.pendingGiftCards')}
               </div>
             </CardContent>
           </Card>
@@ -251,7 +251,7 @@ const MerchantDashboard = () => {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Clienti Totali</p>
+                  <p className="text-sm text-muted-foreground">{t('merchant.totalCustomers')}</p>
                   <p className="text-2xl font-bold">{stats.totalCustomers}</p>
                 </div>
                 <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
@@ -261,7 +261,7 @@ const MerchantDashboard = () => {
               <div className="flex items-center mt-2 text-sm">
                 <TrendingUp className="w-4 h-4 text-green-500 mr-1" />
                 <span className="text-green-500">+15.3%</span>
-                <span className="text-muted-foreground ml-1">nuovi clienti</span>
+                <span className="text-muted-foreground ml-1">{t('merchant.newCustomers')}</span>
               </div>
             </CardContent>
           </Card>
@@ -270,28 +270,28 @@ const MerchantDashboard = () => {
         {/* Main Content */}
         <Tabs defaultValue="orders" className="space-y-6">
           <TabsList>
-            <TabsTrigger value="orders">Ordini</TabsTrigger>
-            <TabsTrigger value="giftcards">Gift Card</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="orders">{t('merchant.orders')}</TabsTrigger>
+            <TabsTrigger value="giftcards">{t('merchant.giftCards')}</TabsTrigger>
+            <TabsTrigger value="analytics">{t('merchant.analytics')}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="orders">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Ordini Recenti</CardTitle>
+                <CardTitle>{t('merchant.recentOrders')}</CardTitle>
                 <Button variant="outline" size="sm">
                   <Download className="w-4 h-4 mr-2" />
-                  Esporta
+                  {t('merchant.export')}
                 </Button>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {orders.length === 0 ? (
                     <div className="text-center py-8">
-                      <p className="text-muted-foreground">Nessun ordine trovato</p>
+                      <p className="text-muted-foreground">{t('merchant.noOrdersFound')}</p>
                       {selectedShopId && (
                         <p className="text-sm text-muted-foreground mt-2">
-                          Prova a cambiare negozio o visualizzare tutti i negozi
+                          {t('merchant.tryChangeShop')}
                         </p>
                       )}
                     </div>
@@ -327,7 +327,7 @@ const MerchantDashboard = () => {
                   <CardTitle className="flex items-center justify-between">
                     <span className="flex items-center">
                       <CreditCard className="w-5 h-5 mr-2 text-green-600" />
-                      Gift Card Attive
+                      {t('merchant.activeGiftCards')}
                     </span>
                     <Badge variant="default" className="bg-green-100 text-green-800">
                       {giftCards.filter(card => card.status === 'active').length}
@@ -338,7 +338,7 @@ const MerchantDashboard = () => {
                   <div className="space-y-3 max-h-96 overflow-y-auto">
                     {giftCards.filter(card => card.status === 'active').length === 0 ? (
                       <div className="text-center py-8">
-                        <p className="text-muted-foreground">Nessuna gift card attiva</p>
+                        <p className="text-muted-foreground">{t('merchant.noActiveGiftCards')}</p>
                       </div>
                     ) : (
                       giftCards
@@ -360,7 +360,7 @@ const MerchantDashboard = () => {
                             {card.recipientName && (
                               <div className="mt-2 pt-2 border-t border-green-200">
                                 <p className="text-xs text-muted-foreground">
-                                  Per: {card.recipientName} ({card.recipientEmail})
+                                  {t('merchant.for')} {card.recipientName} ({card.recipientEmail})
                                 </p>
                               </div>
                             )}
@@ -388,7 +388,7 @@ const MerchantDashboard = () => {
                   <CardTitle className="flex items-center justify-between">
                     <span className="flex items-center">
                       <CreditCard className="w-5 h-5 mr-2 text-gray-600" />
-                      Gift Card Esaurite
+                      {t('merchant.usedGiftCards')}
                     </span>
                     <Badge variant="secondary">
                       {giftCards.filter(card => card.status === 'used').length}
@@ -399,7 +399,7 @@ const MerchantDashboard = () => {
                   <div className="space-y-3 max-h-96 overflow-y-auto">
                     {giftCards.filter(card => card.status === 'used').length === 0 ? (
                       <div className="text-center py-8">
-                        <p className="text-muted-foreground">Nessuna gift card esaurita</p>
+                        <p className="text-muted-foreground">{t('merchant.noUsedGiftCards')}</p>
                       </div>
                     ) : (
                       giftCards
@@ -414,20 +414,20 @@ const MerchantDashboard = () => {
                               </div>
                               <div className="text-right">
                                 <p className="font-medium text-gray-600">€{card.amount}</p>
-                                <p className="text-xs text-muted-foreground line-through">€0 rimanente</p>
+                                <p className="text-xs text-muted-foreground line-through">€0 {t('remaining')}</p>
                                 <p className="text-xs text-muted-foreground">{card.purchaseDate}</p>
                               </div>
                             </div>
                             {card.recipientName && (
                               <div className="mt-2 pt-2 border-t border-gray-200">
                                 <p className="text-xs text-muted-foreground">
-                                  Per: {card.recipientName} ({card.recipientEmail})
+                                  {t('merchant.for')} {card.recipientName} ({card.recipientEmail})
                                 </p>
                               </div>
                             )}
                             <div className="mt-2 flex justify-between items-center">
                               <Badge variant="secondary" className="text-xs">
-                                Completamente utilizzata
+                                {t('fullyUsed')}
                               </Badge>
                               <Button
                                 variant="outline"
@@ -450,29 +450,29 @@ const MerchantDashboard = () => {
             {/* Statistiche Gift Card */}
             <Card className="mt-6">
               <CardHeader>
-                <CardTitle>Statistiche Gift Card</CardTitle>
+                <CardTitle>{t('giftCardStats')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="text-center">
                     <p className="text-2xl font-bold text-green-600">{giftCards.filter(card => card.status === 'active').length}</p>
-                    <p className="text-sm text-muted-foreground">Gift Card Attive</p>
+                    <p className="text-sm text-muted-foreground">{t('merchant.activeGiftCards')}</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Valore residuo: €{giftCards.filter(card => card.status === 'active').reduce((sum, card) => sum + card.remainingValue, 0).toFixed(2)}
+                      {t('remainingValue')}: €{giftCards.filter(card => card.status === 'active').reduce((sum, card) => sum + card.remainingValue, 0).toFixed(2)}
                     </p>
                   </div>
                   <div className="text-center">
                     <p className="text-2xl font-bold text-gray-600">{giftCards.filter(card => card.status === 'used').length}</p>
-                    <p className="text-sm text-muted-foreground">Gift Card Esaurite</p>
+                    <p className="text-sm text-muted-foreground">{t('merchant.usedGiftCards')}</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Valore utilizzato: €{giftCards.filter(card => card.status === 'used').reduce((sum, card) => sum + card.amount, 0).toFixed(2)}
+                      {t('usedValue')}: €{giftCards.filter(card => card.status === 'used').reduce((sum, card) => sum + card.amount, 0).toFixed(2)}
                     </p>
                   </div>
                   <div className="text-center">
                     <p className="text-2xl font-bold text-blue-600">{giftCards.length}</p>
-                    <p className="text-sm text-muted-foreground">Totale Gift Card</p>
+                    <p className="text-sm text-muted-foreground">{t('totalGiftCards')}</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Valore totale: €{giftCards.reduce((sum, card) => sum + card.amount, 0).toFixed(2)}
+                      {t('totalValue')}: €{giftCards.reduce((sum, card) => sum + card.amount, 0).toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -486,16 +486,16 @@ const MerchantDashboard = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <BarChart3 className="w-5 h-5 mr-2" />
-                    Vendite per Mese
+                    {t('merchant.salesByMonth')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {monthlyStats.length === 0 ? (
                       <div className="text-center py-8">
-                        <p className="text-muted-foreground">Nessuna vendita negli ultimi mesi</p>
+                        <p className="text-muted-foreground">{t('noSalesLastMonths')}</p>
                         <p className="text-sm text-muted-foreground mt-2">
-                          Le statistiche appariranno dopo le prime vendite
+                          {t('statsWillAppear')}
                         </p>
                       </div>
                     ) : (
@@ -516,9 +516,9 @@ const MerchantDashboard = () => {
                               <span className="text-sm font-medium min-w-[80px] text-right">
                                 €{monthData.total.toFixed(2)}
                               </span>
-                              <span className="text-xs text-muted-foreground min-w-[60px] text-right">
-                                ({monthData.count} vendite)
-                              </span>
+                               <span className="text-xs text-muted-foreground min-w-[60px] text-right">
+                                 ({monthData.count} {t('sold')})
+                               </span>
                             </div>
                           </div>
                         );
@@ -530,15 +530,15 @@ const MerchantDashboard = () => {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Gift Card più Vendute</CardTitle>
+                  <CardTitle>{t('mostSoldGiftCards')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {giftCardStats.length === 0 ? (
                       <div className="text-center py-8">
-                        <p className="text-muted-foreground">Nessuna gift card venduta</p>
+                        <p className="text-muted-foreground">{t('noGiftCardsSold')}</p>
                         <p className="text-sm text-muted-foreground mt-2">
-                          Le statistiche appariranno dopo le prime vendite
+                          {t('statsWillAppear')}
                         </p>
                       </div>
                     ) : (
@@ -559,7 +559,7 @@ const MerchantDashboard = () => {
                                 ></div>
                               </div>
                               <span className="text-sm font-medium min-w-[100px] text-right">
-                                {cardStat.count} vendute
+                                {cardStat.count} {t('soldCount')}
                               </span>
                               <span className="text-xs text-muted-foreground min-w-[80px] text-right">
                                 €{(cardStat.amount * cardStat.count).toFixed(2)}
@@ -573,7 +573,7 @@ const MerchantDashboard = () => {
                   {giftCardStats.length > 5 && (
                     <div className="mt-4 pt-4 border-t border-border">
                       <p className="text-xs text-muted-foreground text-center">
-                        Mostrando le top 5 gift card più vendute
+                        {t('showingTop5')}
                       </p>
                     </div>
                   )}
@@ -589,9 +589,9 @@ const MerchantDashboard = () => {
                     <p className="text-2xl font-bold text-blue-600">
                       €{monthlyStats.reduce((sum, month) => sum + month.total, 0).toFixed(2)}
                     </p>
-                    <p className="text-sm text-muted-foreground">Fatturato ultimi 6 mesi</p>
+                    <p className="text-sm text-muted-foreground">{t('revenueLastSixMonths')}</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      {monthlyStats.reduce((sum, month) => sum + month.count, 0)} transazioni totali
+                      {monthlyStats.reduce((sum, month) => sum + month.count, 0)} {t('totalTransactions')}
                     </p>
                   </div>
                 </CardContent>
@@ -603,9 +603,9 @@ const MerchantDashboard = () => {
                     <p className="text-2xl font-bold text-green-600">
                       €{monthlyStats.length > 0 ? (monthlyStats.reduce((sum, month) => sum + month.total, 0) / monthlyStats.length).toFixed(2) : '0.00'}
                     </p>
-                    <p className="text-sm text-muted-foreground">Media mensile</p>
+                    <p className="text-sm text-muted-foreground">{t('monthlyAverage')}</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Vendite per mese negli ultimi 6 mesi
+                      {t('salesPerMonth')}
                     </p>
                   </div>
                 </CardContent>
@@ -617,9 +617,9 @@ const MerchantDashboard = () => {
                     <p className="text-2xl font-bold text-purple-600">
                       €{giftCardStats.length > 0 ? (giftCardStats.reduce((sum, stat) => sum + (stat.amount * stat.count), 0) / giftCardStats.reduce((sum, stat) => sum + stat.count, 0) || 0).toFixed(2) : '0.00'}
                     </p>
-                    <p className="text-sm text-muted-foreground">Valore medio gift card</p>
+                    <p className="text-sm text-muted-foreground">{t('averageGiftCardValue')}</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Importo medio per transazione
+                      {t('averageAmount')}
                     </p>
                   </div>
                 </CardContent>
