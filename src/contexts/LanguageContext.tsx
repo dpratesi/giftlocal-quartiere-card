@@ -164,6 +164,7 @@ const translations = {
     'giftCard.available': 'Gift Card Disponibili',
     'giftCard.buy': 'Acquista Gift Card',
     'giftCard.selectAmount': 'Seleziona un importo',
+    'giftCard.customAmount': 'Importo personalizzato',
     'giftCard.securePayment': 'Pagamento sicuro',
     'giftCard.instantDelivery': 'Consegna immediata',
     
@@ -534,6 +535,7 @@ const translations = {
     'giftCard.available': 'Available Gift Cards',
     'giftCard.buy': 'Buy Gift Card',
     'giftCard.selectAmount': 'Select an amount',
+    'giftCard.customAmount': 'Custom amount',
     'giftCard.securePayment': 'Secure payment',
     'giftCard.instantDelivery': 'Instant delivery',
     
