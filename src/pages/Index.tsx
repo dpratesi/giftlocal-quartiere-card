@@ -229,7 +229,7 @@ const Index = () => {
           <h3 className="text-2xl font-display font-bold text-localize-night mb-4">
             {t('cta.title')}
           </h3>
-          <p className="text-lg text-localize-night/80 mb-8 max-w-xl mx-auto whitespace-nowrap text-center">
+          <p className="text-lg text-localize-night/80 mb-8 mx-auto whitespace-nowrap text-center w-full">
             {t('cta.description')}
           </p>
           <Link to="/register-shop">
