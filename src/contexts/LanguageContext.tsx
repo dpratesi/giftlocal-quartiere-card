@@ -175,6 +175,8 @@ const translations = {
     'categories.bookstore': 'Librerie',
     'categories.beauty': 'Bellezza',
     'categories.clothing': 'Abbigliamento',
+    'categories.grocery': 'Alimentari',
+    'categories.gelato': 'Gelateria',
     
     // Profile dropdown
     'profile.greeting': 'Ciao',
@@ -546,6 +548,8 @@ const translations = {
     'categories.bookstore': 'Bookstores',
     'categories.beauty': 'Beauty',
     'categories.clothing': 'Clothing',
+    'categories.grocery': 'Groceries',
+    'categories.gelato': 'Ice Cream',
     
     // Profile dropdown
     'profile.greeting': 'Hello',

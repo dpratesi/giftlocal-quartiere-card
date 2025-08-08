@@ -2,13 +2,16 @@ import { Badge } from "@/components/ui/badge";
 import { Coffee, UtensilsCrossed, Book, Scissors, Shirt, Gift } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+import { getAllCategories, getDbCategoryValue } from "@/lib/categoryMapping";
+
 const categories = [
   { key: "all", icon: Gift, dbName: "" },
-  { key: "bar", icon: Coffee, dbName: "Caffetteria" },
-  { key: "restaurant", icon: UtensilsCrossed, dbName: "Ristorante" },
-  { key: "bookstore", icon: Book, dbName: "Libreria" },
-  { key: "beauty", icon: Scissors, dbName: "Moda" },
+  { key: "bar", icon: Coffee, dbName: "bar-caffe" },
+  { key: "restaurant", icon: UtensilsCrossed, dbName: "ristoranti" },
+  { key: "bookstore", icon: Book, dbName: "librerie" },
+  { key: "beauty", icon: Scissors, dbName: "bellezza" },
   { key: "clothing", icon: Shirt, dbName: "abbigliamento" },
+  { key: "gelato", icon: Coffee, dbName: "gelateria" },
 ];
 
 interface CategoryFilterProps {

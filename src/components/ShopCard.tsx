@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LocalizeVerifiedBadge from "@/components/LocalizeVerifiedBadge";
+import { getCategoryDisplayName } from "@/lib/categoryMapping";
 import type { Shop } from "@/lib/types";
 
 interface ShopCardProps extends Shop {}
@@ -22,17 +23,6 @@ const ShopCard = ({
   neighborhood 
  }: ShopCardProps) => {
   const { t } = useLanguage();
-  
-  const getCategoryTranslation = (category: string) => {
-    const categoryMap: { [key: string]: string } = {
-      'Caffetteria': t('categories.bar'),
-      'Ristorante': t('categories.restaurant'), 
-      'Libreria': t('categories.bookstore'),
-      'Moda': t('categories.beauty'),
-      'abbigliamento': t('categories.clothing')
-    };
-    return categoryMap[category] || category;
-  };
   
   const minPrice = Math.min(...giftCardPrices);
   const maxPrice = Math.max(...giftCardPrices);
@@ -57,7 +47,7 @@ const ShopCard = ({
         </div>
         <div className="absolute top-2 sm:top-3 left-2 sm:left-3">
           <Badge variant="secondary" className="bg-localize-sage text-white text-xs sm:text-sm rounded-full">
-            {getCategoryTranslation(category)}
+            {getCategoryDisplayName(category, t)}
           </Badge>
         </div>
       </div>
