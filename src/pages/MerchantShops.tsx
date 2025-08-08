@@ -10,6 +10,7 @@ import { useMerchantShops } from '@/hooks/useMerchantShops';
 import { ShopEditModal } from '@/components/ShopEditModal';
 import Header from '@/components/Header';
 import { toast } from '@/hooks/use-toast';
+import { updateShopStatus } from '@/lib/merchantApi';
 
 interface ExtendedShop {
   id: string;
@@ -52,7 +53,30 @@ const MerchantShops = () => {
     });
   };
 
-  const getStatusBadge = (status: string = 'active') => {
+  const handleStatusToggle = async (shop: ExtendedShop) => {
+    try {
+      const newStatus = shop.status === 'active' ? 'inactive' : 'active';
+      await updateShopStatus(shop.id, newStatus);
+      
+      refetch();
+      toast({
+        title: t('merchant.shops.statusUpdated'),
+        description: newStatus === 'active' 
+          ? t('merchant.shops.shopActivated')
+          : t('merchant.shops.shopDeactivated'),
+      });
+    } catch (error) {
+      console.error('Error updating shop status:', error);
+      toast({
+        title: t('merchant.shops.updateError'),
+        description: t('merchant.shops.statusUpdateError'),
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const getStatusBadge = (shop: ExtendedShop) => {
+    const status = shop.status || 'active';
     const statusConfig = {
       active: { label: t('merchant.shops.statusActive'), variant: "default" as const },
       inactive: { label: t('merchant.shops.statusInactive'), variant: "secondary" as const },
@@ -62,7 +86,11 @@ const MerchantShops = () => {
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.active;
     
     return (
-      <Badge variant={config.variant}>
+      <Badge 
+        variant={config.variant}
+        className="cursor-pointer hover:opacity-80 transition-opacity"
+        onClick={() => handleStatusToggle(shop)}
+      >
         {config.label}
       </Badge>
     );
@@ -145,7 +173,7 @@ const MerchantShops = () => {
                         <p className="text-sm text-muted-foreground">{shop.category}</p>
                       </div>
                     </div>
-                    {getStatusBadge('active')}
+                    {getStatusBadge(shop)}
                   </div>
                 </CardHeader>
                 

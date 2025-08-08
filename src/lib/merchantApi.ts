@@ -542,3 +542,21 @@ export async function fetchMerchantGiftCardStats(merchantId: string, shopId?: st
 
   return result;
 }
+
+export const updateShopStatus = async (shopId: string, status: 'active' | 'inactive') => {
+  console.log('Updating shop status:', shopId, 'to:', status);
+  
+  const { data, error } = await supabase
+    .from('shops')
+    .update({ status })
+    .eq('id', shopId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error updating shop status:', error);
+    throw error;
+  }
+
+  return data;
+};
