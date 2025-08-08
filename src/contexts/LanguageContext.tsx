@@ -170,9 +170,9 @@ const translations = {
     
     // Categories
     'categories.all': 'Tutti',
-    'categories.bar': 'Bar & Caffè',
-    'categories.restaurant': 'Ristoranti',
-    'categories.bookstore': 'Librerie',
+    'categories.bar': 'Caffetteria',
+    'categories.restaurant': 'Ristorante',
+    'categories.bookstore': 'Libreria',
     'categories.beauty': 'Bellezza',
     'categories.clothing': 'Abbigliamento',
     'categories.grocery': 'Alimentari',
@@ -543,13 +543,13 @@ const translations = {
     
     // Categories  
     'categories.all': 'All',
-    'categories.bar': 'Bars & Cafés',
-    'categories.restaurant': 'Restaurants',
-    'categories.bookstore': 'Bookstores',
+    'categories.bar': 'Coffee Shop',
+    'categories.restaurant': 'Restaurant',
+    'categories.bookstore': 'Bookstore',
     'categories.beauty': 'Beauty',
     'categories.clothing': 'Clothing',
-    'categories.grocery': 'Groceries',
-    'categories.gelato': 'Ice Cream',
+    'categories.grocery': 'Grocery',
+    'categories.gelato': 'Ice Cream Shop',
     
     // Profile dropdown
     'profile.greeting': 'Hello',

@@ -142,9 +142,9 @@ export const ShopEditModal: React.FC<ShopEditModalProps> = ({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="bar-caffe">Bar & Caffè</SelectItem>
-                          <SelectItem value="ristoranti">Ristoranti</SelectItem>
-                          <SelectItem value="librerie">Librerie</SelectItem>
+                          <SelectItem value="bar-caffe">Caffetteria</SelectItem>
+                          <SelectItem value="ristoranti">Ristorante</SelectItem>
+                          <SelectItem value="librerie">Libreria</SelectItem>
                           <SelectItem value="bellezza">Bellezza</SelectItem>
                           <SelectItem value="abbigliamento">Abbigliamento</SelectItem>
                           <SelectItem value="alimentari">Alimentari</SelectItem>
