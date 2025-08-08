@@ -156,7 +156,7 @@ const ShopDetail = () => {
               <CardContent className="p-6">
                 <h3 className="text-xl font-semibold mb-4">{t('giftCard.available')}</h3>
                 <div className="space-y-3">
-                  {shop.giftCardPrices.map((price) => (
+                  {[...shop.giftCardPrices].sort((a, b) => a - b).map((price) => (
                     <div 
                       key={price} 
                       className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-colors ${
