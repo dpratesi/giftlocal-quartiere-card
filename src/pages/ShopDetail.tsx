@@ -124,7 +124,7 @@ const ShopDetail = () => {
 
               <div>
                 <h2 className="text-xl font-semibold mb-3">{t('shop.description')}</h2>
-                <p className="text-muted-foreground leading-relaxed">{shop.description}</p>
+                <p className="text-muted-foreground leading-relaxed">{t('shop.sampleDescription')}</p>
               </div>
 
               {/* Contact Info */}
