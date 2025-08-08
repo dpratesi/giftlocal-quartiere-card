@@ -41,7 +41,38 @@ const MerchantDashboard = () => {
   const { stats, orders, shopOptions, giftCards, monthlyStats, giftCardStats, isLoading, error } = useMerchantDashboard(selectedShopId);
 
   const handleViewGiftCardDetails = (giftCard: any) => {
-    setSelectedGiftCard(giftCard);
+    console.log('Gift card data:', giftCard); // Debug log
+    
+    // Convert merchant gift card data to PurchasedGiftCard format for the modal
+    const convertedGiftCard = {
+      id: giftCard.id,
+      user_id: giftCard.user_id || '',
+      shop_id: giftCard.shop_id || '',
+      gift_card_code: giftCard.code,
+      amount: giftCard.amount,
+      remaining_value: giftCard.remainingValue,
+      recipient_email: giftCard.recipientEmail,
+      recipient_name: giftCard.recipientName,
+      message: giftCard.message,
+      status: giftCard.status,
+      purchase_date: giftCard.purchaseDate ? 
+        (giftCard.purchaseDate.includes('/') ? 
+          new Date(giftCard.purchaseDate.split('/').reverse().join('-')).toISOString() : 
+          new Date(giftCard.purchaseDate).toISOString()) :
+        new Date().toISOString(),
+      expiry_date: giftCard.expiryDate ? 
+        (giftCard.expiryDate.includes('/') ? 
+          new Date(giftCard.expiryDate.split('/').reverse().join('-')).toISOString() : 
+          new Date(giftCard.expiryDate).toISOString()) :
+        new Date(Date.now() + 365*24*60*60*1000).toISOString(),
+      shop: {
+        name: giftCard.shopName || 'Negozio',
+        image: ''
+      }
+    };
+    
+    console.log('Converted gift card:', convertedGiftCard); // Debug log
+    setSelectedGiftCard(convertedGiftCard);
     setIsGiftCardDetailsOpen(true);
   };
 
