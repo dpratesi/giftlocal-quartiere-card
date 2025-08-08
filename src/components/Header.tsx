@@ -42,7 +42,7 @@ const Header = () => {
             {/* About Link */}
             <Link 
               to="/about" 
-              className="hidden md:block text-sm font-medium text-localize-sage hover:text-localize-night transition-colors"
+              className="hidden md:block px-4 py-2 text-sm font-medium text-localize-sage bg-white/20 border border-localize-sage/30 rounded-full hover:bg-localize-sage hover:text-white hover:border-localize-sage hover:shadow-lg transition-all duration-300 hover:scale-105"
             >
               {t('header.about')}
             </Link>
