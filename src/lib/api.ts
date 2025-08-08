@@ -31,8 +31,10 @@ export async function fetchShops(): Promise<Shop[]> {
         distance,
         description,
         city,
-        min_gift_card_amount
-      `);
+        min_gift_card_amount,
+        status
+      `)
+      .eq('status', 'active'); // Solo negozi attivi visibili ai clienti
 
     if (error) {
       throw new Error(`Failed to fetch shops: ${error.message}`);
@@ -76,6 +78,21 @@ export async function purchaseGiftCard(data: {
       throw new Error('User not authenticated');
     }
 
+    // Verifica che il negozio sia attivo prima di permettere l'acquisto
+    const { data: shopStatus, error: shopError } = await supabase
+      .from('shops')
+      .select('status, name')
+      .eq('id', data.shopId)
+      .single();
+
+    if (shopError) {
+      throw new Error(`Failed to verify shop status: ${shopError.message}`);
+    }
+
+    if (shopStatus.status !== 'active') {
+      throw new Error(`Il negozio "${shopStatus.name}" non è attualmente disponibile per l'acquisto di gift card.`);
+    }
+
     // Generate gift card code
     const { data: codeData, error: codeError } = await supabase
       .rpc('generate_gift_card_code');
@@ -104,15 +121,15 @@ export async function purchaseGiftCard(data: {
       throw new Error(`Failed to purchase gift card: ${purchaseError.message}`);
     }
 
-    // Get shop details separately
-    const { data: shopData, error: shopError } = await supabase
+    // Get shop details separately  
+    const { data: shopData, error: shopError2 } = await supabase
       .from('shops')
       .select('name, image')
       .eq('id', data.shopId)
       .single();
 
-    if (shopError) {
-      console.warn('Could not fetch shop details:', shopError);
+    if (shopError2) {
+      console.warn('Could not fetch shop details:', shopError2);
     }
 
     return {
