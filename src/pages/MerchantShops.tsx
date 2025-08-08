@@ -24,6 +24,7 @@ interface ExtendedShop {
   updated_at: string;
   rating: number;
   review_count: number;
+  min_gift_card_amount: number;
   gift_card_prices?: number[];
   status?: 'active' | 'inactive' | 'pending';
 }

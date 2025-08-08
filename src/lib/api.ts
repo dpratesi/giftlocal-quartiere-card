@@ -2,6 +2,20 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Shop, PurchasedGiftCard } from "@/lib/types";
 
+// Utility function to calculate dynamic gift card amounts
+export function calculateGiftCardAmounts(minAmount: number): number[] {
+  switch (minAmount) {
+    case 25:
+      return [25, 50, 100];
+    case 50:
+      return [50, 75, 100];
+    case 100:
+      return [100, 150, 200];
+    default:
+      return [25, 50, 100];
+  }
+}
+
 export async function fetchShops(): Promise<Shop[]> {
   try {
     const { data, error } = await supabase
@@ -17,11 +31,8 @@ export async function fetchShops(): Promise<Shop[]> {
         distance,
         description,
         city,
-        gift_cards!inner (
-          amount
-        )
-      `)
-      .eq('gift_cards.is_active', true);
+        min_gift_card_amount
+      `);
 
     if (error) {
       throw new Error(`Failed to fetch shops: ${error.message}`);
@@ -39,7 +50,8 @@ export async function fetchShops(): Promise<Shop[]> {
       distance: shop.distance,
       description: shop.description,
       city: shop.city,
-      giftCardPrices: shop.gift_cards?.map(gc => gc.amount) || []
+      min_gift_card_amount: shop.min_gift_card_amount || 25,
+      giftCardPrices: calculateGiftCardAmounts(shop.min_gift_card_amount || 25)
     })) || [];
 
     return shops;

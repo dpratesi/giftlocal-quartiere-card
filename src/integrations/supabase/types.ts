@@ -199,6 +199,7 @@ export type Database = {
           distance: string
           id: string
           image: string
+          min_gift_card_amount: number
           name: string
           neighborhood: string
           owner_id: string | null
@@ -214,6 +215,7 @@ export type Database = {
           distance: string
           id?: string
           image: string
+          min_gift_card_amount?: number
           name: string
           neighborhood: string
           owner_id?: string | null
@@ -229,6 +231,7 @@ export type Database = {
           distance?: string
           id?: string
           image?: string
+          min_gift_card_amount?: number
           name?: string
           neighborhood?: string
           owner_id?: string | null

@@ -160,6 +160,7 @@ export async function updateShop(shopId: string, shopData: {
   description: string;
   neighborhood: string;
   city: string;
+  min_gift_card_amount?: number;
 }) {
   const { data, error } = await supabase
     .from('shops')
@@ -237,6 +238,7 @@ export async function createShop(shopData: {
       distance: '0 km', // Default distance
       rating: 0,
       review_count: 0,
+      min_gift_card_amount: 25, // Default minimum amount
     })
     .select()
     .single();

@@ -10,6 +10,7 @@ export interface Shop {
   giftCardPrices: number[];
   description: string;
   city: string;
+  min_gift_card_amount: number;
 }
 
 export interface PurchasedGiftCard {

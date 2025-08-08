@@ -16,6 +16,8 @@ const ShopDetail = () => {
   const { t } = useLanguage();
   
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
+  const [customAmount, setCustomAmount] = useState<string>("");
+  const [isCustomSelected, setIsCustomSelected] = useState(false);
 
   const handleBuyGiftCard = () => {
     if (selectedAmount && shop) {
@@ -156,25 +158,68 @@ const ShopDetail = () => {
               <CardContent className="p-6">
                 <h3 className="text-xl font-semibold mb-4">{t('giftCard.available')}</h3>
                 <div className="space-y-3">
-                  {[...shop.giftCardPrices].sort((a, b) => a - b).map((price) => (
+                  {shop.giftCardPrices.map((price) => (
                     <div 
                       key={price} 
                       className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-colors ${
-                        selectedAmount === price 
+                        selectedAmount === price && !isCustomSelected
                           ? 'border-primary bg-primary/10' 
                           : 'border-border hover:border-primary'
                       }`}
-                      onClick={() => setSelectedAmount(price)}
+                      onClick={() => {
+                        setSelectedAmount(price);
+                        setIsCustomSelected(false);
+                        setCustomAmount("");
+                      }}
                     >
                       <div className="flex items-center">
                         <Euro className="w-5 h-5 mr-2 text-local-green" />
                         <span className="font-medium">{price}€</span>
                       </div>
-                      {selectedAmount === price && (
+                      {selectedAmount === price && !isCustomSelected && (
                         <div className="w-2 h-2 bg-primary rounded-full"></div>
                       )}
                     </div>
                   ))}
+                  
+                  {/* Custom Amount Option */}
+                  <div className={`p-3 border rounded-lg ${
+                    isCustomSelected ? 'border-primary bg-primary/10' : 'border-border'
+                  }`}>
+                    <div 
+                      className="flex items-center justify-between cursor-pointer mb-2"
+                      onClick={() => {
+                        setIsCustomSelected(true);
+                        if (!customAmount) {
+                          setCustomAmount(shop.min_gift_card_amount.toString());
+                          setSelectedAmount(shop.min_gift_card_amount);
+                        }
+                      }}
+                    >
+                      <div className="flex items-center">
+                        <Euro className="w-5 h-5 mr-2 text-local-green" />
+                        <span className="font-medium">Importo personalizzato</span>
+                      </div>
+                      {isCustomSelected && (
+                        <div className="w-2 h-2 bg-primary rounded-full"></div>
+                      )}
+                    </div>
+                    {isCustomSelected && (
+                      <input
+                        type="number"
+                        min={shop.min_gift_card_amount}
+                        value={customAmount}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setCustomAmount(value);
+                          const numValue = parseInt(value) || shop.min_gift_card_amount;
+                          setSelectedAmount(Math.max(shop.min_gift_card_amount, numValue));
+                        }}
+                        placeholder={`Minimo ${shop.min_gift_card_amount}€`}
+                        className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                      />
+                    )}
+                  </div>
                 </div>
                 
                 <div className="mt-6 pt-6 border-t border-border">

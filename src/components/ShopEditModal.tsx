@@ -7,11 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { X, Plus } from 'lucide-react';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { LoadingButton } from '@/components/LoadingButton';
-import { updateShop, updateShopGiftCardPrices } from '@/lib/merchantApi';
+import { updateShop } from '@/lib/merchantApi';
+import { calculateGiftCardAmounts } from '@/lib/api';
 import { toast } from '@/hooks/use-toast';
 
 interface Shop {
@@ -21,6 +20,7 @@ interface Shop {
   description: string;
   neighborhood: string;
   city: string;
+  min_gift_card_amount: number;
   gift_card_prices?: number[];
 }
 
@@ -47,8 +47,7 @@ export const ShopEditModal: React.FC<ShopEditModalProps> = ({
   shop,
   onShopUpdated,
 }) => {
-  const [giftCardPrices, setGiftCardPrices] = useState<number[]>([]);
-  const [newPrice, setNewPrice] = useState<string>('');
+  const [minGiftCardAmount, setMinGiftCardAmount] = useState<number>(25);
 
   const form = useForm<ShopEditFormData>({
     resolver: zodResolver(shopEditSchema),
@@ -70,21 +69,10 @@ export const ShopEditModal: React.FC<ShopEditModalProps> = ({
         neighborhood: shop.neighborhood,
         city: shop.city,
       });
-      setGiftCardPrices(shop.gift_card_prices || [10, 25, 50, 100]);
+      setMinGiftCardAmount(shop.min_gift_card_amount || 25);
     }
   }, [shop, form]);
 
-  const addGiftCardPrice = () => {
-    const price = parseInt(newPrice);
-    if (price && price > 0 && !giftCardPrices.includes(price)) {
-      setGiftCardPrices([...giftCardPrices, price].sort((a, b) => a - b));
-      setNewPrice('');
-    }
-  };
-
-  const removeGiftCardPrice = (price: number) => {
-    setGiftCardPrices(giftCardPrices.filter(p => p !== price));
-  };
 
   const onSubmit = async (data: ShopEditFormData) => {
     if (!shop) return;
@@ -97,10 +85,8 @@ export const ShopEditModal: React.FC<ShopEditModalProps> = ({
         description: data.description,
         neighborhood: data.neighborhood,
         city: data.city,
+        min_gift_card_amount: minGiftCardAmount,
       });
-      
-      // Update gift card prices
-      await updateShopGiftCardPrices(shop.id, giftCardPrices);
       
       onShopUpdated();
     } catch (error) {
@@ -219,47 +205,35 @@ export const ShopEditModal: React.FC<ShopEditModalProps> = ({
               </div>
             </div>
 
-            {/* Gift Card Prices */}
+            {/* Gift Card Settings */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Prezzi Gift Card</h3>
+              <h3 className="text-lg font-semibold">Impostazioni Gift Card</h3>
               
-              <div className="flex flex-wrap gap-2">
-                {giftCardPrices.map((price) => (
-                  <Badge 
-                    key={price} 
-                    variant="secondary" 
-                    className="px-3 py-1 flex items-center gap-2"
-                  >
-                    €{price}
-                    <X 
-                      className="w-3 h-3 cursor-pointer hover:text-destructive" 
-                      onClick={() => removeGiftCardPrice(price)}
-                    />
-                  </Badge>
-                ))}
-              </div>
-              
-              <div className="flex gap-2">
-                <Input
-                  type="number"
-                  placeholder="Nuovo prezzo (€)"
-                  value={newPrice}
-                  onChange={(e) => setNewPrice(e.target.value)}
-                  className="flex-1"
-                />
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={addGiftCardPrice}
-                  disabled={!newPrice || parseInt(newPrice) <= 0}
+              <div className="space-y-3">
+                <label className="text-sm font-medium">Importo minimo Gift Card</label>
+                <Select 
+                  value={minGiftCardAmount.toString()} 
+                  onValueChange={(value) => setMinGiftCardAmount(parseInt(value))}
                 >
-                  <Plus className="w-4 h-4" />
-                </Button>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="25">€25 (Tagli: 25€, 50€, 100€)</SelectItem>
+                    <SelectItem value="50">€50 (Tagli: 50€, 75€, 100€)</SelectItem>
+                    <SelectItem value="100">€100 (Tagli: 100€, 150€, 200€)</SelectItem>
+                  </SelectContent>
+                </Select>
+                
+                <div className="p-3 bg-muted rounded-lg">
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Tagli automatici generati:</strong> {calculateGiftCardAmounts(minGiftCardAmount).join('€, ')}€
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    I clienti potranno anche scegliere un importo personalizzato (minimo {minGiftCardAmount}€)
+                  </p>
+                </div>
               </div>
-              
-              <p className="text-sm text-muted-foreground">
-                I clienti potranno acquistare gift card di questi importi
-              </p>
             </div>
 
             {/* Actions */}
