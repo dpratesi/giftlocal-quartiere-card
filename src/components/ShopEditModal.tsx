@@ -62,7 +62,6 @@ export const ShopEditModal: React.FC<ShopEditModalProps> = ({
 
   useEffect(() => {
     if (shop) {
-      console.log('Shop data in modal:', shop); // Debug log
       form.reset({
         name: shop.name,
         category: shop.category,
