@@ -229,6 +229,44 @@ export type Database = {
           },
         ]
       }
+      shop_discounts: {
+        Row: {
+          created_at: string
+          discount_percentage: number
+          gift_card_amount: number
+          id: string
+          is_active: boolean
+          shop_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          discount_percentage: number
+          gift_card_amount: number
+          id?: string
+          is_active?: boolean
+          shop_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          discount_percentage?: number
+          gift_card_amount?: number
+          id?: string
+          is_active?: boolean
+          shop_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shop_discounts_shop_id_fkey"
+            columns: ["shop_id"]
+            isOneToOne: false
+            referencedRelation: "shops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       shops: {
         Row: {
           category: string

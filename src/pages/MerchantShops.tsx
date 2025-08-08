@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useMerchantShops } from '@/hooks/useMerchantShops';
 import { ShopEditModal } from '@/components/ShopEditModal';
+import { ShopSettingsModal } from '@/components/ShopSettingsModal';
 import Header from '@/components/Header';
 import { toast } from '@/hooks/use-toast';
 import { updateShopStatus } from '@/lib/merchantApi';
@@ -37,6 +38,7 @@ const MerchantShops = () => {
   const { shops, isLoading, error, refetch } = useMerchantShops(user?.id);
   const [selectedShop, setSelectedShop] = useState<any | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [updatingShopId, setUpdatingShopId] = useState<string | null>(null);
   const [localShops, setLocalShops] = useState<ExtendedShop[]>([]);
 
@@ -50,6 +52,11 @@ const MerchantShops = () => {
   const handleEditShop = (shop: any) => {
     setSelectedShop(shop);
     setIsEditModalOpen(true);
+  };
+
+  const handleOpenSettings = (shop: any) => {
+    setSelectedShop(shop);
+    setIsSettingsModalOpen(true);
   };
 
   const handleShopUpdated = () => {
@@ -235,13 +242,7 @@ const MerchantShops = () => {
                     <Button 
                       variant="ghost" 
                       size="sm"
-                      onClick={() => {
-                        // TODO: Implementare configurazioni avanzate
-                        toast({
-                          title: t('merchant.shops.featureComingSoon'),
-                          description: t('merchant.shops.advancedSettings'),
-                        });
-                      }}
+                      onClick={() => handleOpenSettings(shop)}
                     >
                       <Settings className="w-4 h-4" />
                     </Button>
@@ -276,6 +277,16 @@ const MerchantShops = () => {
         }}
         shop={selectedShop}
         onShopUpdated={handleShopUpdated}
+      />
+
+      {/* Settings Modal */}
+      <ShopSettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={() => {
+          setIsSettingsModalOpen(false);
+          setSelectedShop(null);
+        }}
+        shop={selectedShop}
       />
     </div>
   );
