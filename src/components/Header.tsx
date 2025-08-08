@@ -26,17 +26,27 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-localize-sage rounded-full flex items-center justify-center relative overflow-hidden">
-              <div className="w-6 h-6 md:w-8 md:h-8 bg-localize-terracotta rounded-full flex items-center justify-center">
-                <MapPin className="w-3 h-3 md:w-4 md:h-4 text-white" />
+          <div className="flex items-center space-x-6">
+            <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-localize-sage rounded-full flex items-center justify-center relative overflow-hidden">
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-localize-terracotta rounded-full flex items-center justify-center">
+                  <MapPin className="w-3 h-3 md:w-4 md:h-4 text-white" />
+                </div>
               </div>
-            </div>
-            <div>
-              <h1 className="text-lg md:text-xl font-display font-bold text-localize-night">Localize</h1>
-              <p className="text-xs text-localize-sage hidden sm:block font-serif italic">{t('header.tagline')}</p>
-            </div>
-          </Link>
+              <div>
+                <h1 className="text-lg md:text-xl font-display font-bold text-localize-night">Localize</h1>
+                <p className="text-xs text-localize-sage hidden sm:block font-serif italic">{t('header.tagline')}</p>
+              </div>
+            </Link>
+            
+            {/* About Link */}
+            <Link 
+              to="/about" 
+              className="hidden md:block text-sm font-medium text-localize-sage hover:text-localize-night transition-colors"
+            >
+              {t('header.about')}
+            </Link>
+          </div>
 
           {/* Desktop Search Bar */}
           <div className="hidden lg:flex flex-1 max-w-lg mx-8">

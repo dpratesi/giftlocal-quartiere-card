@@ -15,6 +15,7 @@ import OrderConfirmation from "./pages/OrderConfirmation";
 import MerchantLogin from "./pages/MerchantLogin";
 import MerchantDashboard from "./pages/MerchantDashboard";
 import MerchantShops from "./pages/MerchantShops";
+import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -58,6 +59,7 @@ const App = () => (
               <MerchantShops />
             </ProtectedRoute>
           } />
+          <Route path="/about" element={<About />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
