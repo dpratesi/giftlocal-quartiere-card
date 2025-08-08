@@ -17,6 +17,7 @@ import { QrCode, CreditCard, CheckCircle, AlertCircle, Scan } from "lucide-react
 import { useToast } from "@/hooks/use-toast";
 import { verifyGiftCard, redeemGiftCard } from "@/lib/merchantApi";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface QRRedemptionModalProps {
   onRedemption?: (giftCardCode: string, amount: number) => void;
@@ -30,6 +31,7 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
   const [verificationResult, setVerificationResult] = useState<any>(null);
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t } = useLanguage();
 
   const handleVerifyCode = async () => {
     if (!giftCardCode.trim()) return;
@@ -41,8 +43,8 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
     } catch (error) {
       console.error('Error verifying gift card:', error);
       toast({
-        title: "Errore",
-        description: "Errore durante la verifica del codice",
+        title: t('error'),
+        description: t('errorVerifying'),
         variant: "destructive",
       });
     } finally {
@@ -56,8 +58,8 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
     const amount = parseFloat(amountToUse);
     if (isNaN(amount) || amount <= 0) {
       toast({
-        title: "Errore",
-        description: "Inserisci un importo valido",
+        title: t('error'),
+        description: t('enterValidAmount'),
         variant: "destructive",
       });
       return;
@@ -70,8 +72,8 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
       onRedemption?.(verificationResult.giftCard.code, amount);
       
       toast({
-        title: "Gift Card Utilizzata",
-        description: `Utilizzati €${amount} dalla gift card. ${result.fullyUsed ? 'Gift card completamente utilizzata.' : `Rimanente: €${result.remainingValue}`}`,
+        title: t('giftCardUsed'),
+        description: `${t('usedAmount')} €${amount} ${t('fromGiftCard')}. ${result.fullyUsed ? t('fullyUsed') : `${t('remaining')}: €${result.remainingValue}`}`,
       });
 
       // Reset and close
@@ -82,8 +84,8 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
     } catch (error: any) {
       console.error('Error redeeming gift card:', error);
       toast({
-        title: "Errore",
-        description: error.message || "Errore durante l'utilizzo della gift card",
+        title: t('error'),
+        description: error.message || t('errorUsingGiftCard'),
         variant: "destructive",
       });
     } finally {
@@ -105,24 +107,24 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
       <DialogTrigger asChild>
         <Button variant="outline">
           <QrCode className="w-4 h-4 mr-2" />
-          Utilizza Gift Card
+          {t('useGiftCard')}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Scan className="w-5 h-5" />
-            Utilizza Gift Card
+            {t('useGiftCard')}
           </DialogTitle>
           <DialogDescription>
-            Scansiona il QR code o inserisci manualmente il codice della gift card
+            {t('scanQROrEnterCode')}
           </DialogDescription>
         </DialogHeader>
         
         <Tabs defaultValue="manual" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="scan">Scansiona QR</TabsTrigger>
-            <TabsTrigger value="manual">Codice Manuale</TabsTrigger>
+            <TabsTrigger value="scan">{t('scanQR')}</TabsTrigger>
+            <TabsTrigger value="manual">{t('manualCode')}</TabsTrigger>
           </TabsList>
           
           <TabsContent value="scan" className="space-y-4">
@@ -132,14 +134,14 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
                   <QrCode className="w-16 h-16 text-muted-foreground" />
                 </div>
                 <div>
-                  <p className="font-medium">Scanner QR Code</p>
+                  <p className="font-medium">{t('qrScanner')}</p>
                   <p className="text-sm text-muted-foreground">
-                    Inquadra il QR code della gift card
+                    {t('pointCamera')}
                   </p>
                 </div>
                 <Button variant="outline" disabled>
                   <Scan className="w-4 h-4 mr-2" />
-                  Avvia Scanner (Demo)
+                  {t('startScanner')}
                 </Button>
               </CardContent>
             </Card>
@@ -147,7 +149,7 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
           
           <TabsContent value="manual" className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="giftCardCode">Codice Gift Card</Label>
+              <Label htmlFor="giftCardCode">{t('giftCardCode')}</Label>
               <div className="flex gap-2">
                 <Input
                   id="giftCardCode"
@@ -161,7 +163,7 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
                   disabled={loading || !giftCardCode.trim()}
                   variant="outline"
                 >
-                  {loading ? "Verifica..." : "Verifica"}
+                  {loading ? t('verifying') : t('verify')}
                 </Button>
               </div>
             </div>
@@ -174,36 +176,36 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
                     <div className="space-y-3">
                       <div className="flex items-center gap-2 text-green-600">
                         <CheckCircle className="w-5 h-5" />
-                        <span className="font-medium">Gift Card Valida</span>
+                        <span className="font-medium">{t('validGiftCard')}</span>
                       </div>
                       
                       <div className="bg-gradient-to-r from-primary to-primary/80 rounded-lg p-4 text-white">
                         <div className="flex items-center justify-between">
                           <div>
                             <div className="text-2xl font-bold">€{verificationResult.giftCard.amount}</div>
-                            <div className="text-sm opacity-90">Gift Card</div>
+                            <div className="text-sm opacity-90">{t('giftCard.label')}</div>
                           </div>
                           <CreditCard className="w-8 h-8 opacity-80" />
                         </div>
                         <div className="mt-2 text-sm opacity-90">
-                          Codice: {verificationResult.giftCard.code}
+                          {t('giftCardCode')}: {verificationResult.giftCard.code}
                         </div>
                       </div>
                       
                       <div className="space-y-1 text-sm">
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">Cliente:</span>
+                          <span className="text-muted-foreground">{t('customer')}:</span>
                           <span>{verificationResult.giftCard.customer}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">Acquistata il:</span>
+                          <span className="text-muted-foreground">{t('purchasedOn')}:</span>
                           <span>{verificationResult.giftCard.purchaseDate}</span>
                         </div>
                       </div>
                       
                       {/* Amount to use input */}
                       <div className="space-y-2">
-                        <Label htmlFor="amountToUse">Importo da utilizzare</Label>
+                        <Label htmlFor="amountToUse">{t('amountToUse')}</Label>
                         <div className="flex gap-2">
                           <Input
                             id="amountToUse"
@@ -221,11 +223,11 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
                             size="sm"
                             onClick={() => setAmountToUse(verificationResult.giftCard.amount.toString())}
                           >
-                            Tutto
+                            {t('all')}
                           </Button>
                         </div>
                         <p className="text-xs text-muted-foreground">
-                          Massimo €{verificationResult.giftCard.amount}
+                          {t('maximum')} €{verificationResult.giftCard.amount}
                         </p>
                       </div>
                     </div>
@@ -242,11 +244,11 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
             {/* Helper Text */}
             <Card className="bg-muted/50">
               <CardContent className="p-4">
-                <p className="text-sm font-medium mb-2">Come utilizzare:</p>
+                <p className="text-sm font-medium mb-2">{t('howToUse')}</p>
                 <div className="space-y-1 text-sm text-muted-foreground">
-                  <p>• Inserisci il codice gift card nell'input sopra</p>
-                  <p>• Clicca "Verifica" per controllare la validità</p>
-                  <p>• Se valida, clicca "Utilizza" per completare la transazione</p>
+                  <p>{t('step1')}</p>
+                  <p>{t('step2')}</p>
+                  <p>{t('step3')}</p>
                 </div>
               </CardContent>
             </Card>
@@ -255,7 +257,7 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
 
         <DialogFooter className="flex gap-2">
           <Button variant="outline" onClick={() => setOpen(false)}>
-            Annulla
+            {t('cancel')}
           </Button>
           {verificationResult?.valid && (
             <Button 
@@ -263,7 +265,7 @@ const QRRedemptionModal = ({ onRedemption }: QRRedemptionModalProps) => {
               disabled={loading || !amountToUse || parseFloat(amountToUse) <= 0}
               className="bg-green-600 hover:bg-green-700"
             >
-              {loading ? "Elaborazione..." : amountToUse ? `Utilizza €${amountToUse}` : 'Inserisci importo'}
+              {loading ? t('processing') : amountToUse ? `${t('use')} €${amountToUse}` : t('insertAmount')}
             </Button>
           )}
         </DialogFooter>

@@ -624,7 +624,47 @@ const translations = {
     'fullyUsed': 'Fully Used',
     'remaining': 'remaining',
     'soldCount': 'sold',
-    'sold': 'sales'
+    'sold': 'sales',
+    
+    // Additional translations needed
+    'useGiftCard': 'Use Gift Card',
+    'settings': 'Settings',
+    
+    // QR Redemption Modal
+    'scanQROrEnterCode': 'Scan QR code or manually enter gift card code',
+    'scanQR': 'Scan QR',
+    'manualCode': 'Manual Code',
+    'qrScanner': 'QR Code Scanner',
+    'pointCamera': 'Point camera at gift card QR code',
+    'startScanner': 'Start Scanner (Demo)',
+    'giftCardCode': 'Gift Card Code',
+    'verify': 'Verify',
+    'verifying': 'Verifying...',
+    'validGiftCard': 'Valid Gift Card',
+    'customer': 'Customer',
+    'purchasedOn': 'Purchased on',
+    'amountToUse': 'Amount to use',
+    'all': 'All',
+    'maximum': 'Maximum',
+    'howToUse': 'How to use:',
+    'step1': '• Enter gift card code in the input above',
+    'step2': '• Click "Verify" to check validity',
+    'step3': '• If valid, click "Use" to complete transaction',
+    'cancel': 'Cancel',
+    'processing': 'Processing...',
+    'use': 'Use',
+    'enterAmount': 'Enter amount',
+    'error': 'Error',
+    'errorVerifying': 'Error verifying code',
+    'enterValidAmount': 'Enter a valid amount',
+    'giftCardUsed': 'Gift Card Used',
+    'usedAmount': 'Used',
+    'fromGiftCard': 'from gift card',
+    'errorUsingGiftCard': 'Error using gift card',
+    
+    // More translations
+    'giftCard.label': 'Gift Card',
+    'insertAmount': 'Insert amount'
   }
 };
 
