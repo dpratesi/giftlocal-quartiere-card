@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Mail, Lock, ArrowLeft, Eye, EyeOff, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,12 @@ import { toast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 
 const Login = () => {
+  const [searchParams] = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
+  const [activeTab, setActiveTab] = useState(() => {
+    // Check URL parameter for initial tab
+    return searchParams.get('tab') === 'signup' ? 'signup' : 'login';
+  });
   const [loginForm, setLoginForm] = useState({
     email: "",
     password: "",
@@ -101,7 +106,7 @@ const Login = () => {
             </CardHeader>
             
             <CardContent>
-              <Tabs defaultValue="login" className="space-y-6">
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="login">{t('login.tab.login')}</TabsTrigger>
                   <TabsTrigger value="signup">{t('login.tab.signup')}</TabsTrigger>
