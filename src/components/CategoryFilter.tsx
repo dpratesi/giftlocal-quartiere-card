@@ -1,18 +1,6 @@
 import { Badge } from "@/components/ui/badge";
-import { Coffee, UtensilsCrossed, Book, Scissors, Shirt, Gift } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
-
-import { getAllCategories, getDbCategoryValue } from "@/lib/categoryMapping";
-
-const categories = [
-  { key: "all", icon: Gift, dbName: "" },
-  { key: "bar", icon: Coffee, dbName: "bar-caffe" },
-  { key: "restaurant", icon: UtensilsCrossed, dbName: "ristoranti" },
-  { key: "bookstore", icon: Book, dbName: "librerie" },
-  { key: "beauty", icon: Scissors, dbName: "bellezza" },
-  { key: "clothing", icon: Shirt, dbName: "abbigliamento" },
-  { key: "gelato", icon: Coffee, dbName: "gelateria" },
-];
+import { icons } from "lucide-react";
+import { useCategories } from "@/hooks/useCategories";
 
 interface CategoryFilterProps {
   selectedCategories: string[];
@@ -20,17 +8,29 @@ interface CategoryFilterProps {
 }
 
 const CategoryFilter = ({ selectedCategories, onCategoryToggle }: CategoryFilterProps) => {
-  const { t } = useLanguage();
+  const { categories, isLoading, getCategoryName } = useCategories();
+  
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-6">
+        <div className="flex flex-wrap gap-3 justify-center">
+          {Array.from({ length: 7 }).map((_, i) => (
+            <div key={i} className="h-10 w-24 bg-gray-200 animate-pulse rounded-full" />
+          ))}
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="flex flex-wrap gap-3 justify-center">
         {categories.map((category) => {
-          const IconComponent = category.icon;
-          const categoryName = t(`categories.${category.key}`);
+          const IconComponent = icons[category.icon as keyof typeof icons];
+          const categoryName = getCategoryName(category);
           const isSelected = category.key === "all" 
             ? selectedCategories.length === 0 
-            : selectedCategories.includes(category.dbName);
+            : selectedCategories.includes(category.key);
           
           return (
             <Badge
@@ -43,9 +43,9 @@ const CategoryFilter = ({ selectedCategories, onCategoryToggle }: CategoryFilter
                   : "bg-white text-localize-sage border-localize-sage hover:bg-localize-terracotta hover:text-white hover:border-localize-terracotta"
                 }
               `}
-              onClick={() => onCategoryToggle(category.dbName)}
+              onClick={() => onCategoryToggle(category.key === "all" ? "" : category.key)}
             >
-              <IconComponent className="w-4 h-4 mr-2" />
+              {IconComponent && <IconComponent className="w-4 h-4 mr-2" />}
               {categoryName}
             </Badge>
           );

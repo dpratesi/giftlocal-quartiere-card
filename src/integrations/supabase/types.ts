@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      categories: {
+        Row: {
+          color: string | null
+          created_at: string
+          icon: string
+          id: string
+          is_active: boolean
+          key: string
+          name_en: string
+          name_it: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          icon: string
+          id?: string
+          is_active?: boolean
+          key: string
+          name_en: string
+          name_it: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          key?: string
+          name_en?: string
+          name_it?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       gift_card_transactions: {
         Row: {
           amount_used: number

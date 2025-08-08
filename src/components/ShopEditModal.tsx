@@ -12,6 +12,7 @@ import { LoadingButton } from '@/components/LoadingButton';
 import { updateShop } from '@/lib/merchantApi';
 import { calculateGiftCardAmounts } from '@/lib/api';
 import { toast } from '@/hooks/use-toast';
+import { useCategories } from '@/hooks/useCategories';
 
 interface Shop {
   id: string;
@@ -40,6 +41,22 @@ const shopEditSchema = z.object({
 });
 
 type ShopEditFormData = z.infer<typeof shopEditSchema>;
+
+const CategorySelectContent = () => {
+  const { categories, getCategoryName } = useCategories();
+  
+  return (
+    <SelectContent>
+      {categories
+        .filter(cat => cat.key !== 'all')
+        .map((category) => (
+          <SelectItem key={category.key} value={category.key}>
+            {getCategoryName(category)}
+          </SelectItem>
+        ))}
+    </SelectContent>
+  );
+};
 
 export const ShopEditModal: React.FC<ShopEditModalProps> = ({
   isOpen,
@@ -141,15 +158,7 @@ export const ShopEditModal: React.FC<ShopEditModalProps> = ({
                             <SelectValue placeholder="Seleziona categoria" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
-                          <SelectItem value="bar-caffe">Caffetteria</SelectItem>
-                          <SelectItem value="ristoranti">Ristorante</SelectItem>
-                          <SelectItem value="librerie">Libreria</SelectItem>
-                          <SelectItem value="bellezza">Bellezza</SelectItem>
-                          <SelectItem value="abbigliamento">Abbigliamento</SelectItem>
-                          <SelectItem value="alimentari">Alimentari</SelectItem>
-                          <SelectItem value="gelateria">Gelateria</SelectItem>
-                        </SelectContent>
+                        <CategorySelectContent />
                       </Select>
                       <FormMessage />
                     </FormItem>

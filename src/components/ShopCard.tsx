@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LocalizeVerifiedBadge from "@/components/LocalizeVerifiedBadge";
-import { getCategoryDisplayName } from "@/lib/categoryMapping";
+import { useCategories } from "@/hooks/useCategories";
 import type { Shop } from "@/lib/types";
 
 interface ShopCardProps extends Shop {}
@@ -23,6 +23,7 @@ const ShopCard = ({
   neighborhood 
  }: ShopCardProps) => {
   const { t } = useLanguage();
+  const { getCategoryNameByKey } = useCategories();
   
   const minPrice = Math.min(...giftCardPrices);
   const maxPrice = Math.max(...giftCardPrices);
@@ -47,7 +48,7 @@ const ShopCard = ({
         </div>
         <div className="absolute top-2 sm:top-3 left-2 sm:left-3">
           <Badge variant="secondary" className="bg-localize-sage text-white text-xs sm:text-sm rounded-full">
-            {getCategoryDisplayName(category, t)}
+            {getCategoryNameByKey(category)}
           </Badge>
         </div>
       </div>
